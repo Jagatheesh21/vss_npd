@@ -34,6 +34,7 @@ Route::resource('part_number',PartNumberController::class);
 Route::resource('stage',StageController::class);
 Route::resource('sub_stage',SubStageController::class);
 Route::get('apqp_timing_plan/plan_scheduler',[APQPTimingPlanController::class,'plan_scheduler'])->name('plan_scheduler');
+Route::post('apqp_timing_plan/scheduler_update',[APQPTimingPlanController::class,'scheduler_update'])->name('scheduler_update');
 Route::post('apqp_timing_plan/plans',[APQPTimingPlanController::class,'getPlans'])->name('plans');
 Route::post('apqp_timing_plan/plan_activities',[APQPTimingPlanController::class,'getPlanActivities'])->name('plan_activities');
 Route::resource('apqp_timing_plan',APQPTimingPlanController::class);

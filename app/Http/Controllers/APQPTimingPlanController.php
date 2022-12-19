@@ -11,6 +11,7 @@ use App\Models\Stage;
 use App\Models\SubStage;
 use App\Http\Requests\StoreAPQPTimingPlanRequest;
 use App\Http\Requests\UpdateAPQPTimingPlanRequest;
+use App\Http\Requests\UpdateScheduler;
 use DataTables;
 use Illuminate\Http\Request;
 use DB;
@@ -165,5 +166,9 @@ class APQPTimingPlanController extends Controller
         $users = User::where('id','>',1)->get();
         $html = view('apqp.timing_plan.schedule_activities',compact('stages','users'))->render();
         return response(['html' => $html]);
+    }
+    public function scheduler_update(UpdateScheduler $request)
+    {
+        dd($request->all());
     }
 }

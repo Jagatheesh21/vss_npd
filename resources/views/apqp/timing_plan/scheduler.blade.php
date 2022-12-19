@@ -24,13 +24,13 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('apqp_timing_plan.update',1)}}">
+                <form id="category_save">
                   @csrf
-                  @method('PUT')
+                  @method('POST')
                     <div class="row mb-3">
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
-                        <select name="customer_id" id="customer_id" class="form-control select2">
+                        <select name="customer_id" id="customer_id" class="form-control select2" required>
                           <option value=""></option>
                           @foreach($customers as $customer)
                           <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id)
@@ -44,7 +44,7 @@
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
-                        <select name="part_number_id" id="part_number_id" class="form-control select2">
+                        <select name="part_number_id" id="part_number_id" class="form-control select2" required>
                           <option value=""></option>
                           @foreach($part_numbers as $part_number)
                           <option value="{{$part_number->id}}" @if (old('part_number_id')==$part_number->id)
@@ -58,7 +58,7 @@
                       </div>
                       <div class="col-md-4">
                         <label for="" class="col-sm-6 col-form-label required">Timing Plan#</label>
-                        <select name="timing_plan_id" id="timing_plan_id" class="form-control select2">
+                        <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" required class="form-control select2">
                             <option value="">Select Part Number First</option>
                         </select>
                       </div>
@@ -85,7 +85,7 @@
             placeholder:"Select Part Number",
             allowedClear:true,
         });
-        $("#timing_plan_id").select2({
+        $("#apqp_timing_plan_id").select2({
             placeholder:"Select Timing Plan",
             allowedClear:true,
         });
@@ -103,9 +103,9 @@
                     success:function(response)
                     {
                         var result = JSON.parse(response);
-                        $("#timing_plan_id").append("<option value=''>Select Timing Plan</option>");
+                        $("#apqp_timing_plan_id").append("<option value=''>Select Timing Plan</option>");
                         $.each(result, function (index, optiondata) {
-                            $("#timing_plan_id").append("<option value='" + optiondata.id + "'>" + optiondata.apqp_timing_plan_number + "</option>");
+                            $("#apqp_timing_plan_id").append("<option value='" + optiondata.id + "'>" + optiondata.apqp_timing_plan_number + "</option>");
                         });
                     }
                 });
@@ -126,12 +126,29 @@
                     {
                       $(".responsibility").select2();  
                       $(".activities").html(response.html);
-                      toaster.success("Success");
                     }
                 }
             });
 
         });
+      $("#submit").click(function(e){
+        e.preventDefault();
+        $.ajax({
+          url:"{{route('scheduler_update')}}",
+          type:"POST",
+          data:$("#category_save").serialize(),
+          success:function(response)
+          {
 
+          },
+          // error: function (reject) {
+          //       if( reject.status === 422 ) {
+          //         $.each(reject.responseJSON.errors,function(field_name,error){
+          //                   $(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
+          //               })
+          //       }
+          //   }
+        });
+      });
     </script>
 @endpush
