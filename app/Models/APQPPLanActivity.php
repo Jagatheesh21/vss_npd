@@ -5,7 +5,33 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class APQPPLanActivity extends Model
+class APQPPlanActivity extends Model
 {
     use HasFactory;
+    protected $table = 'apqp_plan_activities';
+    protected $fillable = ['apqp_timing_plan_id','stage_id','sub_stage_id','status'];
+    
+    /**
+     * The roles that belong to the APQPPlanActivity
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    /**
+     * Get the user that owns the APQPPlanActivity
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function stage()
+    {
+        return $this->belongsTo(Stage::class, 'stage_id');
+    }
+    public function stages()
+    {
+        return $this->belongsToMany(Stage::class, 'apqp_plan_activities', 'apqp_timing_plan_id', 'stage_id');
+    }
+    public function sub_stages()
+    {
+        return $this->belongsToMany(SubStage::class, 'apqp_plan_activities', 'apqp_timing_plan_id', 'sub_stage_id');
+    }
+
 }

@@ -15,7 +15,7 @@
         <li class="nav-item"><a class="nav-link" href="{{route('part_number.index')}}"><span class="nav-icon"></span> Part Numbers</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{route('stage.index')}}"><span class="nav-icon"></span> Stages</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{route('sub_stage.index')}}"><span class="nav-icon"></span> Sub Stages</a></li>  
-        <li class="nav-item"><a class="nav-link" href="{{route('test_mail')}}"><span class="nav-icon"></span> Test Mail</a></li>  
+        {{-- <li class="nav-item"><a class="nav-link" href="{{route('test_mail')}}"><span class="nav-icon"></span> Test Mail</a></li>   --}}
       </ul>
     </li>
     <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
@@ -24,6 +24,7 @@
       </svg> APQP</a>
       <ul class="nav-group-items">
         <li class="nav-item"><a class="nav-link" href="{{route('apqp_timing_plan.index')}}"><span class="nav-icon"></span> Timing Plan</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{route('plan_scheduler')}}"><span class="nav-icon"></span> Timing Plan Scheduler</a></li>  
         {{-- <li class="nav-item"><a class="nav-link" href="{{route('part_number.index')}}"><span class="nav-icon"></span> Part Numbers</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{route('stage.index')}}"><span class="nav-icon"></span> Stages</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{route('sub_stage.index')}}"><span class="nav-icon"></span> Sub Stages</a></li>  

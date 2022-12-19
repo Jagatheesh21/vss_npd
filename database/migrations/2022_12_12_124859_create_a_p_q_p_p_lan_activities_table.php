@@ -15,16 +15,18 @@ return new class extends Migration
     {
         Schema::create('apqp_plan_activities', function (Blueprint $table) {
             $table->id();
-            $table->integer('apqp_timimg_plan_id');
+            $table->integer('apqp_timing_plan_id');
             $table->integer('stage_id');
             $table->integer('sub_stage_id');
-            $table->integer('responsibility');
-            $table->date('plan_start_date');
-            $table->date('plan_end_date');
-            $table->date('actual_start_date');
-            $table->date('actual_end_date');
-            $table->integer('status_id');
-            $table->text('remarks');
+            $table->integer('process_time')->nullable();
+            $table->integer('responsibility')->nullable();
+            $table->date('plan_start_date')->nullable();
+            $table->date('plan_end_date')->nullable();
+            $table->date('actual_start_date')->nullable();
+            $table->date('actual_end_date')->nullable();
+            $table->integer('status_id')->default(1);
+            $table->text('remarks')->nullable();
+            $table->enum('gyr_status',['G','Y','R','P'])->default('P');
             $table->integer('aging')->default(0);
             $table->timestamps();
         });

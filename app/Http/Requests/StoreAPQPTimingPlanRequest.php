@@ -24,6 +24,7 @@ class StoreAPQPTimingPlanRequest extends FormRequest
     public function rules()
     {
         return [
+            'apqp_timing_plan_number' => 'required',
             'customer_id' => 'required',
             'part_number_id' => 'required',
             'revision_number' => 'required',

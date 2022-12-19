@@ -34,7 +34,9 @@
                         <select name="customer_id" id="customer_id" class="form-control select2">
                           <option value=""></option>
                           @foreach($customers as $customer)
-                          <option value="{{$customer->id}}">{{$customer->name}}</option>
+                          <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id)
+                            selected
+                        @endif>{{$customer->name}}</option>
                           @endforeach
                         </select>
                         @error('customer_id')
@@ -46,7 +48,9 @@
                         <select name="part_number_id" id="part_number_id" class="form-control select2">
                           <option value=""></option>
                           @foreach($part_numbers as $part_number)
-                          <option value="{{$part_number->id}}">{{$part_number->name}}</option>
+                          <option value="{{$part_number->id}}" @if (old('part_number_id')==$part_number->id)
+                              selected
+                          @endif>{{$part_number->name}}</option>
                           @endforeach
                         </select>
                         @error('part_number_id')
@@ -55,28 +59,28 @@
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Number*</label>
-                        <input type="text" name="revision_number" id="revision_number" class="form-control">
+                        <input type="text" name="revision_number" id="revision_number" class="form-control @error('revision_number') is-invalid @enderror" value="{{ old('revision_number') }}">
                         @error('revision_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Date*</label>
-                        <input type="date" name="revision_date" id="revision_date" class="form-control">
+                        <input type="date" name="revision_date" id="revision_date" class="form-control @error('revision_date') is-invalid @enderror" value="{{ old('revision_date') }}">
                         @error('revision_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Number*</label>
-                        <input type="text" name="issuance_number" id="issuance_number" class="form-control">
+                        <input type="text" name="issuance_number" id="issuance_number" class="form-control @error('issuance_number') is-invalid @enderror" value="{{ old('issuance_number') }}">
                         @error('issuance_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Date*</label>
-                        <input type="date" name="issuance_date" id="issuance_date" class="form-control">
+                        <input type="date" name="issuance_date" id="issuance_date" class="form-control @error('issuance_date') is-invalid @enderror" value="{{ old('issuance_date') }}">
                         @error('issuance_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror

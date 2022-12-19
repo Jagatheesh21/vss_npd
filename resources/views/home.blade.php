@@ -47,6 +47,21 @@
                   </div>
                 </div>
               </div>
+              <div class="col-6 col-lg-3">
+                <div class="card">
+                  <div class="card-body p-3 d-flex align-items-center">
+                    <div class="bg-info text-white p-3 me-3">
+                      <svg class="icon icon-xl">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="fs-6 fw-semibold text-info">4</div>
+                      <div class="text-medium-emphasis text-uppercase fw-semibold small">SubStages</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               
               
     </div>
