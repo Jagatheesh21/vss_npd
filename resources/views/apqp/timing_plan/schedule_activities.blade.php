@@ -1,4 +1,4 @@
-<table class="table table-responsive table-bordered" style="width:500px;overflow-y: scroll;">
+<table class="table table-responsive table-bordered" style="height:500px;overflow-y: scroll;">
     <thead>
       <tr>
         <th class="text-center text-bold text-white bg-primary" colspan="3">Activity</th>
@@ -17,13 +17,14 @@
             @foreach ($stage->stage->sub_stages as $sub_stage)
             <tr>
               <td class="col-md-6">{{$sub_stage->name}}
+              <input type="hidden" name="activity_id[]" value="{{$stage->id}}">
               <input type="hidden" name="sub_stage_id[]" value="{{$sub_stage->id}}">
               </td>
               <td class="col-md-2">
-                <input type="number" class="form-control" name="process_time[]"  value="1" min="1">
+                <input type="number" class="form-control" name="process_time[]" required value="1" min="1">
               </td>
               <td class="col-md-4">
-                <select name="responsibility[]" class="form-control select2 responsibility">
+                <select name="responsibility[]" class="form-control select2 responsibility" required>
                   <option value="">Select User</option>
                   @foreach ($users as $user)
                       <option value="{{$user->id}}">{{$user->name}}</option>

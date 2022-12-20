@@ -72,11 +72,11 @@
             </div>
         </div>
     </div>
-
 @endsection
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
+       
         $("#customer_id").select2({
             placeholder:"Select Customer",
             allowedClear:true,
@@ -111,7 +111,7 @@
                 });
             }
         });
-        $("#timing_plan_id").change(function(e){
+        $("#apqp_timing_plan_id").change(function(e){
             e.preventDefault();
             if($(this).val()=="" || $(this).val()==null || $(this).val()==undefined){
                 return false;
@@ -141,13 +141,15 @@
           {
 
           },
-          // error: function (reject) {
-          //       if( reject.status === 422 ) {
-          //         $.each(reject.responseJSON.errors,function(field_name,error){
-          //                   $(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
-          //               })
-          //       }
-          //   }
+          error: function (reject) {
+                if( reject.status === 422 ) {
+                  $.each(reject.responseJSON.errors,function(field_name,error){
+                    //swal("Error!",+error+);    
+                    //$(document).find('[name='+field_name+']').after('');
+                            //$(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
+                        })
+                }
+            }
         });
       });
     </script>

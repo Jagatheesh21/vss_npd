@@ -34,7 +34,7 @@ class APQPTimingPlanController extends Controller
                         ->addColumn('action', function($row){
        
                             $btn = '<a href="'.route('apqp_timing_plan.edit',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
-                           // $btn = '<a href="'.route('apqp_timing_plan.view',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm viewPlan">Details</a>';
+                            $btn = '<a href="'.route('apqp_timing_plan.show',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm viewPlan">Details</a>';
                
                                 return $btn;
                         })
@@ -108,8 +108,8 @@ class APQPTimingPlanController extends Controller
     public function show(APQPTimingPlan $aPQPTimingPlan)
     {
         $plan = $aPQPTimingPlan;
-        $timing = APQPTimingPlan::with(['stages','sub_stages','activites'])->find(1);
-        dd($timing->stages);
+        $timing = APQPTimingPlan::with(['stages','sub_stages','activites'])->find(9);
+        dd($timing);
         return view('apqp.timing_plan.show',compact('plan'));
     }
 
@@ -163,12 +163,35 @@ class APQPTimingPlanController extends Controller
     {
         $plan_id = $request->timing_plan_id;
         $stages = APQPPlanActivity::with('stage')->where('apqp_timing_plan_id',$plan_id)->GroupBy('stage_id')->get();
+        
         $users = User::where('id','>',1)->get();
         $html = view('apqp.timing_plan.schedule_activities',compact('stages','users'))->render();
         return response(['html' => $html]);
     }
     public function scheduler_update(UpdateScheduler $request)
     {
-        dd($request->all());
+        //dd($request->all());
+        DB::beginTransaction();
+        try {
+            $apqp_plan_id = $request->apqp_timing_plan_id;
+            $activities = $request->input('activity_id');
+            $responsibility = $request->input('responsibility');
+            $process_time = $request->input('process_time');
+            $stage = $request->input('stage_id');
+            $sub_stage = $request->input('sub_stage_id');
+            foreach($activities as $key=>$activity)
+            {
+                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
+                $plan_activity->process_time = $process_time[$key];
+                $plan_activity->responsibility = $responsibility[$key];
+                $plan_activity->update();
+            }
+            DB::commit();
+            return redirect(route('apqp_timing_plan.index'))->withSuccess('Scheduler Added Successfully!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return back()->withError($th->getMessage());
+        }
     }
 }
