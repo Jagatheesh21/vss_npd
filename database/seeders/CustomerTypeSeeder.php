@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-class CustomerSeeder extends Seeder
+use App\Models\CustomerType;
+class CustomerTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,8 @@ class CustomerSeeder extends Seeder
      */
     public function run()
     {
+        CustomerType::create(['name' => 'Automotive']);
+        CustomerType::create(['name' => 'Non-Automotive']);
 
     }
 }

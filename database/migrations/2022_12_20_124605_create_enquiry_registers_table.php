@@ -19,7 +19,12 @@ return new class extends Migration
             $table->integer('stage_id');
             $table->integer('sub_stage_id');
             $table->date('received_date');
+            $table->string('enquiry_type');
+            $table->text('enquiry_document')->nullable();
+            $table->text('escalation')->nullable();
             $table->integer('prepared_by');
+            $table->integer('approved_by')->nullable();
+            $table->timestamp('approved_at')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

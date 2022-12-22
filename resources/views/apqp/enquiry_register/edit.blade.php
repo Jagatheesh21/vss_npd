@@ -59,9 +59,32 @@
                     <input type="text" readonly name="supplier" id="supplier" class="form-control" value="{{$plan->plan->supplier}}" readonly>
                   </div>
                   <div class="col-md-4">
+                    <label for="name" class="col-sm-6 col-form-label required">Type Of Enquiry*</label>
+                    <select name="type_of_enquiry" id="type_of_enquiry" class="form-control">
+                      <option value="">Select Type</option>
+                    </select>
+                    @error('type_of_enquiry')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                  </div>
+                  <div class="col-md-4">
                     <label for="name" class="col-sm-6 col-form-label required">Received Date*</label>
                     <input type="date" name="received_date" id="received_date" class="form-control @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}">
                     @error('received_date')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                  </div>
+                  <div class="col-md-4">
+                    <label for="name" class="col-sm-6 col-form-label required">Average Annum Demand *</label>
+                    <input type="text" name="average_annum_demand" id="average_annum_demand" class="form-control @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}">
+                    @error('average_annum_demand')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                  </div>
+                  <div class="col-md-4">
+                    <label for="name" class="col-sm-6 col-form-label required">Customer Enquiry* <i class="bi bi-info-circle"></i></label>
+                    <input type="file" name="enquiry_document" id="enquiry_document" class="form-control @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}">
+                    @error('enquiry_document')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>

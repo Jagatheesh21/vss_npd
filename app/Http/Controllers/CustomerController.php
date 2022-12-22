@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -43,7 +44,8 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customer.create');
+        $customer_types = CustomerType::all();
+        return view('customer.create',compact('customer_types'));
     }
 
     /**

@@ -28,6 +28,23 @@
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
+
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="name" class="col-sm-4 col-form-label required">Customer Type*</label>
+                          <select name="customer_type_id" id="customer_type_id" class="form-control select2">
+                            <option value="">Select Customer Type</option>
+                            @foreach ($customer_types as $customer_type)
+                                <option value="{{$customer_type->id}}" @if (old('customer_type_id')==$customer_type->id)
+                                    selected
+                                @endif>{{$customer_type->name}}</option>
+                            @endforeach
+                          </select>
+                          @error('customer_type_id')
+                          <span class="text-danger">{{$message}}</span>
+                          @enderror
+                        </div>
+                      </div>
                       <div class="col-md-4">
                         <div class="form-group">
                           <label for="name" class="col-sm-4 col-form-label required">Name*</label>
@@ -40,7 +57,7 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label for="name" class="col-sm-4 col-form-label required">Contact Person*</label>
-                          <input type="text" class="form-control" id="contact_person" name="contact_person" @error('name') is-invalid @enderror autocomplete="off" value="{{ old('name') }}">
+                          <input type="text" class="form-control" id="contact_person" name="contact_person" @error('name') is-invalid @enderror autocomplete="off" value="{{ old('contact_person') }}">
                           @error('contact_person')
                           <span class="text-danger">{{$message}}</span>
                           @enderror
@@ -49,7 +66,7 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label for="name" class="col-sm-4 col-form-label required">Email Address*</label>
-                          <input type="text" class="form-control" id="email" name="email" @error('email') is-invalid @enderror autocomplete="off" value="{{ old('name') }}">
+                          <input type="text" class="form-control" id="email" name="email" @error('email') is-invalid @enderror autocomplete="off" value="{{ old('email') }}">
                           @error('email')
                           <span class="text-danger">{{$message}}</span>
                           @enderror
@@ -63,3 +80,9 @@
     </div>
 
 @endsection
+@push('scripts')
+<script src="{{asset('js/select2.min.js')}}"></script>
+<script>
+  $("#customer_type_id").select2();
+</script>
+@endpush

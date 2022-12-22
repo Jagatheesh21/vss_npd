@@ -30,14 +30,21 @@
                     <div class="row mb-3">
                       <input type="hidden" class="form-control" name="apqp_timing_plan_number" readonly value="{{$plan_number}}">
                       <div class="col-md-4">
+                        <label for="name" class="col-sm-6 col-form-label required">Customer Type*</label>
+                        <select name="customer_type_id" id="customer_type_id" class="form-control select2">
+                          <option value="">Select Customer Type</option>
+                          @foreach($customer_types as $customer_type)
+                          <option value="{{$customer_type->id}}" @if (old('customer_type_id')==$customer_type->id)
+                            selected
+                        @endif>{{$customer_type->name}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
                         <select name="customer_id" id="customer_id" class="form-control select2">
-                          <option value=""></option>
-                          @foreach($customers as $customer)
-                          <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id)
-                            selected
-                        @endif>{{$customer->name}}</option>
-                          @endforeach
+                          <option value="">Select Customer </option>
+        
                         </select>
                         @error('customer_id')
                         <span class="text-danger">{{$message}}</span>
@@ -125,6 +132,11 @@
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
+        $("#customer_type_id").select2({
+            placeholder:"Select Customer Type",
+            allowedClear:true,
+        });
+
         $("#customer_id").select2({
             placeholder:"Select Customer",
             allowedClear:true,
@@ -132,6 +144,18 @@
         $("#part_number_id").select2({
             placeholder:"Select Part Number",
             allowedClear:true,
+        });
+        $("#customer_type_id").change(function(e){
+          e.preventDefault();
+          $.ajax({
+            url:"{{route('customers')}}",
+            type:"POST",
+            data:{customer_type_id:$(this).val()},
+            success:function(response)
+            {
+            $("#customer_id").html(response.html);              
+            }
+          });
         });
         // $("#category_save").submit(function(e){
         //   e.preventDefault();

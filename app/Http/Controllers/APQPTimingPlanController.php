@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
+use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\PartNumber;
@@ -52,19 +53,13 @@ class APQPTimingPlanController extends Controller
      */
     public function create()
     {
-        // $structure = collect();
-        // $master_menu_collection = APQPPlanActivity::where('stage_id', null)->get();
-        // foreach ($master_menu_collection as $stage) {
-        //     $structure->push($stage->getAll());
-        // }
-
-        // //dd($structure);
+        $customer_types = CustomerType::all();
         $customers = Customer::all();
         $part_numbers = PartNumber::all();
         $max_id = APQPTimingPlan::max('id')??0;
         $plan_number = 'TP'.date('Y').$max_id+1;
         $stages = Stage::with('sub_stages')->get();
-        return view('apqp.timing_plan.create',compact('customers','stages','plan_number','part_numbers'));
+        return view('apqp.timing_plan.create',compact('customer_types','customers','stages','plan_number','part_numbers'));
     }
 
     /**
@@ -155,6 +150,13 @@ class APQPTimingPlanController extends Controller
         $customers = Customer::all();
         $part_numbers = PartNumber::all();
         return view('apqp.timing_plan.scheduler',compact('customers','part_numbers'));
+    }
+    public function getCustomers(Request $request)
+    {
+        $customer_type_id = $request->customer_type_id;
+        $customers = Customer::select('id','name')->where('customer_type_id',$customer_type_id)->get();
+        $html = view('apqp.timing_plan.customers',compact("customers"))->render();
+        return response(['html' => $html]);
     }
     public function getPlans(Request $request)
     {

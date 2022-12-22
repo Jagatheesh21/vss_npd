@@ -24,9 +24,10 @@ class StoreCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'customer_type_id' => 'required',
+            'name' => 'required|unique:customers,name,null,id,customer_type_id,'.$this->customer_type_id,
             'contact_person' => 'required',
-            'email' => 'required|email|unique:customers'
+            'email' => 'required|email|unique:customers,email,null,id,customer_type_id,'.$this->customer_type_id
         ];
     }
 }
