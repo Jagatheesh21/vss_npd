@@ -8,6 +8,7 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\SubStageController;
 use App\Http\Controllers\APQPTimingPlanController;
 use App\Http\Controllers\APQPPlanActivityController;
+use App\Http\Controllers\EnquiryRegisterController;
 
 
 /*
@@ -26,7 +27,7 @@ use App\Http\Controllers\APQPPlanActivityController;
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('test_mail', [HomeController::class, 'test_email'])->name('test_mail');
+Route::get('test_mail', [HomeController::class, 'test_mail'])->name('test_mail');
 Route::get('customer/export/excel', [CustomerController::class, 'export_excel'])->name('customer.export_excel');
 Route::get('customer/export/pdf', [CustomerController::class, 'export_pdf'])->name('customer.export_pdf');
 Route::resource('customer',CustomerController::class);
@@ -36,6 +37,8 @@ Route::resource('sub_stage',SubStageController::class);
 Route::get('apqp_timing_plan/plan_scheduler',[APQPTimingPlanController::class,'plan_scheduler'])->name('plan_scheduler');
 Route::post('apqp_timing_plan/scheduler_update',[APQPTimingPlanController::class,'scheduler_update'])->name('scheduler_update');
 Route::post('apqp_timing_plan/plans',[APQPTimingPlanController::class,'getPlans'])->name('plans');
+Route::post('apqp_timing_plan/schedule_plans',[APQPTimingPlanController::class,'getSchedulePlans'])->name('schedule_plans');
 Route::post('apqp_timing_plan/plan_activities',[APQPTimingPlanController::class,'getPlanActivities'])->name('plan_activities');
 Route::resource('apqp_timing_plan',APQPTimingPlanController::class);
+Route::resource('enquiry_register',EnquiryRegisterController::class);
 

@@ -62,4 +62,8 @@ class TimingPlanObserver
     {
         //
     }
+    public function scheduler_update(APQPTimingPlan $aPQPTimingPlan)
+    {
+        Mail::to('edp@venkateswarasteels.com')->view('email.test');
+    }
 }

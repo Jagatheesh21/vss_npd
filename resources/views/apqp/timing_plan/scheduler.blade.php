@@ -139,7 +139,8 @@
           data:$("#category_save").serialize(),
           success:function(response)
           {
-
+            window.location.href="apqp_timing_plan";
+            return false;
           },
           error: function (reject) {
                 if( reject.status === 422 ) {

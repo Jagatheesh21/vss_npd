@@ -40,8 +40,13 @@ class HomeController extends Controller
     }
     public function test_mail()
     {
-        $user ="jagatheesh21@gmail.com";
-        dd($user);
-        Mail::to($user)->send(new NotifyMail());
+        $user = User::find(1);
+        
+        try {
+            Mail::to('jagatheesh21@gmail.com')->send(new NotifyMail($user));
+            return response()->withSuccess('Mail Send Successfully!');
+        } catch (\Throwable $th) {
+           return reponse()->withError($th->getMessage());
+        }
     }
 }

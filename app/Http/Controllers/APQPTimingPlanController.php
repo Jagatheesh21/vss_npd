@@ -15,6 +15,7 @@ use App\Http\Requests\UpdateScheduler;
 use DataTables;
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 class APQPTimingPlanController extends Controller
 {
@@ -108,9 +109,12 @@ class APQPTimingPlanController extends Controller
     public function show(APQPTimingPlan $aPQPTimingPlan)
     {
         $plan = $aPQPTimingPlan;
+        $customers = Customer::all();
+        $part_numbers = PartNumber::all();
+        $stages = Stage::with('sub_stages')->get();
+
         $timing = APQPTimingPlan::with(['stages','sub_stages','activites'])->find(9);
-        dd($timing);
-        return view('apqp.timing_plan.show',compact('plan'));
+        return view('apqp.timing_plan.show',compact('plan','timing','customers','part_numbers','stages'));
     }
 
     /**
@@ -159,6 +163,18 @@ class APQPTimingPlanController extends Controller
         $plans = APQPTimingPlan::select('id','apqp_timing_plan_number')->where('customer_id',$customer_id)->where('part_number_id',$part_number_id)->where('status_id',1)->get();
         return json_encode($plans);
     }
+    public function getSchedulePlans(Request $request)
+    {
+        $customer_id = $request->customer_id;
+        $part_number_id = $request->part_number;
+        $plans = APQPTimingPlan::whereHas('activities', function($q)
+        {
+            $q->whereNull('plan_start_date');
+
+        })->where('customer_id',$customer_id)->where('part_number_id',$part_number_id)->where('status_id',1)->get();
+        
+        return json_encode($plans);
+    }
     public function getPlanActivities(Request $request)
     {
         $plan_id = $request->timing_plan_id;
@@ -170,7 +186,6 @@ class APQPTimingPlanController extends Controller
     }
     public function scheduler_update(UpdateScheduler $request)
     {
-        //dd($request->all());
         DB::beginTransaction();
         try {
             $apqp_plan_id = $request->apqp_timing_plan_id;
@@ -179,11 +194,16 @@ class APQPTimingPlanController extends Controller
             $process_time = $request->input('process_time');
             $stage = $request->input('stage_id');
             $sub_stage = $request->input('sub_stage_id');
+            $process_date = carbon::now();
             foreach($activities as $key=>$activity)
             {
                 $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
                 $plan_activity->process_time = $process_time[$key];
                 $plan_activity->responsibility = $responsibility[$key];
+                $process_start_date = Carbon::parse($process_date); 
+                $process_date = $process_start_date->addWeekdays($process_time[$key]);
+                $plan_activity->plan_start_date = $process_date;
+                $plan_activity->plan_end_date = $process_date;
                 $plan_activity->update();
             }
             DB::commit();

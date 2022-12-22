@@ -21,7 +21,11 @@ class APQPPlanActivity extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function stage()
+    public function plan()
+    {
+        return $this->belongsTo(APQPTimingPlan::class, 'apqp_timing_plan_id');
+    }
+     public function stage()
     {
         return $this->belongsTo(Stage::class, 'stage_id');
     }

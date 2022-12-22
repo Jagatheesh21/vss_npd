@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\APQPPLanActivity;
 use App\Http\Requests\StoreAPQPPLanActivityRequest;
 use App\Http\Requests\UpdateAPQPPLanActivityRequest;
-
+use DataTables;
+use Illuminate\Http\Request;
+use Auth;
+use DB;
 class APQPPLanActivityController extends Controller
 {
     /**
@@ -13,9 +16,23 @@ class APQPPLanActivityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->ajax()){
+            $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer'])->where('responsibility',auth()->user()->id)->where('sub_stage_id',1)->where('status_id',1)->get();
+      
+                return Datatables::of($data)
+                        ->addIndexColumn()
+                        ->addColumn('action', function($row){
+                            $btn = '<a href="'.route('plan_activity.edit',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';               
+                            return $btn;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
+                    }
+        
+        return view('apqp.activity.index');
+    
     }
 
     /**
