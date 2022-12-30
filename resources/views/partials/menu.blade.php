@@ -32,8 +32,7 @@
         <use xlink:href="{{asset('vendors/@coreui/icons/svg/free.svg#cil-task')}}"></use>
       </svg> My Tasks</a>
       <ul class="nav-group-items">
-        <li class="nav-item"><a class="nav-link" href="{{route('enquiry_register.index')}}"><span class="nav-icon"></span>Task List</a></li>  
-        <li class="nav-item"><a class="nav-link" href="{{route('enquiry_register.index')}}"><span class="nav-icon"></span>Enquiry Register</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{route('activity.index')}}"><span class="nav-icon"></span>Task List</a></li>  
       </ul>
     </li>
     <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">

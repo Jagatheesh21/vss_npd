@@ -27,15 +27,6 @@ class HomeController extends Controller
     public function index()
     {
         $user_lists = User::get();
-        // $user ="jagatheesh21@gmail.com";
-        // $data = array('name'=>"Test Mail");
-        // Mail::send(['text'=>'mail'], $data, function($message) {
-        //     $message->to('jagatheesh21@gmail.com', 'NPD')->subject
-        //        ('Laravel Basic Testing Mail');
-        //     $message->from('edp@venkateswarasteels.com','EDP');
-        //  });
-        //Mail::to($user)->send();
-
         return view('home',compact('user_lists'));
     }
     public function test_mail()
@@ -44,9 +35,9 @@ class HomeController extends Controller
         
         try {
             Mail::to('jagatheesh21@gmail.com')->send(new NotifyMail($user));
-            return response()->withSuccess('Mail Send Successfully!');
+            return response()->with('success','Mail Send Successfully!');
         } catch (\Throwable $th) {
-           return reponse()->withError($th->getMessage());
+           return response()->with('error',$th->getMessage());
         }
     }
 }

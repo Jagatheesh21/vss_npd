@@ -19,12 +19,11 @@ class APQPPLanActivityController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer'])->where('responsibility',auth()->user()->id)->where('sub_stage_id',1)->where('status_id',1)->get();
-      
+            $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer','sub_stage'])->where('responsibility',auth()->user()->id)->where('status_id',1)->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('plan_activity.edit',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';               
+                            $btn = '<a href="'.route('enquiry_register.create',['id'=>$row->id]).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';               
                             return $btn;
                         })
                         ->rawColumns(['action'])
@@ -42,7 +41,8 @@ class APQPPLanActivityController extends Controller
      */
     public function create()
     {
-        //
+        $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer'])->where('responsibility',auth()->user()->id)->where('status_id',1)->get();
+        dd($data);
     }
 
     /**
@@ -99,5 +99,19 @@ class APQPPLanActivityController extends Controller
     public function destroy(APQPPLanActivity $aPQPPLanActivity)
     {
         //
+    }
+    public function getActivityStatus(Request $request)
+    {
+        if($request->activity_id)
+        {
+            $activity_id = $request->activity_id;
+            $plan = APQPPLanActivity::find($activity_id);
+            // if(($plan->sub_stage_id)>1)
+            // {
+            //     $prev = ($plan->sub_stage_id)-1;
+            //     $prev_plan = APQPPLanActivity::where('apqp_timing_plan_id',$plan->apqp_timing_plan_id)->where('sub_stage_id',$prev)->first();
+            //     $prev_
+            // }
+        }
     }
 }

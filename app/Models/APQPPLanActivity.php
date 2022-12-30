@@ -29,6 +29,10 @@ class APQPPlanActivity extends Model
     {
         return $this->belongsTo(Stage::class, 'stage_id');
     }
+    public function sub_stage()
+    {
+        return $this->belongsTo(SubStage::class, 'sub_stage_id');
+    }
     public function stages()
     {
         return $this->belongsToMany(Stage::class, 'apqp_plan_activities', 'apqp_timing_plan_id', 'stage_id');

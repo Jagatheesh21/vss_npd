@@ -26,7 +26,11 @@ class StoreEnquiryRegisterRequest extends FormRequest
         return [
             'apqp_timing_plan_id' => 'required',
             'received_date' => 'required|date',
-            'prepared_by' => 'required'
+            'prepared_by' => 'required',
+            'enquiry_type' => 'required',
+            //'enquiry_document' => 'required|mimes:csv,txt,xlx,xls,pdf,jpg,png,PNG|max:2048'
+            'enquiry_document' => 'required'
+
         ];
     }
 }

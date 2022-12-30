@@ -11,9 +11,9 @@
     </div>
     <div class="card-body">
         <div class="col-md-12">
-            <form id="category_save" method="POST" action="{{route('enquiry_register.update',$plan->id)}}">
+            <form id="category_save" method="POST" action="{{route('enquiry_register.store')}}" enctype="multipart/form-data">
               @csrf
-              @method('PUT')
+              @method('POST')
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
@@ -62,6 +62,11 @@
                     <label for="name" class="col-sm-6 col-form-label required">Type Of Enquiry*</label>
                     <select name="type_of_enquiry" id="type_of_enquiry" class="form-control">
                       <option value="">Select Type</option>
+                      @foreach ($customer_types as $customer_type)
+                          <option value="{{$customer_type->id}}" @if ($customer_type->id==$plan->plan->customer->customer_type->id)
+                              selected
+                          @endif>{{$customer_type->name}}</option>
+                      @endforeach
                     </select>
                     @error('type_of_enquiry')
                     <span class="text-danger">{{$message}}</span>
@@ -76,14 +81,14 @@
                   </div>
                   <div class="col-md-4">
                     <label for="name" class="col-sm-6 col-form-label required">Average Annum Demand *</label>
-                    <input type="text" name="average_annum_demand" id="average_annum_demand" class="form-control @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}">
+                    <input type="text" name="average_annum_demand" id="average_annum_demand" class="form-control @error('average_annum_demand') is-invalid @enderror" value="{{ old('average_annum_demand') }}">
                     @error('average_annum_demand')
                     <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
                   <div class="col-md-4">
                     <label for="name" class="col-sm-6 col-form-label required">Customer Enquiry* <i class="bi bi-info-circle"></i></label>
-                    <input type="file" name="enquiry_document" id="enquiry_document" class="form-control @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}">
+                    <input type="file" name="enquiry_document" id="enquiry_document" class="form-control @error('enquiry_document') is-invalid @enderror">
                     @error('enquiry_document')
                     <span class="text-danger">{{$message}}</span>
                     @enderror

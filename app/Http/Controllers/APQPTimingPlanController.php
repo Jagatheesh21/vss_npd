@@ -52,7 +52,7 @@ class APQPTimingPlanController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
+    {        
         $customer_types = CustomerType::all();
         $customers = Customer::all();
         $part_numbers = PartNumber::all();
@@ -180,40 +180,66 @@ class APQPTimingPlanController extends Controller
     public function getPlanActivities(Request $request)
     {
         $plan_id = $request->timing_plan_id;
-        $stages = APQPPlanActivity::with('stage')->where('apqp_timing_plan_id',$plan_id)->GroupBy('stage_id')->get();
-        
+        $sub_stages = APQPPlanActivity::with('sub_stage')->where('apqp_timing_plan_id',$plan_id)->get();
+        //$stages = APQPPlanActivity::with('stage')->where('apqp_timing_plan_id',$plan_id)->GroupBy('stage_id')->get();
         $users = User::where('id','>',1)->get();
-        $html = view('apqp.timing_plan.schedule_activities',compact('stages','users'))->render();
+        $html = view('apqp.timing_plan.schedule_activities',compact('sub_stages','stages','users'))->render();
         return response(['html' => $html]);
     }
-    public function scheduler_update(UpdateScheduler $request)
+    public function scheduler_update(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            $apqp_plan_id = $request->apqp_timing_plan_id;
-            $activities = $request->input('activity_id');
-            $responsibility = $request->input('responsibility');
-            $process_time = $request->input('process_time');
-            $stage = $request->input('stage_id');
-            $sub_stage = $request->input('sub_stage_id');
-            $process_date = carbon::now();
-            foreach($activities as $key=>$activity)
-            {
-                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
-                $plan_activity->process_time = $process_time[$key];
-                $plan_activity->responsibility = $responsibility[$key];
-                $process_start_date = Carbon::parse($process_date); 
-                $process_date = $process_start_date->addWeekdays($process_time[$key]);
-                $plan_activity->plan_start_date = $process_date;
-                $plan_activity->plan_end_date = $process_date;
-                $plan_activity->update();
-            }
-            DB::commit();
-            return redirect(route('apqp_timing_plan.index'))->withSuccess('Scheduler Added Successfully!');
-        } catch (\Throwable $th) {
-            //throw $th;
-            DB::rollback();
-            return back()->withError($th->getMessage());
+        $apqp_plan_id = $request->apqp_timing_plan_id;
+        $activities = $request->input('activity_id');
+        $responsibility = $request->input('responsibility');
+        $process_time = $request->input('process_time');
+        $stage = $request->input('stage_id');
+        $sub_stage = $request->input('sub_stage_id');
+        $process_date = carbon::now();
+        $data = array();
+        dd($sub_stage);
+        foreach($activities as $key=>$activity)
+        {
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
+            $plan_activity->process_time = $process_time[$key];
+            $plan_activity->responsibility = $responsibility[$key];
+            $process_start_date = Carbon::parse($process_date); 
+            $process_date = $process_start_date->addWeekdays($process_time[$key]);
+            $plan_activity->plan_start_date = $process_date;
+            $plan_activity->plan_end_date = $process_date;
+            $data = $key;
+            //$plan_activity->update();
         }
+        dd($data);
+        //dd($request->all());
+        //DB::beginTransaction();
+        // try {
+        //     $apqp_plan_id = $request->apqp_timing_plan_id;
+        //     $activities = $request->input('activity_id');
+        //     $responsibility = $request->input('responsibility');
+        //     $process_time = $request->input('process_time');
+        //     $stage = $request->input('stage_id');
+        //     $sub_stage = $request->input('sub_stage_id');
+        //     $process_date = carbon::now();
+        //     $data = array();
+        //     foreach($activities as $key=>$activity)
+        //     {
+        //         $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
+        //         $plan_activity->process_time = $process_time[$key];
+        //         $plan_activity->responsibility = $responsibility[$key];
+        //         $process_start_date = Carbon::parse($process_date); 
+        //         $process_date = $process_start_date->addWeekdays($process_time[$key]);
+        //         $plan_activity->plan_start_date = $process_date;
+        //         $plan_activity->plan_end_date = $process_date;
+        //         $data = $plan_activity;
+        //         //$plan_activity->update();
+        //     }
+        //     dd($data);
+        //     // DB::commit();
+        //     return redirect(route('apqp_timing_plan.index'))->withSuccess('Scheduler Added Successfully!');
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     //DB::rollback();
+        //     return back()->withError($th->getMessage());
+        // }
     }
 }

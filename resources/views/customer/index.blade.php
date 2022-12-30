@@ -19,6 +19,7 @@
                 <thead class="bg-secondary">
                     <tr>
                         <th>SNo</th>
+                        <th>Type</th>
                         <th>Name</th>
                         <th>Contact Person</th>
                         <th>Email Address</th>
@@ -59,6 +60,7 @@
         ajax: "{{ route('customer.index') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'customer_type.name', name: 'type'},
             {data: 'name', name: 'name'},
             {data: 'contact_person', name: 'contact_person'},
             {data: 'email', name: 'Email Address'},

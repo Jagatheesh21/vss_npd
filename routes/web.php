@@ -41,5 +41,7 @@ Route::post('apqp_timing_plan/plans',[APQPTimingPlanController::class,'getPlans'
 Route::post('apqp_timing_plan/schedule_plans',[APQPTimingPlanController::class,'getSchedulePlans'])->name('schedule_plans');
 Route::post('apqp_timing_plan/plan_activities',[APQPTimingPlanController::class,'getPlanActivities'])->name('plan_activities');
 Route::resource('apqp_timing_plan',APQPTimingPlanController::class);
+Route::resource('activity',APQPPLanActivityController::class);
+Route::post('enquiry_register/save_register',[EnquiryRegisterController::class,'save_register'])->name('save_register');
 Route::resource('enquiry_register',EnquiryRegisterController::class);
 

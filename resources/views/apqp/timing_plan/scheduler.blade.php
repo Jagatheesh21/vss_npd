@@ -24,7 +24,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save">
+                <form id="category_save" method="POST" action="{{route('scheduler_update')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -139,16 +139,15 @@
           data:$("#category_save").serialize(),
           success:function(response)
           {
-            window.location.href="apqp_timing_plan";
+            window.location.href="{{route('apqp_timing_plan.index')}}";
             return false;
           },
           error: function (reject) {
                 if( reject.status === 422 ) {
                   $.each(reject.responseJSON.errors,function(field_name,error){
-                    //swal("Error!",+error+);    
-                    //$(document).find('[name='+field_name+']').after('');
-                            //$(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
-                        })
+                    $(document).find('[name='+field_name+']').after('');
+                    $(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
+                    })
                 }
             }
         });

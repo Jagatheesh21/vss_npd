@@ -42,7 +42,11 @@ class APQPTimingPlan extends Model
     }
     public function sub_stages()
     {
-        return $this->hasMany(APQPPlanActivity::class,'sub_stage_id');
+        return $this->hasMany(APQPPlanActivity::class,'sub_stage_id','id');
     }
 
+    // public function scopeActiveTasks($query)
+    // {
+    //     return $query->where();
+    // }
 }
