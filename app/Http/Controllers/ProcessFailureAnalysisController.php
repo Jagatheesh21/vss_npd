@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductInformationData;
+use App\Models\ProcessFailureAnalysis;
 use App\Models\APQPTimingPlan;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
-use App\Http\Requests\StoreProductInformationDataRequest;
-use App\Http\Requests\UpdateProductInformationDataRequest;
+use App\Models\User;
+use App\Http\Requests\StoreProcessFailureAnalysisRequest;
+use App\Http\Requests\UpdateProcessFailureAnalysisRequest;
 use Illuminate\Http\Request;
 
-
-class ProductInformationDataController extends Controller
+class ProcessFailureAnalysisController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,18 +35,20 @@ class ProductInformationDataController extends Controller
         $plan = APQPTimingPlan::find($id);
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
+        $users = User::where('id','>',1)->get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        return view('apqp.product_information.create',compact('plan','plans','part_numbers','customers','customer_types'));
+        return view('apqp.process_failure_analysis.create',compact('plan','users','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreProductInformationDataRequest  $request
+     * @param  \App\Http\Requests\StoreProcessFailureAnalysisRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductInformationDataRequest $request)
+    public function store(StoreProcessFailureAnalysisRequest $request)
     {
         //
     }
@@ -54,10 +56,10 @@ class ProductInformationDataController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFailureAnalysis  $processFailureAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductInformationData $productInformationData)
+    public function show(ProcessFailureAnalysis $processFailureAnalysis)
     {
         //
     }
@@ -65,10 +67,10 @@ class ProductInformationDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFailureAnalysis  $processFailureAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductInformationData $productInformationData)
+    public function edit(ProcessFailureAnalysis $processFailureAnalysis)
     {
         //
     }
@@ -76,11 +78,11 @@ class ProductInformationDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateProductInformationDataRequest  $request
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Http\Requests\UpdateProcessFailureAnalysisRequest  $request
+     * @param  \App\Models\ProcessFailureAnalysis  $processFailureAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductInformationDataRequest $request, ProductInformationData $productInformationData)
+    public function update(UpdateProcessFailureAnalysisRequest $request, ProcessFailureAnalysis $processFailureAnalysis)
     {
         //
     }
@@ -88,10 +90,10 @@ class ProductInformationDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFailureAnalysis  $processFailureAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductInformationData $productInformationData)
+    public function destroy(ProcessFailureAnalysis $processFailureAnalysis)
     {
         //
     }

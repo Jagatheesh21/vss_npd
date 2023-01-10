@@ -30,9 +30,18 @@
     <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
       <svg class="nav-icon">
         <use xlink:href="{{asset('vendors/@coreui/icons/svg/free.svg#cil-task')}}"></use>
-      </svg> My Tasks</a>
+      </svg> My Tasks </a>
       <ul class="nav-group-items">
         <li class="nav-item"><a class="nav-link" href="{{route('activity.index')}}"><span class="nav-icon"></span>Task List</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('enquiry_register/create?id=1')}}"><span class="nav-icon"></span>Enquiry Register</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('product_information_data/create?id=1')}}"><span class="nav-icon"></span>Product Information Data</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('mfr/create?id=1')}}"><span class="nav-icon"></span>Manufacturing Feasibility Review</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('risk_analysis/create?id=1')}}"><span class="nav-icon"></span>Risk Analysis</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('customer_requiements/create?id=1')}}"><span class="nav-icon"></span>Customer Specific Requirements</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('special_characteristics/create?id=1')}}"><span class="nav-icon"></span>Special Characteristic</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('gauge_equipment/create?id=1')}}"><span class="nav-icon"></span>Gauge Testing Equipment</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('process_flow_diagram/create?id=1')}}"><span class="nav-icon"></span>Process Flow Diagram</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('process_failure_analysis/create?id=1')}}"><span class="nav-icon"></span>Process Failure Analysis</a></li>  
       </ul>
     </li>
     <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">

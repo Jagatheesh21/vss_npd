@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductInformationData;
+use App\Models\ProcessFlowDiagram;
 use App\Models\APQPTimingPlan;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
-use App\Http\Requests\StoreProductInformationDataRequest;
-use App\Http\Requests\UpdateProductInformationDataRequest;
+use App\Http\Requests\StoreProcessFlowDiagramRequest;
+use App\Http\Requests\UpdateProcessFlowDiagramRequest;
 use Illuminate\Http\Request;
 
-
-class ProductInformationDataController extends Controller
+class ProcessFlowDiagramController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,16 +36,16 @@ class ProductInformationDataController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        return view('apqp.product_information.create',compact('plan','plans','part_numbers','customers','customer_types'));
+        return view('apqp.process_flow_diagram.create',compact('plan','plans','part_numbers','customers','customer_types'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreProductInformationDataRequest  $request
+     * @param  \App\Http\Requests\StoreProcessFlowDiagramRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductInformationDataRequest $request)
+    public function store(StoreProcessFlowDiagramRequest $request)
     {
         //
     }
@@ -54,10 +53,10 @@ class ProductInformationDataController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFlowDiagram  $processFlowDiagram
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductInformationData $productInformationData)
+    public function show(ProcessFlowDiagram $processFlowDiagram)
     {
         //
     }
@@ -65,10 +64,10 @@ class ProductInformationDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFlowDiagram  $processFlowDiagram
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductInformationData $productInformationData)
+    public function edit(ProcessFlowDiagram $processFlowDiagram)
     {
         //
     }
@@ -76,11 +75,11 @@ class ProductInformationDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateProductInformationDataRequest  $request
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Http\Requests\UpdateProcessFlowDiagramRequest  $request
+     * @param  \App\Models\ProcessFlowDiagram  $processFlowDiagram
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductInformationDataRequest $request, ProductInformationData $productInformationData)
+    public function update(UpdateProcessFlowDiagramRequest $request, ProcessFlowDiagram $processFlowDiagram)
     {
         //
     }
@@ -88,10 +87,10 @@ class ProductInformationDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @param  \App\Models\ProcessFlowDiagram  $processFlowDiagram
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductInformationData $productInformationData)
+    public function destroy(ProcessFlowDiagram $processFlowDiagram)
     {
         //
     }

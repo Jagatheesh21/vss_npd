@@ -9,8 +9,14 @@ use App\Http\Controllers\SubStageController;
 use App\Http\Controllers\APQPTimingPlanController;
 use App\Http\Controllers\APQPPlanActivityController;
 use App\Http\Controllers\EnquiryRegisterController;
-
-
+use App\Http\Controllers\ProductInformationDataController;
+use App\Http\Controllers\ManufacturingFeasibilityReviewController;
+use App\Http\Controllers\RiskAnalysisController;
+use App\Http\Controllers\CustomerSpecificRequirementController;
+use App\Http\Controllers\IdentificationOfSpecialCharacteristicController;
+use App\Http\Controllers\IdentificationOfGaugeEquipmentController;
+use App\Http\Controllers\ProcessFlowDiagramController;
+use App\Http\Controllers\ProcessFailureAnalysisController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,4 +50,14 @@ Route::resource('apqp_timing_plan',APQPTimingPlanController::class);
 Route::resource('activity',APQPPLanActivityController::class);
 Route::post('enquiry_register/save_register',[EnquiryRegisterController::class,'save_register'])->name('save_register');
 Route::resource('enquiry_register',EnquiryRegisterController::class);
+Route::resource('product_information_data',ProductInformationDataController::class);
+Route::resource('mfr',ManufacturingFeasibilityReviewController::class);
+Route::resource('risk_analysis',RiskAnalysisController::class);
+Route::resource('customer_requiements',CustomerSpecificRequirementController::class);
+Route::resource('special_characteristics',IdentificationOfSpecialCharacteristicController::class);
+Route::resource('gauge_equipment',IdentificationOfGaugeEquipmentController::class);
+Route::resource('process_flow_diagram',ProcessFlowDiagramController::class);
+Route::resource('process_failure_analysis',ProcessFailureAnalysisController::class);
+
+
 

@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerSpecificRequirement;
+use App\Models\APQPTimingPlan;
+use App\Models\PartNumber;
+use App\Models\CustomerType;
+use App\Models\Customer;
 use App\Http\Requests\StoreCustomerSpecificRequirementRequest;
 use App\Http\Requests\UpdateCustomerSpecificRequirementRequest;
+use Illuminate\Http\Request;
 
 class CustomerSpecificRequirementController extends Controller
 {
@@ -15,7 +20,7 @@ class CustomerSpecificRequirementController extends Controller
      */
     public function index()
     {
-        //
+        dd('customer_requirements');
     }
 
     /**
@@ -23,9 +28,16 @@ class CustomerSpecificRequirementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.customer_spec_requirements.create',compact('plan','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**

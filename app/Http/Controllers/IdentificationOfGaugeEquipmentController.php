@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\IdentificationOfGaugeEquipment;
+use App\Models\APQPTimingPlan;
+use App\Models\PartNumber;
+use App\Models\CustomerType;
+use App\Models\Customer;
 use App\Http\Requests\StoreIdentificationOfGaugeEquipmentRequest;
 use App\Http\Requests\UpdateIdentificationOfGaugeEquipmentRequest;
-
+use Illuminate\Http\Request;
 class IdentificationOfGaugeEquipmentController extends Controller
 {
     /**
@@ -23,9 +27,16 @@ class IdentificationOfGaugeEquipmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.customer_spec_requirements.create',compact('plan','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**

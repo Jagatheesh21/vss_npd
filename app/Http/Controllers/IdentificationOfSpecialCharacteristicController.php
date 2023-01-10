@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\IdentificationOfSpecialCharacteristic;
+use App\Models\APQPTimingPlan;
+use App\Models\PartNumber;
+use App\Models\CustomerType;
+use App\Models\Customer;
+
 use App\Http\Requests\StoreIdentificationOfSpecialCharacteristicRequest;
 use App\Http\Requests\UpdateIdentificationOfSpecialCharacteristicRequest;
+use Illuminate\Http\Request;
 
 class IdentificationOfSpecialCharacteristicController extends Controller
 {
@@ -23,9 +29,16 @@ class IdentificationOfSpecialCharacteristicController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.special_characteristics.create',compact('plan','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**

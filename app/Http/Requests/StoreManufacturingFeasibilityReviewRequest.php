@@ -13,7 +13,7 @@ class StoreManufacturingFeasibilityReviewRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class StoreManufacturingFeasibilityReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "grid_ref_no.*" => 'required',
+            "initial_sample_layout_inspection.*" => 'required',
+            "mass_production.*" => 'required',
+            "pfd.*" => 'required',
+            "specification_as_per_drawing.*" => 'required',
+            "past_trouble.*" => 'required',
+            "mass_production.*" => 'required',
+            "feasibility_confirmation.*" => 'required',
+            "cpk_cmk.*" => 'required',
+            "remarks.*" => 'required',
         ];
     }
 }

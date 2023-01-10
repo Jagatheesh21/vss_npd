@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\ManufacturingFeasibilityReview;
+use App\Models\APQPTimingPlan;
+use App\Models\PartNumber;
+use App\Models\CustomerType;
+use App\Models\Customer;
+
 use App\Http\Requests\StoreManufacturingFeasibilityReviewRequest;
 use App\Http\Requests\UpdateManufacturingFeasibilityReviewRequest;
+use Illuminate\Http\Request;
 
 class ManufacturingFeasibilityReviewController extends Controller
 {
@@ -23,9 +29,16 @@ class ManufacturingFeasibilityReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.mfr.create',compact('plan','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**
