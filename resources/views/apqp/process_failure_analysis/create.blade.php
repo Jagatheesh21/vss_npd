@@ -4,7 +4,7 @@
 @endpush
 
 @section('content')
-<div class="row">
+
   @if(session('success'))
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>Success!</strong> {{session('success')}}.
@@ -18,8 +18,8 @@
   </div>
   @endif
     <div class="card">
-        <div class="card-header">
-            Process Failure Mode And Effects Analysis
+        <div class="card-header text-center">
+            <b>Process Failure Mode And Effects Analysis</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">
@@ -55,14 +55,14 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Number*</label>
-                            <input type="text" name="revision_number" class="form-control" value="{{$plan->revision_number}}">
+                            <input type="text" name="revision_number" class="form-control" readonly value="{{$plan->revision_number}}">
                             @error('revision_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Date*</label>
-                            <input type="text" name="revision_date" class="form-control" value="{{$plan->revision_date}}">
+                            <input type="text" name="revision_date" class="form-control" readonly  value="{{$plan->revision_date}}">
                             @error('revision_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
@@ -187,7 +187,7 @@
             </div>
         </div>
     </div>
-</div>
+
 @endsection
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>

@@ -35,7 +35,7 @@ class IdentificationOfGaugeEquipmentController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        return view('apqp.customer_spec_requirements.create',compact('plan','plans','part_numbers','customers','customer_types'));
+        return view('apqp.gauge_equipment.create',compact('plan','plans','part_numbers','customers','customer_types'));
 
     }
 

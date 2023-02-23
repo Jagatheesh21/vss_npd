@@ -18,6 +18,9 @@ use DataTables;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use App\Exports\TimingPlanExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class APQPTimingPlanController extends Controller
 {
@@ -248,5 +251,10 @@ class APQPTimingPlanController extends Controller
         //     //DB::rollback();
         //     return back()->withError($th->getMessage());
         // }
+    }
+    public function export()
+    {
+        return Excel::download(new TimingPlanExport, 'timing_plan.xlsx');
+
     }
 }

@@ -13,7 +13,7 @@ class StoreProductInformationDataRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreProductInformationDataRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'apqp_timing_plan_id' => 'required|unique:product_information_data',
+            'delivery_commencement_date' => 'required'
         ];
     }
 }

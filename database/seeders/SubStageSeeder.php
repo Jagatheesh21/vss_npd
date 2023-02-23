@@ -29,11 +29,11 @@ class SubStageSeeder extends Seeder
         SubStage::create(['stage_id'=> 2,'name' => 'PROTO CONTROL PLAN RELEASE']);
         SubStage::create(['stage_id'=> 2,'name' => 'PROCESS FMEA']);
         SubStage::create(['stage_id'=> 2,'name' => 'GAUGE DESIGN & DEVELOPMENT']);
-        SubStage::create(['stage_id'=> 2,'name' => 'PROCUREMENT OF GAUGE & TESTING EQUIPEMENT']);
-        SubStage::create(['stage_id'=> 2,'name' => 'GAUGE CALIBRATION']);
-        SubStage::create(['stage_id'=> 2,'name' => 'TOOL DESIGN']);
-        SubStage::create(['stage_id'=> 2,'name' => 'TOOL MANUFACTURING']);
-        SubStage::create(['stage_id'=> 2,'name' => 'TOOL INSPECTION & ASSEMBLY']);
+        // SubStage::create(['stage_id'=> 2,'name' => 'PROCUREMENT OF GAUGE & TESTING EQUIPEMENT']);
+        // SubStage::create(['stage_id'=> 2,'name' => 'GAUGE CALIBRATION']);
+        // SubStage::create(['stage_id'=> 2,'name' => 'TOOL DESIGN']);
+        // SubStage::create(['stage_id'=> 2,'name' => 'TOOL MANUFACTURING']);
+        // SubStage::create(['stage_id'=> 2,'name' => 'TOOL INSPECTION & ASSEMBLY']);
         SubStage::create(['stage_id'=> 2,'name' => 'DEVELOPMENT OF SUBCONTRACTOR PROCESS']);
         SubStage::create(['stage_id'=> 2,'name' => 'PRE LAUNCH CONTROL PLAN']);
         SubStage::create(['stage_id'=> 2,'name' => 'WORK INSTRUCTIONS']);

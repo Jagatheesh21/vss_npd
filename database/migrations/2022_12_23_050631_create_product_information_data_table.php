@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('application');
             $table->string('product_description');
             $table->string('revision_number');
+            $table->string('volume_requirements');
             $table->enum('customer_po_reference',['YES','NO'])->default('YES');
             $table->decimal('price',16,2)->default(0.00);
             $table->date('delivery_commencement_date')->nullable();

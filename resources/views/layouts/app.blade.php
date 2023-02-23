@@ -34,6 +34,7 @@
     <link href="{{asset('css/examples.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet" />
+    <link href="{{asset('css/toast.min.css')}}" rel="stylesheet" />
     <style>
       .table{
         width:100% !important;
@@ -98,6 +99,7 @@
 <script src="{{asset('js/jquery_validation.min.js')}}"></script>
 <script src="{{asset('js/sweetalert.min.js')}}"></script>
 <script src="{{asset('js/toasts.js')}}"></script>
+<script src="{{asset('js/toast.min.js')}}"></script>
 <script type="text/javascript">
   $(function () {
     $.ajaxSetup({

@@ -19,14 +19,15 @@ return new class extends Migration
             $table->integer('stage_id');
             $table->integer('sub_stage_id');
             $table->string('grid_notes');
-            $table->string('pfd_no');
+            $table->string('pfd_no')->nullable();
             $table->string('parameters_per_drawing');
             $table->string('specification_per_drawing');
-            $table->string('past_trouble');
+            $table->string('past_trouble')->nullable();
             $table->string('initial_sample_layout_inspection');
             $table->string('mass_production');
             $table->string('feasibility_confirmation');
-            $table->string('remarks');
+            $table->string('cpk_cmk')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

@@ -18,8 +18,8 @@
   </div>
   @endif
     <div class="card ">
-        <div class="card-header">
-            Schedule Timing Plan 
+        <div class="card-header text-center">
+            <b>Schedule Timing Plan</b> 
             <a href="{{route('apqp_timing_plan.index')}}" class="btn btn-primary btn-sm float-end">Timing Plans</a>
         </div>
         <div class="card-body">

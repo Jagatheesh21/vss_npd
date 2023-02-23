@@ -3,6 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExperienceSharing;
+use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
+use App\Models\PartNumber;
+use App\Models\SubStage;
+use App\Models\CustomerType;
+use App\Models\Customer;
+use Illuminate\Http\Request;
+
 use App\Http\Requests\StoreExperienceSharingRequest;
 use App\Http\Requests\UpdateExperienceSharingRequest;
 
@@ -23,9 +31,16 @@ class ExperienceSharingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.experience_sharing.create',compact('plan','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**

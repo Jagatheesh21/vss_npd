@@ -4,7 +4,7 @@
 @endpush
 
 @section('content')
-<div class="row">
+
   @if(session('success'))
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>Success!</strong> {{session('success')}}.
@@ -13,13 +13,13 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    A simple success alert—check it out!
+    <strong>Error!</strong> {{session('error')}}.
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
     <div class="card">
-        <div class="card-header">
-            Product Information Data
+        <div class="card-header text-center">
+            <b>Product Information Data</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">
@@ -27,9 +27,9 @@
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-3 ">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
-                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2">
+                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2" >
                                 @foreach ($plans as $t_plan)
                                     @if ($t_plan->id==$plan->id)
                                     <option value="{{$t_plan->id}}" selected>{{$t_plan->apqp_timing_plan_number}}</option>
@@ -55,14 +55,14 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Number*</label>
-                            <input type="text" name="revision_number" class="form-control" value="{{$plan->revision_number}}">
+                            <input type="text" name="revision_number" class="form-control" readonly value="{{$plan->revision_number}}">
                             @error('revision_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Date*</label>
-                            <input type="text" name="revision_date" class="form-control" value="{{$plan->revision_date}}">
+                            <input type="text" name="revision_date" class="form-control" readonly value="{{$plan->revision_date}}">
                             @error('revision_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
@@ -125,7 +125,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-12 col-form-label required">Delivery Commencement Date*</label>
-                            <input type="date" name="delivery_commencement_date" class="form-control" >
+                            <input type="date" name="delivery_commencement_date" class="form-control" required>
                             @error('delivery_commencement_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
@@ -345,22 +345,22 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-12 col-form-label required">Process Flow*</label>
-                            <select name="process_flow" id="process_flow" class="form-control">
+                            <select name="preliminary_process_flow" id="process_flow" class="form-control">
                                 <option value="completed">COMPLETED</option>
                             </select>
-                            @error('process_flow')
+                            @error('preliminary_process_flow')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                     </div>
                     
 
-                    <button type="submit" id="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" id="submit" class="btn btn-primary" onclick="confirm('Are you sure?')">Save</button>
                   </form>
             </div>
         </div>
     </div>
-</div>
+
 @endsection
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>

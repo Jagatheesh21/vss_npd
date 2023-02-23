@@ -6,11 +6,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
-         
-        <strong>APQP- Timing Plan </strong>  <a href="{{route('apqp_timing_plan.create')}}" class="btn btn-primary float-end">Add New</a>
+    <div class="card-header text-center">
+        <strong >APQP- Timing Plan </strong>  
+        <a href="{{route('apqp_timing_plan.create')}}" class="btn btn-primary float-end">Add New</a>
     </div>
     <div class="card-body">
+        <a href="{{ route('timing_plan.export') }}" class="btn btn-primary btn-sm">Export</a>
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" id="category_table">
                 <thead class="bg-secondary">
