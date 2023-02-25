@@ -19,7 +19,7 @@
   @endif
     <div class="card">
         <div class="card-header text-center">
-            <b>Gauge Design And Developement</b>
+            <b>Pilot Lot</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">

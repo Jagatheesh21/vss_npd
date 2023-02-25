@@ -29,6 +29,11 @@ use App\Http\Controllers\SubcontractProcessController;
 use App\Http\Controllers\GaugeDesignAndDevelopementController;
 use App\Http\Controllers\MsaStudyController;
 use App\Http\Controllers\ExperienceSharingController;
+use App\Http\Controllers\SampleSubmissionController;
+use App\Http\Controllers\PilotLotController;
+use App\Http\Controllers\PackingSpecificationPreparationController;
+use App\Http\Controllers\PpapPreparationController;
+use App\Http\Controllers\ProcessDesignGoalController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -83,5 +88,10 @@ Route::resource('subcontract_process',SubcontractProcessController::class);
 Route::resource('gauge_design_and_development',GaugeDesignAndDevelopementController::class);
 Route::resource('msa_study',MsaStudyController::class);
 Route::resource('experience_sharing',ExperienceSharingController::class);
+Route::resource('sample_submission',SampleSubmissionController::class);
+Route::resource('pilot_lot',PilotLotController::class);
+Route::resource('packing_specification',PackingSpecificationPreparationController::class);
+Route::resource('ppap_preparation',PpapPreparationController::class);
+Route::resource('process_design_goal',ProcessDesignGoalController::class);
 
 

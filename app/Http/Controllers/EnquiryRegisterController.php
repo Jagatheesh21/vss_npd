@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use DB;
 use Carbon\Carbon;
-
-
+use App\Mail\EnquiryRegisterMail;
+use Mail;
 class EnquiryRegisterController extends Controller
 {
     /**
@@ -50,13 +50,19 @@ class EnquiryRegisterController extends Controller
      */
     public function create(Request $request)
     {
-        $id = $request->id;
-        $customers = Customer::with('customer_type')->get();
-        $part_numbers = PartNumber::all();
-        $customer_types = CustomerType::all();
-        $timing_plans = APQPTimingPlan::all();
-        $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($id);
-        return view('apqp.enquiry_register.create',compact('timing_plans','plan','customer_types','customers','part_numbers'));
+        $user_email = auth()->user()->email;
+        $user_name = auth()->user()->name;
+        $file = public_path('TP20231\enquiry_register\1677306082_rcinv.txt');
+        $enquiry = EnquiryRegister::find(1);
+        Mail::to('edp@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
+
+        // $id = $request->id;
+        // $customers = Customer::with('customer_type')->get();
+        // $part_numbers = PartNumber::all();
+        // $customer_types = CustomerType::all();
+        // $timing_plans = APQPTimingPlan::all();
+        // $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($id);
+        // return view('apqp.enquiry_register.create',compact('timing_plans','plan','customer_types','customers','part_numbers'));
 
         // $customers = Customer::all();
         // $part_numbers = PartNumber::all();
@@ -73,28 +79,46 @@ class EnquiryRegisterController extends Controller
      */
     public function store(StoreEnquiryRegisterRequest $request)
     {
-        dd($request->all());
+       
         DB::beginTransaction();
         try {
-            EnquiryRegister::create($request->validated());
-            // $enquiry_register = new EnquiryRegister;
-            // $enquiry_register->apqp_timing_plan_id = $request->apqp_timing_plan_id;
-            // $enquiry_register->stage_id = 1;
-            // $enquiry_register->sub_stage_id = 1;
-            // $enquiry_register->received_date = $request->received_date;
-            // $enquiry_register->enquiry_type = $request->type_of_enquiry;
-            // if($req->file()) {
-            //     $fileName = time().'_'.$req->file->getClientOriginalName();
-            //     $filePath = $req->file('enquiry_document')->storeAs('uploads', $fileName, 'public');
-            // }
-            // $enquiry_register->enquiry_document = $fileName;
+            //EnquiryRegister::create($request->validated());
+            $enquiry_register = new EnquiryRegister;
+            $enquiry_register->apqp_timing_plan_id = $request->apqp_timing_plan_id;
+            $enquiry_register->stage_id = 1;
+            $enquiry_register->sub_stage_id = 1;
+            $enquiry_register->received_date = $request->received_date;
+            $enquiry_register->enquiry_type = $request->type_of_enquiry;
+            if($req->file()) {
+
+                $fileName = time().'_'.$req->file->getClientOriginalName();
+                $filePath = $req->file('enquiry_document')->storeAs('uploads', $fileName, 'public');
+            }
+            $enquiry_register->enquiry_document = $fileName;
             
-            //$enquiry_register->save();
-            // $plan = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
-            // $plan->status_id = 4;
-            // $plan->gyr_status = 'G';
-            // $plan->update();
+            $enquiry_register->save();
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            $file = $filepath;
+            $enquiry = EnquiryRegister::find($enquiry_register->id);
+            Mail::to('edp@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
+            
+            $plan = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
+            $plan->status_id = 4;
+            $plan->gyr_status = 'G';
+            $plan->update();
+            $data["email"] = "edp@venakteswarasteels.com";
+           $data["title"] = "Enquiry Register Approval";
+           
+           
+           
+        //   Mail::send('email.welcome', $data, function($message)use($data, $file) {
+        //     $message->to($data["email"])
+        //             ->subject($data["title"])
+        //             ->attach($file);
+        //     });
            DB::commit();
+           
             return response('success');
         } catch (\Throwable $th) {
             //throw $th;

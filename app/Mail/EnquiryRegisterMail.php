@@ -6,22 +6,26 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User;
+use App\Models\EnquiryRegister;
 
-class NotifyMail extends Mailable
+class EnquiryRegisterMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $user;
+    public $user_email,$user_name,$file,$enquiry;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct($user_email,$user_name,$file,EnquiryRegister $enquiry)
     {
-        $this->user = $user;
+        $this->file = $file;
+        $this->user_email = $user_email;
+        $this->user_name = $user_name;
+        $this->enquiry = $enquiry;
     }
 
     /**
@@ -32,7 +36,7 @@ class NotifyMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Test Mail',
+            subject: 'Enquiry Register Mail',
         );
     }
 
@@ -44,7 +48,8 @@ class NotifyMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.welcome',
+            view: 'email.test',
+            with: ['user_name' => $this->user_name,'user_email'=> $this->user_email,'enquiry'=>$this->enquiry],
         );
     }
 
@@ -55,6 +60,8 @@ class NotifyMail extends Mailable
      */
     public function attachments()
     {
-        return [];
+        return [
+            Attachment::fromPath($this->file),
+        ];
     }
 }

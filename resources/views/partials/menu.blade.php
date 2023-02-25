@@ -47,6 +47,11 @@
         <li class="nav-item"><a class="nav-link" href="{{url('work_instructions/create?id=1')}}"><span class="nav-icon"></span>Work Instruction</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{url('ptr_signoff/create?id=1')}}"><span class="nav-icon"></span>PTR Sign Off</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{url('subcontract_process/create?id=1')}}"><span class="nav-icon"></span>Subcontract Process</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('sample_submission/create?id=1')}}"><span class="nav-icon"></span>Sample Submission</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('pilot_lot/create?id=1')}}"><span class="nav-icon"></span>Pilot Lot</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('packing_specification/create?id=1')}}"><span class="nav-icon"></span>Packing Specification</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('ppap_preparation/create?id=1')}}"><span class="nav-icon"></span>PPAP Preparation</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{{url('process_design_goal/create?id=1')}}"><span class="nav-icon"></span>Process Design Goal</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{url('gauge_design_and_development/create?id=1')}}"><span class="nav-icon"></span>Gauge Design And Developement</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{url('experience_sharing/create?id=1')}}"><span class="nav-icon"></span>Experience Sharing</a></li>  
         <li class="nav-item"><a class="nav-link" href="{{url('process_failure_analysis/create?id=1')}}"><span class="nav-icon"></span>PFEMA</a></li>  

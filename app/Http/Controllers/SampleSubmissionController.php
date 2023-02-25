@@ -3,6 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\SampleSubmission;
+use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
+use App\Models\PartNumber;
+use App\Models\SubStage;
+use App\Models\User;
+use App\Models\CustomerType;
+use App\Models\Customer;
+use Illuminate\Http\Request;
+
 use App\Http\Requests\StoreSampleSubmissionRequest;
 use App\Http\Requests\UpdateSampleSubmissionRequest;
 
@@ -23,9 +32,17 @@ class SampleSubmissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $users = User::where('id','>',1)->get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        return view('apqp.sample_submission.create',compact('plan','users','plans','part_numbers','customers','customer_types'));
+
     }
 
     /**

@@ -31,13 +31,18 @@ class HomeController extends Controller
     }
     public function test_mail()
     {
-        $user = User::find(1);
+        $user_detail = User::select('name')->find(1);
+        $user = $user_detail->name;
+      return view('email.test',compact('user'));
+        // 
         
-        try {
-            Mail::to('jagatheesh21@gmail.com')->send(new NotifyMail($user));
-            return response()->with('success','Mail Send Successfully!');
-        } catch (\Throwable $th) {
-           return response()->with('error',$th->getMessage());
-        }
+        // try {
+        //     Mail::to('edp@venkateswarasteels.com')->send(new NotifyMail($user));
+        //     //return response()->with('success','Mail Send Successfully!');
+        //     return "Success";
+        // } catch (\Throwable $th) {
+        //    //return response()->with('error',$th->getMessage());
+        //    return $th->getMessage();
+        // }
     }
 }

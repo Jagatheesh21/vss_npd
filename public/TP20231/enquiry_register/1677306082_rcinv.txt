@@ -1,0 +1,4 @@
+http://localhost/tapcm/i12_3.php?tdate=2023-02-13&cat=FG%20For%20Invoicing&rat=29150310&dc=U12223-18227&tiqty=143&rem=143&ino=1&i=1
+
+==
+http://localhost/tapcm/newinv4dc_rc.php?tdate=2023-02-13&cat=FG%20For%20Invoicing&rat=29150311&dc=U12223-18227&tiqty=7113&rem=7113&scn=

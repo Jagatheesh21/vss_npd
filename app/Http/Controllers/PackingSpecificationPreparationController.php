@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PpapPreparation;
+use App\Models\PackingSpecificationPreparation;
 use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
 use App\Models\PartNumber;
@@ -11,10 +11,11 @@ use App\Models\User;
 use App\Models\CustomerType;
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePpapPreparationRequest;
-use App\Http\Requests\UpdatePpapPreparationRequest;
 
-class PpapPreparationController extends Controller
+use App\Http\Requests\StorePackingSpecificationPreparationRequest;
+use App\Http\Requests\UpdatePackingSpecificationPreparationRequest;
+
+class PackingSpecificationPreparationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -40,28 +41,28 @@ class PpapPreparationController extends Controller
         $users = User::where('id','>',1)->get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        return view('apqp.ppap_preparation.create',compact('plan','users','plans','part_numbers','customers','customer_types'));
+        return view('apqp.packing_specification.create',compact('plan','users','plans','part_numbers','customers','customer_types'));
 
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorePpapPreparationRequest  $request
+     * @param  \App\Http\Requests\StorePackingSpecificationPreparationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePpapPreparationRequest $request)
+    public function store(StorePackingSpecificationPreparationRequest $request)
     {
-        
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PpapPreparation  $ppapPreparation
+     * @param  \App\Models\PackingSpecificationPreparation  $packingSpecificationPreparation
      * @return \Illuminate\Http\Response
      */
-    public function show(PpapPreparation $ppapPreparation)
+    public function show(PackingSpecificationPreparation $packingSpecificationPreparation)
     {
         //
     }
@@ -69,10 +70,10 @@ class PpapPreparationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\PpapPreparation  $ppapPreparation
+     * @param  \App\Models\PackingSpecificationPreparation  $packingSpecificationPreparation
      * @return \Illuminate\Http\Response
      */
-    public function edit(PpapPreparation $ppapPreparation)
+    public function edit(PackingSpecificationPreparation $packingSpecificationPreparation)
     {
         //
     }
@@ -80,11 +81,11 @@ class PpapPreparationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatePpapPreparationRequest  $request
-     * @param  \App\Models\PpapPreparation  $ppapPreparation
+     * @param  \App\Http\Requests\UpdatePackingSpecificationPreparationRequest  $request
+     * @param  \App\Models\PackingSpecificationPreparation  $packingSpecificationPreparation
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePpapPreparationRequest $request, PpapPreparation $ppapPreparation)
+    public function update(UpdatePackingSpecificationPreparationRequest $request, PackingSpecificationPreparation $packingSpecificationPreparation)
     {
         //
     }
@@ -92,10 +93,10 @@ class PpapPreparationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PpapPreparation  $ppapPreparation
+     * @param  \App\Models\PackingSpecificationPreparation  $packingSpecificationPreparation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PpapPreparation $ppapPreparation)
+    public function destroy(PackingSpecificationPreparation $packingSpecificationPreparation)
     {
         //
     }
