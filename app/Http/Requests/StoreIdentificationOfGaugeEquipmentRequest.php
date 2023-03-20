@@ -13,7 +13,7 @@ class StoreIdentificationOfGaugeEquipmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,19 @@ class StoreIdentificationOfGaugeEquipmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "stage.*" => 'required',
+            "gauge_number.*" => 'required',
+            "to_check.*" => 'required',
+            "sample_size.*" => 'required',
+            "frequency.*" => 'required',
+            "photo.*" => 'required',
         ];
     }
 }

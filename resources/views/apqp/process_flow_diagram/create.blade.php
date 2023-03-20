@@ -13,7 +13,7 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    A simple success alert—check it out!
+    <strong>Error!</strong> {{session('error')}}.
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +72,7 @@
                             <select name="application" id="application" class="form-control select2">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -110,17 +110,13 @@
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Process Identification*</label>
                             <input type="text" name="process_identification" class="form-control">
-                            @error('process_identification')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
-                        </div>                    
+
+                        </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Process Flow Number*</label>
                             <input type="text" name="process_flow_number" class="form-control">
-                            @error('process_flow_number')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
-                        </div>                    
+
+                        </div>
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -172,13 +168,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
+    $("#submit").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:"{{ route('process_flow_diagram.store') }}",
+            type:"POST",
+            data:$("#category_save").serialize(),
+            success:function(response){
+                //alert(response);
+            //     var result = $.parseJSON(response);
+            //     $.toast({
+            //       heading: 'Success',
+            //       text: result.message,
+            //       showHideTransition: 'plain',
+            //       position: 'top-right',
+            //       icon: 'success'
+            //   });
+            //location.reload(true);
+            window.location.reload();
+            },
+            error:function(result)
+            {
+                var response = $.parseJSON(result.responseText);
+                $.each(response.errors, function(key, val) {
+                $.toast({
+                    heading: 'Error',
+                    text: val,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                })
+                })
+            }
+        });
+    });
     $("#apqp_timing_plan_id").select2();
     $("#part_number_id").select2();
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

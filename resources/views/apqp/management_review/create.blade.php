@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -68,11 +68,11 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-6 col-form-label required">Customer*</label>
+                            <label for="" class="col-sm-6 col-form-label required">Cusotmer Type*</label>
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -126,22 +126,21 @@
                             @error('meeting_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Meeting Date *</label>
                             <input type="date" name="meeting_date" id="meeting_date" class="form-control" value="{{ date("d-m-Y") }}">
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Meeting Attend By*</label>
-                            <select name="meeting_attend_by" id="meeting_attend_by" multiple class="form-control select2 bg-light">
+                            <select name="meeting_attend_by[]" id="meeting_attend_by" multiple class="form-control select2 bg-light">
                                <option value="msv"  selected >Mr.M.S. Vijayraghavan</option>
                                <option value="msa"  selected >Mr.M.S. Anandakrishnan</option>
-                               <option value="chinnasamy"  selected >Mr.G.Chinnasamy</option>
                             </select>
                             @error('meeting_attend_by')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
-                        </div> 
+                        </div>
 
                     </div>
                     <div class="row clearfix">
@@ -216,12 +215,7 @@
                             </table>
                         </div>
                     </div>
-                    {{-- <div class="row mb-3 clearfix">
-                        <div class="col-md-12 ">
-                          <button id="add_row" type="button" class="btn btn-primary pull-left">Add Row</button>
-                          <button id='delete_row' type="button" class="float-end btn btn-danger text-white" onclick="confirm('Are you Sure, Want to Delete the Row?')">Delete Row</button>
-                        </div>
-                      </div> --}}
+
                       <div class="row mb-3 clearfix">
                       <div class="col-md-12 text-center m-3 ">
                             <button type="button" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
@@ -240,18 +234,18 @@
     // $("#apqp_timing_plan_id").select2();
     // $("#part_number_id").select2();
     $("#meeting_attend_by").select2();
-    
-    // On Submit 
+
+    // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
         $.ajax({
-            url:"{{ route('work_instructions.store') }}",
+            url:"{{ route('management_review.store') }}",
             type:"POST",
             data:$("#category_save").serialize(),
             success:function(response)
             {
-                console.log(response);
-                //var result = $.parseJSON(response);
+
+                var result = $.parseJSON(response);
                 $.toast({
                   heading: 'Success',
                   text: response.message,
@@ -263,7 +257,7 @@
             },
             error:function(response)
             {
-                console.log(response);
+                //console.log(response);
                 var result = $.parseJSON(response.responseText);
                 $.each(result.errors, function(key, val) {
                 $.toast({
@@ -282,7 +276,7 @@
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

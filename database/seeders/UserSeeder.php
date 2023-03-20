@@ -16,9 +16,24 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'Admiministrator',
+            'name' => 'Administrator',
             'email' => 'admin@admin.com',
             'password' => bcrypt('admin@123'),
+        ]);
+        User::create([
+            'name' => 'Marimuthu',
+            'email' => 'npd@venakateswarasteels.com',
+            'password' => bcrypt('vssipl@123'),
+        ]);
+        User::create([
+            'name' => 'Murugan',
+            'email' => 'qad@venakateswarasteels.com',
+            'password' => bcrypt('vssipl@123'),
+        ]);
+        User::create([
+            'name' => 'Muthuraja',
+            'email' => 'qms@venakateswarasteels.com',
+            'password' => bcrypt('vssipl@123'),
         ]);
         User::create([
             'name' => 'Kiruba',
@@ -26,13 +41,13 @@ class UserSeeder extends Seeder
             'password' => bcrypt('vssipl@123'),
         ]);
         User::create([
-            'name' => 'Bharathi',
-            'email' => 'bharathi@venakateswarasteels.com',
+            'name' => 'Ajith',
+            'email' => 'ajith@venakateswarasteels.com',
             'password' => bcrypt('vssipl@123'),
         ]);
         User::create([
-            'name' => 'Kannadasan',
-            'email' => 'kannadasan@venakateswarasteels.com',
+            'name' => 'Dhanapal NPD',
+            'email' => 'dhanapal@venakateswarasteels.com',
             'password' => bcrypt('vssipl@123'),
         ]);
     }

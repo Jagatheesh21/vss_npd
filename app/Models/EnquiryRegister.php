@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EnquiryRegister extends Model
 {
     use HasFactory;
-    protected $fillable =['apqp_timing_plan_id','stage_id','sub_stage_id','received_date','enquiry_type'];
+    protected $fillable =['apqp_timing_plan_id','stage_id','sub_stage_id','received_date','enquiry_type','prepared_by','ern_sample','sir_sample','safe_launch_sample'];
     /**
      * Get the user that owns the EnquiryRegister
      *

@@ -19,10 +19,11 @@ return new class extends Migration
             $table->integer('stage_id');
             $table->integer('sub_stage_id');
             $table->integer('part_number_id');
-            $table->string('part_name');
             $table->string('revision_number');
             $table->date('revision_date');
-            $table->string('issue_number');
+            $table->integer('customer_id');
+            $table->string('application');
+            $table->string('product_description');
             $table->string('stage');
             $table->string('gauge_number');
             $table->string('to_check');

@@ -15,6 +15,20 @@ return new class extends Migration
     {
         Schema::create('identification_of_special_characteristics', function (Blueprint $table) {
             $table->id();
+            $table->integer('apqp_timing_plan_id');
+            $table->integer('stage_id');
+            $table->integer('sub_stage_id');
+            $table->integer('part_number_id');
+            $table->string('revision_number');
+            $table->date('revision_date');
+            $table->integer('customer_id');
+            $table->string('application');
+            $table->string('product_description');
+            $table->string('grid_notes');
+            $table->string('description');
+            $table->string('specification');
+            $table->string('instrument');
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

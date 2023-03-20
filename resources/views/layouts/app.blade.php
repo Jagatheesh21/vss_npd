@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Fabrication unit">
+    <meta name="description" content="NPD">
     <meta name="author" content="VSSIPL">
-    <meta name="keyword" content="Fabrication ERP">
+    <meta name="keyword" content="NPD">
     <title>{{ config('app.name', 'Laravel') }}</title>
     {{-- <link rel="apple-touch-icon" sizes="57x57" href="{{asset('assets/favicon/apple-icon-57x57.png')}}">
     <link rel="apple-touch-icon" sizes="60x60" href="{{asset('assets/favicon/apple-icon-60x60.png')}}">

@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class QuotePrepartion extends Model
 {
     use HasFactory;
+    protected $fillable = ['apqp_timing_plan_id','stage_id','sub_stage_id','part_number_id','revision_number','revision_date','customer_id','application','product_description','quote_document','remarks'];
 }

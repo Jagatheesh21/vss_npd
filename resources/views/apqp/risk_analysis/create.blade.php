@@ -13,7 +13,7 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    A simple success alert—check it out!
+    <strong>Error!</strong>{{session('error')}}
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
@@ -109,115 +109,40 @@
                         </div>
                         
                     </div>
-                    <div class="row">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>S.No</th>
-                                <th>Type</th>
-                                <th>Risks</th>
-                                <th>Risk Involved</th>
-                                <th>Risk Level</th>
-                                <th>In case of any Medium / High Risk</th>
-                            </tr>
-                            <tr>
-                                <td>1.1</td>
-                                <td>MAN</td>
-                                <td>New operator / Inspector required?</td>
-                                <td><div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk1" id="inlineRadio1" value="YES" checked>
-                                    <label class="form-check-label" for="inlineRadio1">YES</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk1" id="inlineRadio2" value="NO">
-                                    <label class="form-check-label" for="inlineRadio2">NO</label>
-                                  </div></td>
-                                <td><select name="risk_level[]" class="form-control">
-                                    <option value="Low">Low</option>    
-                                    <option value="Medium">Medium</option>    
-                                    <option value="High">High</option>    
-                                </select></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
-                            <tr>
-                                <td>1.2</td>
-                                <td>MAN</td>
-                                <td>Does existing operator / inspector need training?</td>
-                                <td><div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk2" id="inlineRadio1" value="YES" checked>
-                                    <label class="form-check-label" for="inlineRadio1">YES</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk2" id="inlineRadio2" value="NO">
-                                    <label class="form-check-label" for="inlineRadio2">NO</label>
-                                  </div></td>
-                                <td><select name="risk_level[]" class="form-control">
-                                    <option value="Low">Low</option>    
-                                    <option value="Medium">Medium</option>    
-                                    <option value="High">High</option>    
-                                </select></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
-
-                            <tr>
-                                <td>2.1</td>
-                                <td>STOCK</td>
-                                <td>Delivery / Product stock: Is the stock of product sufficient to support the customer.</td>
-                                <td><div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk3" id="inlineRadio1" value="YES" checked>
-                                    <label class="form-check-label" for="inlineRadio1">YES</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk3" id="inlineRadio2" value="NO">
-                                    <label class="form-check-label" for="inlineRadio2">NO</label>
-                                  </div></td>
-                                <td><select name="risk_level[]" class="form-control">
-                                    <option value="Low">Low</option>    
-                                    <option value="Medium">Medium</option>    
-                                    <option value="High">High</option>    
-                                </select></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
-                            <tr>
-                                <td>2.2</td>
-                                <td>STOCK</td>
-                                <td>RM Stock at RMS: Stock in RMS? Can it be used for other products? Or this need to be scraped? If to be scraped what is the cost?</td>
-                                <td><div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk4" id="inlineRadio1" value="YES" checked>
-                                    <label class="form-check-label" for="inlineRadio1">YES</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk4" id="inlineRadio2" value="NO">
-                                    <label class="form-check-label" for="inlineRadio2">NO</label>
-                                  </div></td>
-                                <td><select name="risk_level[]" class="form-control">
-                                    <option value="Low">Low</option>    
-                                    <option value="Medium">Medium</option>    
-                                    <option value="High">High</option>    
-                                </select></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
-                            <tr>
-                                <td>2.3</td>
-                                <td>STOCK</td>
-                                <td>Stock at sub-supplier: Stock at supplier? Is the stock at sub-supplier is sufficient to support the customer.</td>
-                                <td><div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk5" id="inlineRadio1" value="YES" checked>
-                                    <label class="form-check-label" for="inlineRadio1">YES</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="risk5" id="inlineRadio2" value="NO">
-                                    <label class="form-check-label" for="inlineRadio2">NO</label>
-                                  </div></td>
-                                <td><select name="risk_level[]" class="form-control">
-                                    <option value="Low">Low</option>    
-                                    <option value="Medium">Medium</option>    
-                                    <option value="High">High</option>    
-                                </select></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
-                        </table>
-                    </div>
                     
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <table class="table table-responsive table-bordered" id="tab_logic">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Type</th>
+                                        <th>Risks</th>
+                                        <th>Risk Involved</th>
+                                        <th>Risk Level</th>
+                                        <th>In case of any Medium / High Risk</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr id='addr0'>
+                                    <td>1</td>
+                                    <td><input type="text" class="form-control type" name="type[]"></td>
+                                    <td><input type="text" class="form-control risks" name="risks[]"></td>
+                                    <td><input type="text" class="form-control risk_invoilved" name="risk_involved[]"></td>
+                                    <td><input type="text" class="form-control risk_level" name="risk_level[]"></td>
+                                    <td><input type="text" class="form-control high_risk" name="high_risk[]"></td>                                
+                                </tr>
+                                <tr id='addr1'></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mb-3 clearfix">
+                        <div class="col-md-12 ">
+                          <button id="add_row" type="button" class="btn btn-primary pull-left">Add Row</button>
+                          <button id='delete_row' type="button" class="float-end btn btn-danger text-white" onclick="confirm('Are you Sure, Want to Delete the Row?')">Delete Row</button>
+                        </div>
+                    </div>
 
                     <button type="submit" id="submit" class="btn btn-primary">Save</button>
                   </form>
@@ -231,5 +156,17 @@
 <script>
     $("#apqp_timing_plan_id").select2();
     $("#part_number_id").select2();
+    var i=1;
+    $("#add_row").click(function(){b=i-1;
+      	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
+      	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
+      	i++; 
+  	});
+      $("#delete_row").click(function(){
+    	if(i>1){
+		$("#addr"+(i-1)).html('');
+		i--;
+		}
+	});
 </script>
 @endpush

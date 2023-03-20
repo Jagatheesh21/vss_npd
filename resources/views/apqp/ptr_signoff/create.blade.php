@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('work_instructions.store')}}">
+                <form id="category_save" method="POST" action="{{route('ptr_signoff.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -68,11 +68,11 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-6 col-form-label required">Customer*</label>
+                            <label for="" class="col-sm-6 col-form-label required">Customer Type*</label>
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,7 +107,35 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                                            
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-6 col-form-label required">PTR Date*</label>
+                            <input type="date" name="ptr_date" class="form-control">
+                            @error('ptr_date')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-6 col-form-label required">From Time*</label>
+                            <input type="time" name="from_time" class="form-control">
+                            @error('from_time')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-6 col-form-label required">To Time*</label>
+                            <input type="time" name="to_time" class="form-control ">
+                            @error('to_time')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-6 col-form-label required">Comments*</label>
+                            <textarea class="form-control" name="comments"></textarea>
+                            @error('comments')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -115,19 +143,17 @@
                                 <thead>
                                 <tr class="text-center bg-light">
                                     <th>S.No</th>
-                                    <th>Reference No.</th>
-                                    <th>Description</th>
-                                    <th>Inspection Method</th>
-                                    <th>Remarks</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Signature</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr id='addr0'>
                                     <td>1</td>
-                                    <td><input type="text" class="form-control" name="reference_number[]"></td>
-                                    <td><input type="text" class="form-control" name="description[]"></td>
-                                    <td><input type="text" class="form-control" name="inspection_method[]"></td>
-                                    <td><input type="text" class="form-control" name="remarks[]"></td>
+                                    <td><input type="text" class="form-control" name="name[]"></td>
+                                    <td><input type="text" class="form-control" name="department[]"></td>
+                                    <td><input type="text" class="form-control" name="signature[]"></td>
                                 </tr>
                                 <tr id='addr1'></tr>
                                 </tbody>
@@ -158,11 +184,11 @@
     // $("#apqp_timing_plan_id").select2();
     // $("#part_number_id").select2();
 
-    // On Submit 
+    // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
         $.ajax({
-            url:"{{ route('work_instructions.store') }}",
+            url:"{{ route('ptr_signoff.store') }}",
             type:"POST",
             data:$("#category_save").serialize(),
             success:function(response)
@@ -176,7 +202,7 @@
                   position: 'top-right',
                   icon: 'success'
               });
-              location.reload();
+             // location.reload();
             },
             error:function(response)
             {
@@ -199,7 +225,7 @@
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

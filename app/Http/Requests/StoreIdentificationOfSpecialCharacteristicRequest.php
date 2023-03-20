@@ -13,7 +13,7 @@ class StoreIdentificationOfSpecialCharacteristicRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,19 @@ class StoreIdentificationOfSpecialCharacteristicRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "grid_notes.*" => 'required',
+            "description.*" => 'required',
+            "specification.*" => 'required',
+            "instrument.*" => 'required',
+            "remarks.*" => 'required',
+
         ];
     }
 }

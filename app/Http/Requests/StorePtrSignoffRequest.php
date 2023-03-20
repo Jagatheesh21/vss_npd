@@ -13,7 +13,7 @@ class StorePtrSignoffRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StorePtrSignoffRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "ptr_date" => 'required',
+            "from_time" => 'required',
+            "to_time" => 'required',
+            "comments" => 'required',
+            "name.*" => 'required',
+            "department.*" => 'required',
+            "signature.*" => 'required',
         ];
     }
 }

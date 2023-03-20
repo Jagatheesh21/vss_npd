@@ -24,7 +24,7 @@ class StoreWorkInstructionRequest extends FormRequest
     public function rules()
     {
         return [
-            'apqp_timing_plan_id' => 'required',
+            'apqp_timing_plan_id' => 'required|unique:work_instructions',
             'part_number_id' => 'required',
             'revision_number' => 'required',
             'revision_date' => 'required',

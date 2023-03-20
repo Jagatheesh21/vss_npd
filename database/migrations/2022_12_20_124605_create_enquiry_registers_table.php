@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('enquiry_type');
             $table->text('enquiry_document')->nullable();
             $table->text('escalation')->nullable();
+            $table->enum('ern_sample',['YES','NO'])->default('NO');
+            $table->enum('sir_sample',['YES','NO'])->default('NO');
+            $table->enum('safe_launch_sample',['YES','NO'])->default('NO');
             $table->integer('prepared_by');
             $table->integer('approved_by')->nullable();
             $table->timestamp('approved_at')->nullable();

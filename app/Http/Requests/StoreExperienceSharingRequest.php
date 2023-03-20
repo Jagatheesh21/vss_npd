@@ -13,7 +13,7 @@ class StoreExperienceSharingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,16 @@ class StoreExperienceSharingRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'apqp_timing_plan_id' => 'required|unique:quote_prepartions',
+            'part_number_id' => 'required',
+            'revision_number' => 'required',
+            'revision_date' => 'required',
+            'application' => 'required',
+            'customer_id' => 'required',
+            'product_description' => 'required',
+            'stage_id' => 'required',
+            'sub_stage_id' => 'required',
+            'file' => 'required',
         ];
     }
 }

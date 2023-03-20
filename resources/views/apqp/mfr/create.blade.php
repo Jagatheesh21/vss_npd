@@ -176,7 +176,7 @@
                           <button id="add_row" type="button" class="btn btn-primary pull-left">Add Row</button>
                           <button id='delete_row' type="button" class="float-end btn btn-danger text-white" onclick="confirm('Are you Sure, Want to Delete the Row?')">Delete Row</button>
                         </div>
-                      </div>
+                    </div>
 
                     <button type="button" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
                   </form>
@@ -196,31 +196,30 @@
             type:"POST",
             data:$("#category_save").serialize(),
             success:function(response){
-                
-                var result = $.parseJSON(response);
-                
-                $.toast({
-                  heading: 'Success',
-                  text: result.message,
-                  showHideTransition: 'plain',
-                  position: 'top-right',
-                  icon: 'success'
-              });
-          
-            location.reload(true);
+                alert(response);
+            //     var result = $.parseJSON(response);
+            //     $.toast({
+            //       heading: 'Success',
+            //       text: result.message,
+            //       showHideTransition: 'plain',
+            //       position: 'top-right',
+            //       icon: 'success'
+            //   });
+            //location.reload(true);
+            window.location.reload();
             },
             error:function(result)
             {
                 var response = $.parseJSON(result.responseText);
-            $.each(response.errors, function(key, val) {
-              $.toast({
-                  heading: 'Error',
-                  text: val,
-                  showHideTransition: 'plain',
-                  position: 'top-right',
-                  icon: 'error'
-              })
-            })
+                $.each(response.errors, function(key, val) {
+                $.toast({
+                    heading: 'Error',
+                    text: val,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                })
+                })
             }
         });
     });

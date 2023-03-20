@@ -13,7 +13,7 @@ class StoreProcessFlowDiagramRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreProcessFlowDiagramRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "process_identification" => 'required',
+            "process_flow_number" => 'required',
+            "process.*" => 'required',
+            "process_name.*" => 'required',
+            "incoming_source_of_variation.*" => 'required',
+            "product_characteristics.*" => 'required',
+            "process_characteristics.*" => 'required',
         ];
     }
 }

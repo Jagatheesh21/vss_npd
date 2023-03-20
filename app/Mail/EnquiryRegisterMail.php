@@ -36,7 +36,7 @@ class EnquiryRegisterMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Enquiry Register Mail',
+            subject: 'Enquiry Register',
         );
     }
 

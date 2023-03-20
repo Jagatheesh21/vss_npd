@@ -29,19 +29,19 @@ class APQPTimingPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function index(Request $request)
     {
         if($request->ajax()){
             $data = APQPTimingPlan::with(['stage','sub_stage','part_number','customer'])->latest()->get();
-      
+
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
-       
+
                             $btn = '<a href="'.route('apqp_timing_plan.edit',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
                             $btn = '<a href="'.route('apqp_timing_plan.show',$row->id).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm viewPlan">Details</a>';
-               
+
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -49,14 +49,14 @@ class APQPTimingPlanController extends Controller
                     }
         return view('apqp.timing_plan.index');
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {        
+    {
         $customer_types = CustomerType::all();
         $customers = Customer::all();
         $part_numbers = PartNumber::all();
@@ -76,7 +76,7 @@ class APQPTimingPlanController extends Controller
     {
         DB::beginTransaction();
         try {
-            $plan = APQPTimingPlan::create($request->validated());
+            $plan = APQPTimingPlan::create($request->validated(),['current_stage_id'=>1,'current_sub_stage_id'=>1]);
             $activities = $request->input('status');
             $sub_stage = $request->input('sub_stage_id');
             $stage = $request->input('stage_id');
@@ -90,11 +90,11 @@ class APQPTimingPlanController extends Controller
                 $plan_activity->save();
             }
             DB::commit();
-            
+
             return back()->withSuccess('Timing Plan Created Successfully!');
         } catch (\Throwable $th) {
             DB::rollback();
-            
+
             return back()->withError($th->getMessage());
         }
     }
@@ -178,7 +178,7 @@ class APQPTimingPlanController extends Controller
             $q->whereNull('plan_start_date');
 
         })->where('customer_id',$customer_id)->where('part_number_id',$part_number_id)->where('status_id',1)->get();
-        
+
         return json_encode($plans);
     }
     public function getPlanActivities(Request $request)
@@ -206,12 +206,12 @@ class APQPTimingPlanController extends Controller
                 $plan_activity = APQPPlanActivity::find($activity);
                 $plan_activity->process_time = $process_time[$key];
                 $plan_activity->responsibility = $responsibility[$key];
-                $process_start_date = Carbon::parse($process_date); 
+                $process_start_date = Carbon::parse($process_date);
                 $process_date = $process_start_date->addWeekdays($process_time[$key]);
                 $plan_activity->plan_start_date = $process_date;
                 $plan_activity->plan_end_date = $process_date;
                 $plan_activity->update();
-                
+
             }
             DB::commit();
             return redirect(route('apqp_timing_plan.index'))->withSuccess('Scheduler Added Successfully!');
@@ -236,7 +236,7 @@ class APQPTimingPlanController extends Controller
         //         $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_plan_id)->where('sub_stage_id',$sub_stage[$key])->first();
         //         $plan_activity->process_time = $process_time[$key];
         //         $plan_activity->responsibility = $responsibility[$key];
-        //         $process_start_date = Carbon::parse($process_date); 
+        //         $process_start_date = Carbon::parse($process_date);
         //         $process_date = $process_start_date->addWeekdays($process_time[$key]);
         //         $plan_activity->plan_start_date = $process_date;
         //         $plan_activity->plan_end_date = $process_date;

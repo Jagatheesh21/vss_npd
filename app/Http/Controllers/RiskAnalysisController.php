@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Http\Requests\StoreRiskAnalysisRequest;
 use App\Http\Requests\UpdateRiskAnalysisRequest;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 
 class RiskAnalysisController extends Controller
 {
@@ -48,7 +49,13 @@ class RiskAnalysisController extends Controller
      */
     public function store(StoreRiskAnalysisRequest $request)
     {
-        //
+        try {
+            //code...
+            RiskAnalysis::create($request->validated());
+        } catch (\Throwable $th) {
+            //throw $th;
+
+        }
     }
 
     /**

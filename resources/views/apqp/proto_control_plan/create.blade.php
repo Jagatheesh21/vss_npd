@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('prelaunch_control_plan.store')}}">
+                <form id="category_save" method="POST" action="{{route('proto_control_plan.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -76,7 +76,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -103,7 +103,7 @@
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -117,7 +117,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -130,7 +130,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -140,9 +140,9 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Core Team*</label>
-                            <select name="core_team" id="core_team" class="form-control select2" multiple>
+                            <select name="core_team[]" id="core_team" class="form-control select2" multiple>
                                 @foreach ($users as $user)
-                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>  
+                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
                                 @endforeach
                             </select>
                             @error('core_team')
@@ -157,28 +157,21 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-12 col-form-label required">Supplier Plant Approval Date</label>
+                            <label for="" class="col-sm-12 col-form-label required">Supplier Plant Approval Date*</label>
                             <input type="date" id="supplier_plant_approval_date" name="supplier_plant_approval_date" class="form-control" value="M&M W601">
                             @error('supplier_plant_approval_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-12 col-form-label required">Customer Engineer Approval Date</label>
+                            <label for="" class="col-sm-12 col-form-label required">Customer Engineer Approval Date*</label>
                             <input type="date" id="customer_engineer_approval_date" name="customer_engineer_approval_date" class="form-control" value="M&M W601">
                             @error('customer_engineer_approval_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-12 col-form-label required">Customer Engineer Approval Date</label>
-                            <input type="date" id="customer_engineer_approval_date" name="customer_engineer_approval_date" class="form-control" value="M&M W601">
-                            @error('customer_engineer_approval_date')
-                            <span class="text-danger">{{$message}}</span>
-                            @enderror
-                        </div>
-                        <div class="col-md-3">
-                            <label for="" class="col-sm-12 col-form-label required">Other Approval Date</label>
+                            <label for="" class="col-sm-12 col-form-label required">Other Approval Date*</label>
                             <input type="date" id="other_approval_date" name="other_approval_date" class="form-control" value="M&M W601">
                             @error('other_approval_date')
                             <span class="text-danger">{{$message}}</span>
@@ -190,7 +183,7 @@
                             @error('material_specification_norms')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
-                        </div>                   
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: auto">
@@ -199,7 +192,7 @@
                                 <tr class="text-center bg-light" >
                                     <th rowspan="3">S.No</th>
                                     <th rowspan="3">Process Seq no.</th>
-                                    <th rowspan="3">MACHINE, DEVICE, JIG, TOOLS 
+                                    <th rowspan="3">MACHINE, DEVICE, JIG, TOOLS
                                         for Mfg</th>
                                     <th colspan="3">Characteristics</th>
                                     <th rowspan="3">SPL CHAR/CLASS</th>
@@ -226,7 +219,7 @@
                                 <tr id='addr0'>
                                     <td>1</td>
                                     <td>
-                                    <input type="text" name="process_seq_no[]" class="form-control"  readonly>
+                                    <input type="text" name="process_seq_no[]" class="form-control" >
                                     </td>
                                     <td>
                                         <div style="width:150px">
@@ -274,7 +267,7 @@
                                     <td>
                                         <div class="form-group">
                                             <div style="width:200px">
-                                                <textarea name="" id="measurement_technique[]" cols="30" rows="5" class="form-control"></textarea>
+                                                <textarea  name="measurement_technique[]" cols="30" rows="5" class="form-control"></textarea>
                                             </div>
                                         </div>
                                     </td>
@@ -347,17 +340,15 @@
     //$("#part_number_id").select2();
     $("#core_team").select2();
 
-    // On Submit 
+    // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
         $.ajax({
-            url:"{{ route('prelaunch_control_plan.store') }}",
+            url:"{{route('proto_control_plan.store')}}",
             type:"POST",
             data:$("#category_save").serialize(),
             success:function(response)
             {
-                console.log(response);
-                //var result = $.parseJSON(response);
                 $.toast({
                   heading: 'Success',
                   text: response.message,
@@ -369,7 +360,6 @@
             },
             error:function(response)
             {
-                console.log(response);
                 var result = $.parseJSON(response.responseText);
                 $.each(result.errors, function(key, val) {
                 $.toast({
@@ -388,7 +378,7 @@
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

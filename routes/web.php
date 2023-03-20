@@ -12,6 +12,7 @@ use App\Http\Controllers\EnquiryRegisterController;
 use App\Http\Controllers\ProductInformationDataController;
 use App\Http\Controllers\ManufacturingFeasibilityReviewController;
 use App\Http\Controllers\RiskAnalysisController;
+use App\Http\Controllers\QuotePrepartionController;
 use App\Http\Controllers\CustomerSpecificRequirementController;
 use App\Http\Controllers\IdentificationOfSpecialCharacteristicController;
 use App\Http\Controllers\IdentificationOfGaugeEquipmentController;
@@ -34,6 +35,10 @@ use App\Http\Controllers\PilotLotController;
 use App\Http\Controllers\PackingSpecificationPreparationController;
 use App\Http\Controllers\PpapPreparationController;
 use App\Http\Controllers\ProcessDesignGoalController;
+use App\Http\Controllers\SpcStudyController;
+use App\Http\Controllers\CustomerApprovalOfPpapController;
+use App\Http\Controllers\SafeLaunchController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -71,6 +76,7 @@ Route::resource('enquiry_register',EnquiryRegisterController::class);
 Route::resource('product_information_data',ProductInformationDataController::class);
 Route::resource('mfr',ManufacturingFeasibilityReviewController::class);
 Route::resource('risk_analysis',RiskAnalysisController::class);
+Route::resource('quote_preparation',QuotePrepartionController::class);
 Route::resource('customer_requiements',CustomerSpecificRequirementController::class);
 Route::resource('special_characteristics',IdentificationOfSpecialCharacteristicController::class);
 Route::resource('gauge_equipment',IdentificationOfGaugeEquipmentController::class);
@@ -87,11 +93,14 @@ Route::resource('management_review',ManagementReviewController::class);
 Route::resource('subcontract_process',SubcontractProcessController::class);
 Route::resource('gauge_design_and_development',GaugeDesignAndDevelopementController::class);
 Route::resource('msa_study',MsaStudyController::class);
+Route::resource('spc_study',SpcStudyController::class);
 Route::resource('experience_sharing',ExperienceSharingController::class);
 Route::resource('sample_submission',SampleSubmissionController::class);
 Route::resource('pilot_lot',PilotLotController::class);
 Route::resource('packing_specification',PackingSpecificationPreparationController::class);
 Route::resource('ppap_preparation',PpapPreparationController::class);
 Route::resource('process_design_goal',ProcessDesignGoalController::class);
+Route::resource('customer_approval_of_ppap',CustomerApprovalOfPpapController::class);
+Route::resource('safe_launch',SafeLaunchController::class);
 
 

@@ -13,7 +13,7 @@ class StoreCustomerSpecificRequirementRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreCustomerSpecificRequirementRequest extends FormRequest
     public function rules()
     {
         return [
-            //
-        ];
+            'apqp_timing_plan_id' => 'required|unique:customer_specific_requirements',
+            'stage_id' => 'required',
+            'sub_stage_id' => 'required',
+            'part_number_id' => 'required',
+            'revision_number' => 'required',
+            'revision_date' => 'required',
+            'customer_id' => 'required',
+            'application' => 'required',
+            'manufacturing_requirements' => 'required',
+            'handling_requirements' => 'required',
+            'marking_requirements' => 'required',
+            'packing_preservation' => 'required',
+            'delivery_requirements' => 'required',
+            'document_requirements' => 'required',
+            ];
     }
 }

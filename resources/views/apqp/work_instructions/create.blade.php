@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +72,7 @@
                             <select name="application" id="application" class="form-control select2">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,7 +107,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                                            
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -158,7 +158,7 @@
     $("#apqp_timing_plan_id").select2();
     $("#part_number_id").select2();
 
-    // On Submit 
+    // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
         $.ajax({
@@ -176,7 +176,7 @@
                   position: 'top-right',
                   icon: 'success'
               });
-              location.reload();
+              //location.reload();
             },
             error:function(response)
             {
@@ -199,7 +199,7 @@
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

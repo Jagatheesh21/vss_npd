@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductInformationData;
 use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
+use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Http\Requests\StoreProductInformationDataRequest;
 use App\Http\Requests\UpdateProductInformationDataRequest;
 use Illuminate\Http\Request;
+use Mail;
+use App\Mail\ActivityMail;
 
 
 class ProductInformationDataController extends Controller
@@ -48,9 +52,12 @@ class ProductInformationDataController extends Controller
      */
     public function store(StoreProductInformationDataRequest $request)
     {
-        
+        // $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+
+        // dd($plan);
+        // DB::beginTransaction();
         try {
-            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            
             $product = new ProductInformationData;
             $product->apqp_timing_plan_id = $request->apqp_timing_plan_id;
             $product->stage_id = 1;
@@ -79,8 +86,27 @@ class ProductInformationDataController extends Controller
             $product->prepared_by = auth()->user()->id;
             $product->prepared_at = now();
             $product->save();
+            // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            $plan->current_stage_id = 1;
+            $plan->current_sub_stage_id = 2;
+            $plan->update();
+            // Update Activity 
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
+            $plan_activity->status_id = 4;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_end_date = date('Y-m-d');
+            $plan_activity->gyr_status = 'G';
+            $plan_activity->update();
+            $activity = APQPPlanActivity::find($plan->id);
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            // Mail Function
+            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
         } catch (\Throwable $th) {
+            DB::rollback();
             return back()->withError($th->getMessage());
         }
     }

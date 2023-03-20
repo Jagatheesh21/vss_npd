@@ -23,15 +23,15 @@ class APQPPLanActivityController extends Controller
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('enquiry_register.create',['id'=>$row->id]).'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';               
+                            $btn = '<a href="'.$row->sub_stage->url.$row->id.'" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';
                             return $btn;
                         })
                         ->rawColumns(['action'])
                         ->make(true);
                     }
-        
+
         return view('apqp.activity.index');
-    
+
     }
 
     /**

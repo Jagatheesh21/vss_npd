@@ -13,7 +13,7 @@ class StoreProcessDesignGoalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,22 @@ class StoreProcessDesignGoalRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            "process_description.*" => 'required',
+            "target_cost.*" => 'required',
+            "target_quality.*" => 'required',
+            "target_output.*" => 'required',
+            "target_cpk.*" => 'required',
+            "actual_cost.*" => 'required',
+            "actual_quality.*" => 'required',
+            "actual_output.*" => 'required',
+            "actual_cpk.*" => 'required',
         ];
     }
 }

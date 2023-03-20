@@ -9,7 +9,7 @@
 </div>
 <div class="card ">
     <div class="card-header text-center text-bold">
-       <b>Enquiry Register Updation</b> 
+       <b>Enquiry Register Updation</b>
         <a href="{{route('enquiry_register.index')}}" class="btn btn-primary btn-sm float-end">Enquiry Register</a>
     </div>
     <div class="card-body">
@@ -17,13 +17,13 @@
             <form id="category_save" method="POST" action="{{route('save_register')}}" enctype="multipart/form-data">
               @csrf
               @method('POST')
-              
+
               <div class="row mb-3">
                 <div class="col-md-4">
                     <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
                     <select name="customer_id" id="customer_id" class="form-control select2 bg-light" required readonly>
                       @foreach($customers as $customer)
-                      <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id || $plan->plan->customer_id==$customer->id) 
+                      <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id || $plan->plan->customer_id==$customer->id)
                         selected
                     @endif>{{$customer->name}}</option>
                       @endforeach
@@ -50,7 +50,7 @@
                     <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" required class="form-control select2 bg-light" readonly>
                         @foreach($timing_plans as $timing_plan)
                         @if ($timing_plan->id==$plan->apqp_timing_plan_id)
-                            <option value="{{$timing_plan->id}}" 
+                            <option value="{{$timing_plan->id}}"
                               selected
                             >{{$timing_plan->apqp_timing_plan_number}}</option>
                             @endif
@@ -66,7 +66,7 @@
                 <select name="type_of_enquiry" id="type_of_enquiry" class="form-control bg-light">
                   @foreach ($customer_types as $customer_type)
                   @if ($customer_type->id==$plan->plan->customer->customer_type->id)
-                      <option value="{{$customer_type->id}}" 
+                      <option value="{{$customer_type->id}}"
                           selected
                       >{{$customer_type->name}}</option>
                       @endif
@@ -97,6 +97,63 @@
                 <span class="text-danger">{{$message}}</span>
                 @enderror
               </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="" class="col-sm-8 col-form-label required">ERN Sample*</label>
+
+                    <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="ern_sample" id="inlineRadio1" value="YES" >
+                        <label class="form-check-label" for="inlineRadio1">YES</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="ern_sample" id="inlineRadio2" value="NO" checked>
+                        <label class="form-check-label" for="inlineRadio2">NO</label>
+                      </div>
+                    @error('ern_sample')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <label for="" class="col-sm-8 col-form-label required">SIR Sample*</label>
+
+                    <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sir_sample" id="inlineRadio3" value="YES" >
+                        <label class="form-check-label" for="inlineRadio1">YES</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sir_sample" id="inlineRadio4" value="NO" checked>
+                        <label class="form-check-label" for="inlineRadio2">NO</label>
+                      </div>
+                    @error('sir_sample')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <label for="" class="col-sm-8 col-form-label required">SafeLaunch Sample*</label>
+
+                    <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="safe_launch_sample" id="inlineRadio5" value="YES" >
+                        <label class="form-check-label" for="inlineRadio1">YES</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="safe_launch_sample" id="inlineRadio6" value="NO" checked>
+                        <label class="form-check-label" for="inlineRadio2">NO</label>
+                      </div>
+                    @error('ern_sample')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                    </div>
+
+                </div>
             </div>
                 <button type="submit" id="submit" class="btn btn-primary" onclick="confirm('Are you sure?')">Save</button>
               </form>
@@ -126,6 +183,9 @@
         url:"{{route('save_register')}}",
         type:"POST",
         data:$(this).serialize(),
+        success:function(response){
+          alert(response);
+        },
         error:function(response)
         {
           //var errors = $.parseJSON(response.responseText);

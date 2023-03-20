@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkInstruction;
 use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Auth;
 use App\Http\Requests\StoreWorkInstructionRequest;
 use App\Http\Requests\UpdateWorkInstructionRequest;
 use Illuminate\Http\Request;
+use App\Mail\ActivityMail;
+use Mail;
 
 class WorkInstructionController extends Controller
 {
@@ -48,6 +54,7 @@ class WorkInstructionController extends Controller
      */
     public function store(StoreWorkInstructionRequest $request)
     {
+        DB::beginTransaction();
         try {
             //code...
             $apqp_timing_plan_id = $request->apqp_timing_plan_id;
@@ -76,9 +83,28 @@ class WorkInstructionController extends Controller
                 $work->remarks = $remarks[$key];
                 $work->save();
             }
+            // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            $plan->current_stage_id = 2;
+            $plan->current_sub_stage_id = 17;
+            $plan->update();
+            // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',17)->first();
+            $plan_activity->status_id = 4;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_end_date = date('Y-m-d');
+            $plan_activity->gyr_status = 'G';
+            $plan_activity->update();
+            $activity = APQPPlanActivity::find($plan->id);
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            // Mail Function
+            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return response()->json(['status'=>200,'message'=>'Work Instructions Added Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return response()->json(['status'=>500,'message'=>$th->getMessage()]);
         }
     }

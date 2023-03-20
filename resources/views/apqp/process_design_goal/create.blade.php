@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +72,7 @@
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,7 +107,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                        
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12" style="overflow-x:auto">
@@ -139,28 +139,44 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <div style="width:150px;">
                                         <input type="text" name="target_cost[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="target_quality[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="target_output[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="target_cpk[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="actual_cost[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="actual_quality[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="actual_output[]" class="form-control">
+                                        </div>
                                     </td>
                                     <td>
+                                        <div style="width:200px;">
                                         <input type="text" name="actual_cpk[]" class="form-control">
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr id='addr1'></tr>
@@ -189,22 +205,22 @@
     $("#submit").click(function(e){
         e.preventDefault();
         $.ajax({
-            url:"{{ route('mfr.store') }}",
+            url:"{{ route('process_design_goal.store') }}",
             type:"POST",
             data:$("#category_save").serialize(),
             success:function(response){
-                
-                var result = $.parseJSON(response);
-                
+
+                //var result = $.parseJSON(response);
+
                 $.toast({
                   heading: 'Success',
-                  text: result.message,
+                  text: response.message,
                   showHideTransition: 'plain',
                   position: 'top-right',
                   icon: 'success'
               });
-          
-            location.reload(true);
+
+           // location.reload(true);
             },
             error:function(result)
             {
@@ -227,7 +243,7 @@
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

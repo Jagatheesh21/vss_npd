@@ -13,7 +13,7 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    A simple success alert—check it out!
+    <strong>Error!</strong> {{session('error')}}.
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
@@ -23,10 +23,12 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('product_information_data.store')}}">
+                <form id="category_save" method="POST" action="{{route('customer_requiements.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
+                        <input type="hidden" name="stage_id" value="1">
+                        <input type="hidden" name="sub_stage_id" value="6">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
                             <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2">
@@ -45,7 +47,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +74,7 @@
                             <select name="application" id="application" class="form-control select2">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +88,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +101,7 @@
                             <select name="product_description" id="product_description" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,8 +109,8 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                        
-                        
+
+
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -136,8 +138,6 @@
                             <textarea name="document_requirements" id="document_requirements" required class="form-control" cols="30" rows="5"></textarea>
                         </div>
                     </div>
-                    
-
                     <button type="submit" id="submit" class="btn btn-primary">Save</button>
                   </form>
             </div>

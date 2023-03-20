@@ -13,20 +13,22 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    A simple success alert—check it out!
+    <strong>Error!</strong> {{session('error')}}.
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
     <div class="card">
         <div class="card-header text-center">
-            <b>Subcontract Process</b>
+            <b>SubContract Process</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('subcontract_process.store')}}">
+                <form id="quote_save" method="POST" enctype="multipart/form-data" action="{{route('subcontract_process.store')}}" >
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
+                        <input type="hidden" name="stage_id" value="1">
+                        <input type="hidden" name="sub_stage_id" value="5">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
                             <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2 bg-light">
@@ -45,7 +47,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +74,7 @@
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +88,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +101,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -110,13 +112,16 @@
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
                             <input type="file" name="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
                             <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
                         </div>
                     </div>
-                    
+
 
                     <button type="submit" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
                   </form>
@@ -129,13 +134,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
-    // $("#apqp_timing_plan_id").select2();
-    // $("#part_number_id").select2();
+
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

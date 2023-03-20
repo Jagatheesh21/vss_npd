@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\ProcessFlowDiagram;
 use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Http\Requests\StoreProcessFlowDiagramRequest;
 use App\Http\Requests\UpdateProcessFlowDiagramRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Mail;
+use App\Mail\ActivityMail;
+
 
 class ProcessFlowDiagramController extends Controller
 {
@@ -47,7 +53,67 @@ class ProcessFlowDiagramController extends Controller
      */
     public function store(StoreProcessFlowDiagramRequest $request)
     {
-        //
+
+        try {
+            //code...
+            $processes = $request->input('process');
+            $process_name = $request->input('process_name');
+            $incoming_source_of_variation = $request->input('incoming_source_of_variation');
+            $product_characteristics = $request->input('product_characteristics');
+            $process_characteristics = $request->input('process_characteristics');
+            $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
+            $part_number_id = $request->input('part_number_id');
+            $revision_number = $request->input('revision_number');
+            $revision_date = $request->input('revision_date');
+            $application = $request->input('application');
+            $customer_id = $request->input('customer_id');
+            $product_description = $request->input('product_description');
+            $process_identification = $request->input('process_identification');
+            $process_flow_number = $request->input('process_flow_number');
+            foreach ($processes as $key => $process) {
+                $process_flow = new ProcessFlowDiagram;
+                $process_flow->apqp_timing_plan_id = $apqp_timing_plan_id;
+                $process_flow->stage_id = 2;
+                $process_flow->sub_stage_id = 1;
+                $process_flow->part_number_id = $part_number_id;
+                $process_flow->revision_number = $revision_number;
+                $process_flow->revision_date = $revision_date;
+                $process_flow->application = $application;
+                $process_flow->customer_id = $customer_id;
+                $process_flow->product_description = $product_description;
+                $process_flow->process_identification = $process_identification;
+                $process_flow->process_flow_number = $process_flow_number;
+                $process_flow->process = $process;
+                $process_flow->process_name = $process_name[$key];
+                $process_flow->incoming_source_of_variation = $incoming_source_of_variation[$key];
+                $process_flow->product_characteristics = $product_characteristics[$key];
+                $process_flow->process_characteristics = $process_characteristics[$key];
+                $process_flow->save();
+            }
+                // Update Timing Plan Current Activity
+                $plan = APQPTimingPlan::find($apqp_timing_plan_id);
+                $plan->current_stage_id = 2;
+                $plan->current_sub_stage_id = 1;
+                $plan->update();
+                // Update Activity
+                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',1)->first();
+                $plan_activity->status_id = 4;
+                $plan_activity->actual_start_date = date('Y-m-d');
+                $plan_activity->actual_end_date = date('Y-m-d');
+                $plan_activity->gyr_status = 'G';
+                $plan_activity->update();
+                $activity = APQPPlanActivity::find($plan_activity->id);
+                $user_email = auth()->user()->email;
+                $user_name = auth()->user()->name;
+                // Mail Function
+                Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+
+                return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['status'=>500,'message'=>$th->getMessage()]);
+        }
     }
 
     /**

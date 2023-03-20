@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('process_flow_diagram.store')}}">
+                <form id="category_save" method="POST" action="{{route('special_characteristics.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +72,7 @@
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,7 +107,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                                            
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -125,7 +125,7 @@
                                 <tbody>
                                 <tr id='addr0'>
                                     <td>1</td>
-                                    <td><input type="text" class="form-control" name="grid_reference_number[]">
+                                    <td><input type="text" class="form-control" name="grid_notes[]">
                                     </td>
                                     <td><input type="text" class="form-control" name="description[]"></td>
                                     <td><input type="text" class="form-control" name="specification[]"></td>
@@ -155,13 +155,46 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
-    // $("#apqp_timing_plan_id").select2();
-    // $("#part_number_id").select2();
+    $("#submit").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:"{{route('special_characteristics.store')}}",
+            type:"POST",
+            data:$("#category_save").serialize(),
+            success:function(result)
+            {
+
+                // var response = $.parseJSON(result);
+                $.toast({
+                    heading: 'Success',
+                    text: result.message,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'success'
+                });
+                location.reload(true);
+            },
+            error:function(result)
+            {
+                var response = $.parseJSON(result.responseText);
+                $.each(response.errors, function(key, val) {
+                $.toast({
+                    heading: 'Error',
+                    text: val,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                });
+                });
+            }
+        });
+
+    });
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

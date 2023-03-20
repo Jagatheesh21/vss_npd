@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomerSpecificRequirement;
 use App\Models\APQPTimingPlan;
+use App\Models\APQPPlanActivity;
 use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerSpecificRequirementRequest;
 use App\Http\Requests\UpdateCustomerSpecificRequirementRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Mail;
+use App\Mail\ActivityMail;
 
 class CustomerSpecificRequirementController extends Controller
 {
@@ -48,7 +52,18 @@ class CustomerSpecificRequirementController extends Controller
      */
     public function store(StoreCustomerSpecificRequirementRequest $request)
     {
-        //
+        //dd($request->validated());
+    try {
+        $customer = CustomerSpecificRequirement::Create($request->validated());
+        // Update Timing Plan
+        // Update Activity
+        // Mail
+
+        return back()->withSuccess('Customer Specific Requirements Creatred Successfully!');
+    } catch (\Throwable $th) {
+        //throw $th;
+        return back()->withErrors($th->getMessage());
+    }
     }
 
     /**

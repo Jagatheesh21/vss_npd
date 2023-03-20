@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('mfr.store')}}">
+                <form id="category_save" method="POST" action="{{route('gauge_equipment.store')}}" enctype="multipart/form-data">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -72,7 +72,7 @@
                             <select name="application" id="application" class="form-control select2">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,7 +99,7 @@
                             <select name="product_description" id="product_description" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -107,7 +107,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                        
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -136,7 +136,6 @@
                                     <td><input type="text" class="form-control" name="sample_size[]"></td>
                                     <td><input type="text" class="form-control" name="frequency[]"></td>
                                     <td><input type="file" class="form-control" name="photo[]"></td>
-                                    
                                 </tr>
                                 <tr id='addr1'></tr>
                                 </tbody>
@@ -163,11 +162,43 @@
 <script>
     $("#apqp_timing_plan_id").select2();
     $("#part_number_id").select2();
+    $("#submit").click(function(){
+        $.ajax({
+            url:"{{route('gauge_equipment.store')}}",
+            type:"POST",
+            data:$("#category_save").serialize(),
+            success:function(result)
+            {
+                var response = $.parseJSON(result);
+                $.toast({
+                    heading: 'Success',
+                    text: response.message,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'success'
+                });
+                location.reload();
+            },
+            error:function(result)
+            {
+                var response = $.parseJSON(result.responseText);
+                $.each(response.errors, function(key, val) {
+                $.toast({
+                    heading: 'Error',
+                    text: val,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                });
+                });
+            }
+        });
+    });
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){

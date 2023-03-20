@@ -11,6 +11,11 @@ use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Mail\ActivityMail;
+use Mail;
 use App\Http\Requests\StoreManagementReviewRequest;
 use App\Http\Requests\UpdateManagementReviewRequest;
 
@@ -42,7 +47,8 @@ class ManagementReviewController extends Controller
         $customers = Customer::get();
         $sub_stages = SubStage::get();
         $users = User::get();
-        $review_sub_stages = APQPPlanActivity::with('sub_stage')->where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->get();
+        $last_id = APQPPlanActivity::where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->max('sub_stage_id');
+        $review_sub_stages = APQPPlanActivity::with('sub_stage')->where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->whereNotIn('sub_stage_id',array($last_id))->get();
         return view('apqp.management_review.create',compact('plan','plans','part_numbers','customers','customer_types','meeting_id','sub_stages','review_sub_stages','users'));
 
     }
@@ -55,7 +61,58 @@ class ManagementReviewController extends Controller
      */
     public function store(StoreManagementReviewRequest $request)
     {
-        //
+       // dd($request->all());
+       DB::beginTransaction();
+        try {
+            //code...
+            $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
+            $part_number_id = $request->input('part_number_id');
+            $revision_number = $request->input('revision_number');
+            $revision_date = $request->input('revision_date');
+            $application = $request->input('application');
+            $customer_id = $request->input('customer_id');
+            $product_description = $request->input('product_description');
+            $meeting_date = $request->input('meeting_date');
+            $meeting_number = $request->input('meeting_number');
+            $meeting_attend_by = json_encode($request->input('meeting_attend_by'));
+            $points = $request->input('point_discuessed');
+            $responsibility = $request->input('responsibility');
+            $target_date = $request->input('target_date');
+            $actual_date = $request->input('actual_date');
+            $delay_reason = $request->input('delay_reason');
+            $action_plan = $request->input('action_plan');
+            $revisied_target_date = $request->input('revisied_target_date');
+            $review_comments = $request->input('review_comments');
+            foreach ($points as $key => $point) {
+                $management = new ManagementReview;
+                $management->apqp_timing_plan_id = $apqp_timing_plan_id;
+                $management->part_number_id = $part_number_id;
+                $management->revision_number = $revision_number;
+                $management->revision_date = $revision_date;
+                $management->application = $application;
+                $management->customer_id = $customer_id;
+                $management->product_description = $product_description;
+                $management->meeting_date = $meeting_date;
+                $management->meeting_id = $meeting_number;
+                $management->meeting_attend_by = $meeting_attend_by;
+                $management->points_discussed = $point;
+                $management->responsibility = $responsibility[$key];
+                $management->target_date = $target_date[$key];
+                $management->actual_date = $actual_date[$key]??NULL;
+                $management->delay_reason = $delay_reason[$key];
+                $management->action_plan = $action_plan[$key];
+                $management->revisied_target_date = $revisied_target_date[$key];
+                $management->review_comments = $review_comments[$key];
+                $management->save();
+            }
+            DB::commit();
+            return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return response()->json(['status'=>500,'message' =>$th->getMessage()]);
+        }
+
     }
 
     /**

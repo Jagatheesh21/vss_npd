@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('stage_id');
             $table->string('name');
+            $table->string('url');
             $table->timestamps();
         });
     }

@@ -7,7 +7,7 @@
 @section('content')
 <div class="card">
     <div class="card-header text-center">
-        <strong >APQP- Timing Plan </strong>  
+        <strong >APQP- Timing Plan </strong>
         <a href="{{route('apqp_timing_plan.create')}}" class="btn btn-primary float-end">Add New</a>
     </div>
     <div class="card-body">
@@ -22,6 +22,8 @@
                         <th>Part Number</th>
                         <th>Part Description</th>
                         <th>Customer</th>
+                        <th>Current Stage</th>
+                        <th>Current Sub Stage</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -31,7 +33,7 @@
             </table>
         </div>
     </div>
-</div>    
+</div>
 @endsection
 
 @push('scripts')
@@ -58,6 +60,8 @@
             {data: 'part_number.name', name: 'part_number'},
             {data: 'part_number.description', name: 'part_description'},
             {data: 'customer.name', name: 'customer'},
+            {data: 'stage.name', name: 'current_stage'},
+            {data: 'sub_stage.name', name: 'currentsub_stage'},
             {data: 'action', name: 'action', orderable: false, searchable: false,exportable:false},
         ]
     });

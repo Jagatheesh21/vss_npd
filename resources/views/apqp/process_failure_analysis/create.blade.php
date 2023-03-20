@@ -45,7 +45,7 @@
                             <select name="part_number_id" id="part_number_id" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -68,11 +68,11 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-6 col-form-label required">Customer*</label>
+                            <label for="" class="col-sm-6 col-form-label required">Customer Type*</label>
                             <select name="application" id="application" class="form-control select2">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
-                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>  
+                                    <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -86,7 +86,7 @@
                             <select name="customer_id" id="customer_id" class="form-control select2">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
-                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>  
+                                    <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -99,14 +99,14 @@
                             <select name="product_description" id="product_description" class="form-control select2">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
-                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>  
+                                    <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
                             @error('product_description')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
-                        </div>                        
+                        </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Manufacturer Location*</label>
                             <input type="text" class="form-control" name="location" >
@@ -114,22 +114,23 @@
 
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Core team*</label>
-                            <select name="team[]" id="team" class="form-control select2" multiple>
+                            <select name="core_team[]" id="team" class="form-control select2" multiple>
                                 <option value="">Select Team Members</option>
                                 @foreach ($users as $user)
-                                   
-                                    <option value="{{$user->id}}">{{$user->name}}</option>  
-                                    
+
+                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
+
                                 @endforeach
                             </select>
                             @error('team')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-                                            
+
                     </div>
                     <div class="row">
-                        <table class="table table-bordered" id="tab_logic" style="width:650px !important;overflow-x:scroll">
+                        <div class="col-md-12" style="overflow-x: auto">
+                        <table class="table table-bordered" id="tab_logic" >
                             <thead class="bg-secondary text-white" >
                             <tr>
                                 <th>Process Seq.No</th>
@@ -157,23 +158,76 @@
                                         <input type="text" class="form-control" name="process_description[]"></td>
                                     </div>
                                 </div>
-                                <td><input type="text" class="form-control" name="process_requirements[]"></td>
-                                <td><input type="text" class="form-control" name="potential_failure_mode[]"></td>
-                                <td><input type="text" class="form-control" name="potential_effects_of_failure[]"></td>
-                                <td><input type="text" class="form-control" name="severity[]"></td>
-                                <td><input type="text" class="form-control" name="failure_class[]"></td>
-                                <td><input type="text" class="form-control" name="potential_causes[]"></td>
-                                <td><input type="text" class="form-control" name="control_prevention[]"></td>
-                                <td><input type="text" class="form-control" name="occurance[]"></td>
-                                <td><input type="text" class="form-control" name="control_detection[]"></td>
-                                <td><input type="text" class="form-control" name="detection[]"></td>
-                                <td><input type="text" class="form-control" name="rpn[]"></td>
-                                <td><input type="text" class="form-control" name="so[]"></td>
-                                <td><input type="text" class="form-control" name="sd[]"></td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="process_requirements[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="potential_failure_mode[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="potential_effects_of_failure[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="severity[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="failure_class[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="potential_causes[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="control_prevention[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="occurance[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="control_detection[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="detection[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="rpn[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="so[]">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="width:150px">
+                                    <input type="text" class="form-control" name="sd[]">
+                                    </div>
+                                </td>
                             </tr>
                             <tr id='addr1'></tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     <div class="row mb-3 clearfix">
                         <div class="col-md-12 ">
@@ -197,13 +251,44 @@
     placeholder: "Select Team Member",
     allowClear: true
 });
-    $("#apqp_timing_plan_id").select2();
-    $("#part_number_id").select2();
+$("#submit").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:"{{route('process_failure_analysis.store')}}",
+            type:"POST",
+            data:$("#category_save").serialize(),
+            success:function(response)
+            {
+                $.toast({
+                  heading: 'Success',
+                  text: response.message,
+                  showHideTransition: 'plain',
+                  position: 'top-right',
+                  icon: 'success'
+              });
+             // location.reload();
+            },
+            error:function(response)
+            {
+                var result = $.parseJSON(response.responseText);
+                $.each(result.errors, function(key, val) {
+                $.toast({
+                    heading: 'Error',
+                    text: val,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                })
+                })
+            }
+        });
+
+    });
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
       	$('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      	i++; 
+      	i++;
   	});
       $("#delete_row").click(function(){
     	if(i>1){
