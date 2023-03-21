@@ -1,5 +1,5 @@
 <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
-    <li class="nav-item"><a class="nav-link" href="/">
+    <li class="nav-item"><a class="nav-link" href="{{route('home')}}">
         <svg class="nav-icon">
           <use xlink:href="{{asset('vendors/@coreui/icons/svg/free.svg#cil-speedometer')}}"></use>
         </svg> Dashboard
@@ -70,7 +70,7 @@
         <use xlink:href="{{asset('vendors/@coreui/icons/svg/free.svg#cil-people')}}"></use>
       </svg> User Management</a>
       <ul class="nav-group-items">
-        <li class="nav-item"><a class="nav-link" href=""><span class="nav-icon"></span>Users</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{route('change_password')}}"><span class="nav-icon"></span>Update Password</a></li>
       </ul>
     </li>
 

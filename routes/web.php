@@ -38,7 +38,7 @@ use App\Http\Controllers\ProcessDesignGoalController;
 use App\Http\Controllers\SpcStudyController;
 use App\Http\Controllers\CustomerApprovalOfPpapController;
 use App\Http\Controllers\SafeLaunchController;
-
+use App\Http\Controllers\ChangePasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,7 +53,8 @@ use App\Http\Controllers\SafeLaunchController;
 
 
 Auth::routes();
-
+Route::get('change-password', [ChangePasswordController::class,'index'])->name('change_password');
+Route::post('change-password', [ChangePasswordController::class,'store'])->name('change.password');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('test_mail', [HomeController::class, 'test_mail'])->name('test_mail');
 Route::get('customer/export/excel', [CustomerController::class, 'export_excel'])->name('customer.export_excel');
