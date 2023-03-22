@@ -6,6 +6,7 @@ use App\Models\EnquiryRegister;
 use App\Models\Customer;
 use App\Models\CustomerType;
 use App\Models\PartNumber;
+use App\Models\User;
 use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
 use Auth;
@@ -50,6 +51,7 @@ class EnquiryRegisterController extends Controller
      */
     public function create(Request $request)
     {
+
         // $user_email = auth()->user()->email;
         // $user_name = auth()->user()->name;
         // $file = public_path('TP20231\enquiry_register\1677306082_rcinv.txt');
@@ -214,7 +216,10 @@ class EnquiryRegisterController extends Controller
             $user_name = auth()->user()->name;
             $file_path = $location.'/'.$fileName;
             $enquiry = EnquiryRegister::find($enquiry_register->id);
-            Mail::to('edp@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            ->cc($cc_emails)
+            ->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
             $plan->actual_start_date = Carbon::now();
             $plan->actual_end_date = Carbon::now();
             $plan->status_id = 4;

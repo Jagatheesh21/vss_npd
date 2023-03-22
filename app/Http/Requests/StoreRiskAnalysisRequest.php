@@ -13,7 +13,7 @@ class StoreRiskAnalysisRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,18 @@ class StoreRiskAnalysisRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "apqp_timing_plan_id" => 'required|unique:risk_analyses',
+            "part_number_id" => 'required',
+            "revision_number" => 'required',
+            "revision_date" => 'required',
+            "application" => 'required',
+            "customer_id" => 'required',
+            "product_description" => 'required',
+            'type.*' => 'required',
+            'risks.*' => 'required',
+            'risk_involved.*' => 'required',
+            'risk_level.*' => 'required',
+            'high_risk.*' => 'required',
         ];
     }
 }

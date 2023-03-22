@@ -69,27 +69,27 @@ class ManufacturingFeasibilityReviewController extends Controller
             $sub_stage_id = 3;
             foreach ($ref_nos as $key => $ref_no) {
                 $mfr = new ManufacturingFeasibilityReview;
-                $mfr->apqp_timing_plan_id = $request->apqp_timing_plan_id;  
-                $mfr->stage_id = 1;  
-                $mfr->sub_stage_id = 3;  
-                $mfr->grid_notes = $ref_no;  
-                $mfr->pfd_no = $pfds[$key];  
-                $mfr->parameters_per_drawing = $parameters[$key];  
-                $mfr->specification_per_drawing = $specifications[$key];  
-                $mfr->initial_sample_layout_inspection = $layouts[$key];  
-                $mfr->past_trouble = $past_troubles[$key];  
-                $mfr->mass_production = $mass_productions[$key];  
-                $mfr->feasibility_confirmation = $feasibility_confirmations[$key];  
-                $mfr->cpk_cmk = $cpk_cmks[$key];  
-                $mfr->remarks = $remark[$key];  
-                $mfr->save();                                                                                             
+                $mfr->apqp_timing_plan_id = $request->apqp_timing_plan_id;
+                $mfr->stage_id = 1;
+                $mfr->sub_stage_id = 3;
+                $mfr->grid_notes = $ref_no;
+                $mfr->pfd_no = $pfds[$key];
+                $mfr->parameters_per_drawing = $parameters[$key];
+                $mfr->specification_per_drawing = $specifications[$key];
+                $mfr->initial_sample_layout_inspection = $layouts[$key];
+                $mfr->past_trouble = $past_troubles[$key];
+                $mfr->mass_production = $mass_productions[$key];
+                $mfr->feasibility_confirmation = $feasibility_confirmations[$key];
+                $mfr->cpk_cmk = $cpk_cmks[$key];
+                $mfr->remarks = $remark[$key];
+                $mfr->save();
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 3;
             $plan->update();
-            // Update Activity 
+            // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',3)->first();
             $plan_activity->status_id = 4;
             $plan_activity->actual_start_date = date('Y-m-d');
@@ -100,7 +100,10 @@ class ManufacturingFeasibilityReviewController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            ->cc($cc_emails)
+            ->send(new ActivityMail($user_email,$user_name,$activity));
             return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;

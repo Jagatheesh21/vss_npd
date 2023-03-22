@@ -18,16 +18,17 @@ return new class extends Migration
             $table->integer('apqp_timing_plan_id');
             $table->integer('stage_id');
             $table->integer('sub_stage_id');
+            $table->integer('part_number_id');
+            $table->string('revision_number');
+            $table->date('revision_date');
+            $table->integer('customer_id');
+            $table->string('application');
+            $table->string('product_description');
             $table->string('type');
             $table->string('risks');
             $table->string('risk_involved');
-            $table->string('specification_per_drawing');
-            $table->string('past_trouble')->nullable();
-            $table->string('initial_sample_layout_inspection');
-            $table->string('mass_production');
-            $table->string('feasibility_confirmation');
-            $table->string('cpk_cmk')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('risk_level');
+            $table->string('high_risk');
             $table->timestamps();
         });
     }

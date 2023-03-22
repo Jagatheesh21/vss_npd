@@ -57,7 +57,7 @@ class ProductInformationDataController extends Controller
         // dd($plan);
         // DB::beginTransaction();
         try {
-            
+
             $product = new ProductInformationData;
             $product->apqp_timing_plan_id = $request->apqp_timing_plan_id;
             $product->stage_id = 1;
@@ -91,7 +91,7 @@ class ProductInformationDataController extends Controller
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 2;
             $plan->update();
-            // Update Activity 
+            // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
             $plan_activity->status_id = 4;
             $plan_activity->actual_start_date = date('Y-m-d');
@@ -102,7 +102,10 @@ class ProductInformationDataController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            ->cc($cc_emails)
+            ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
         } catch (\Throwable $th) {

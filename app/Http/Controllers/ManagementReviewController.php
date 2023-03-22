@@ -106,6 +106,7 @@ class ManagementReviewController extends Controller
                 $management->save();
             }
             DB::commit();
+
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;
