@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user_lists = User::get();
+        $user_lists = User::where('id','>',1)->get();
         return view('home',compact('user_lists'));
     }
     public function test_mail()
@@ -34,8 +34,8 @@ class HomeController extends Controller
         $user_detail = User::select('name')->find(1);
         $user = $user_detail->name;
       return view('email.test',compact('user'));
-        // 
-        
+        //
+
         // try {
         //     Mail::to('edp@venkateswarasteels.com')->send(new NotifyMail($user));
         //     //return response()->with('success','Mail Send Successfully!');
