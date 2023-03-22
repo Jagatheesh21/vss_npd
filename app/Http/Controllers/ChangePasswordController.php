@@ -44,11 +44,11 @@ class ChangePasswordController extends Controller
             'new_confirm_password' => ['same:new_password'],
         ]);
 
-        $to = 'edp@venkateswarasteels.com';
+        $to = 'r.naveen@venkateswarasteels.com';
         $mail_data = ['name'=>auth()->user()->name,'email'=>auth()->user()->email,'password'=>$request->new_password];
 
         User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-        Mail::to('edp@venkateswarasteels.com')->send(new PasswordUpdateMail($mail_data));
+        Mail::to($to)->send(new PasswordUpdateMail($mail_data));
         return back()->withSuccess('Password Updated Successfully!');
     }
 }
