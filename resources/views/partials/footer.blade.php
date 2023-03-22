@@ -1,6 +1,6 @@
 <footer class="footer">
     <div><a href="void(0)">Venakateswara Steels & Springs</a> © {{date('Y')}}</div>
-    <div class="ms-auto">Powered by&nbsp;<a href="void(0)">Enterprise Excellence Solutions</a></div>
+    <div class="ms-auto">Powered by&nbsp;<a href="void(0)">VSSIPL</a></div>
   </footer>
 </div>
 <!-- CoreUI and necessary plugins-->

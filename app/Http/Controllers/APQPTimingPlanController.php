@@ -186,7 +186,7 @@ class APQPTimingPlanController extends Controller
         $plan_id = $request->timing_plan_id;
         $sub_stages = APQPPlanActivity::with('sub_stage')->where('apqp_timing_plan_id',$plan_id)->get();
         $stages = APQPPlanActivity::with('stage')->where('apqp_timing_plan_id',$plan_id)->GroupBy('stage_id')->get();
-        $users = User::where('id','>',1)->get();
+        $users = User::where('id','>',4)->get();
         $html = view('apqp.timing_plan.schedule_activities',compact('sub_stages','stages','users'))->render();
         return response(['html' => $html]);
     }
