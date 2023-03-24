@@ -9,6 +9,8 @@ use DataTables;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use App\Exports\EscalationActivity;
+use Maatwebsite\Excel\Facades\Excel;
 class APQPPLanActivityController extends Controller
 {
     /**
@@ -113,5 +115,20 @@ class APQPPLanActivityController extends Controller
             //     $prev_
             // }
         }
+    }
+    public function escalation_activity(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = APQPPLanActivity::with('plan','plan.part_number','plan.customer','stage','sub_stage','plan.status')->upcoming()->get();
+             return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->make(true);
+        }
+        return view('apqp.activity.escalation');
+    }
+    public function escalation_export()
+    {
+        return Excel::download(new EscalationActivity, 'activities.xlsx');
+
     }
 }

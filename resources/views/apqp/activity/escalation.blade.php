@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('styles')
-<link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
 @section('content')
@@ -18,11 +18,12 @@
 @endif
 <div class="card">
     <div class="card-header">
-        <strong> Task List </strong>
+        <strong> Escaltion - Task List </strong>
+        <a class="btn btn-primary" style="float:right" href="{{route('escalation_export')}}">Export</a>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" id="enquiry_table">
+            <table class="table table-bordered table-hover table-striped py-2" id="escalation_table">
                 <thead class="bg-secondary">
                     <tr>
                         <th>SNo</th>
@@ -31,7 +32,9 @@
                         <th>Part Description</th>
                         <th>Customer</th>
                         <th>Activity</th>
-                        <th>Action</th>
+                        <th>Status</th>
+                        <th>Plan Start Date</th>
+                        <th>Plan End Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,17 +48,11 @@
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script>
-        load_data();
-        function load_data(from_date = '', to_date = ''){
-        $('#enquiry_table').DataTable({
-            dom: 'Bfrtip',
-        buttons: [
-             'excel', 'print'
-        ],
+<script>
+        var table = $('#escalation_table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('activity.index') }}",
+        ajax: "{{ route('escalation_activity') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'plan.apqp_timing_plan_number', name: 'apqp_timing_plan_number'},
@@ -63,10 +60,10 @@
             {data: 'plan.part_number.description', name: 'part_description'},
             {data: 'plan.customer.name', name: 'customer'},
             {data: 'sub_stage.name', name: 'activity'},
-            {data: 'action', name: 'action', orderable: false, searchable: false,exportable:false},
+            {data: 'plan.status.name', name: 'status'},
+            {data: 'plan_start_date', name: 'Plan Start Date'},
+            {data: 'plan_end_date', name: 'Plan End Date'},
         ]
     });
-}
-
-    </script>
+</script>
 @endpush

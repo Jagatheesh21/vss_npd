@@ -71,6 +71,8 @@ Route::post('apqp_timing_plan/schedule_plans',[APQPTimingPlanController::class,'
 Route::post('apqp_timing_plan/plan_activities',[APQPTimingPlanController::class,'getPlanActivities'])->name('plan_activities');
 Route::get('apqp_timing_plan/export',[APQPTimingPlanController::class,'export'])->name('timing_plan.export');
 Route::resource('apqp_timing_plan',APQPTimingPlanController::class);
+Route::get('escalation_activity',[APQPPLanActivityController::class,'escalation_activity'])->name('escalation_activity');
+Route::get('escalation_export',[APQPPLanActivityController::class,'escalation_export'])->name('escalation_export');
 Route::resource('activity',APQPPLanActivityController::class);
 Route::post('enquiry_register/save_register',[EnquiryRegisterController::class,'save_register'])->name('save_register');
 Route::resource('enquiry_register',EnquiryRegisterController::class);

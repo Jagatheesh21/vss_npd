@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
+use App\Models\Customer;
+use App\Models\SubStage;
 use App\Mail\NotifyMail;
 use Mail;
 
@@ -29,12 +31,16 @@ class HomeController extends Controller
     public function index()
     {
         $user_lists = User::where('id','>',1)->get();
+        $sub_stages_count = SubStage::get()->count();
+        $total_users = User::where('id','>',1)->count();
+        $total_customers = Customer::get()->count();
         $timing_plan_lists = APQPTimingPlan::get();
         $pending_activities = APQPPlanActivity::pending();
         $completed_activities = APQPPlanActivity::completed();
+        $activity_list = APQPPLanActivity::with('plan','plan.part_number','plan.customer','stage','sub_stage','plan.status','user')->upcoming()->get();
         $total_activities = $pending_activities+$completed_activities;
         $percentage = $completed_activities==0?0:round(($completed_activities/$total_activities)*100);
-        return view('home',compact('user_lists','timing_plan_lists','total_activities','completed_activities','percentage'));
+        return view('home',compact('user_lists','timing_plan_lists','sub_stages_count','total_customers','total_users','total_activities','pending_activities','completed_activities','percentage','activity_list'));
     }
     public function test_mail()
     {

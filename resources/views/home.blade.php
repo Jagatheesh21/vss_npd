@@ -11,7 +11,7 @@
                       </svg>
                     </div>
                     <div>
-                      <div class="fs-6 fw-semibold text-primary">1</div>
+                      <div class="fs-6 fw-semibold text-primary">{{$total_users}}</div>
                       <div class="text-medium-emphasis text-uppercase fw-semibold small">Users</div>
                     </div>
                   </div>
@@ -20,13 +20,13 @@
               <div class="col-6 col-lg-3">
                 <div class="card">
                   <div class="card-body p-3 d-flex align-items-center">
-                    <div class="bg-primary text-white p-3 me-3">
+                    <div class="bg-info text-white p-3 me-3">
                       <svg class="icon icon-xl">
                         <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                       </svg>
                     </div>
                     <div>
-                      <div class="fs-6 fw-semibold text-primary">4</div>
+                      <div class="fs-6 fw-semibold text-primary">{{$total_customers}}</div>
                       <div class="text-medium-emphasis text-uppercase fw-semibold small">Customers</div>
                     </div>
                   </div>
@@ -35,7 +35,7 @@
               <div class="col-6 col-lg-3">
                 <div class="card">
                   <div class="card-body p-3 d-flex align-items-center">
-                    <div class="bg-info text-white p-3 me-3">
+                    <div class="bg-primary text-white p-3 me-3">
                       <svg class="icon icon-xl">
                         <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
                       </svg>
@@ -50,13 +50,13 @@
               <div class="col-6 col-lg-3">
                 <div class="card">
                   <div class="card-body p-3 d-flex align-items-center">
-                    <div class="bg-info text-white p-3 me-3">
+                    <div class="bg-success text-white p-3 me-3">
                       <svg class="icon icon-xl">
                         <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
                       </svg>
                     </div>
                     <div>
-                      <div class="fs-6 fw-semibold text-info">4</div>
+                      <div class="fs-6 fw-semibold text-info">{{$sub_stages_count}}</div>
                       <div class="text-medium-emphasis text-uppercase fw-semibold small">SubStages</div>
                     </div>
                   </div>
@@ -69,7 +69,7 @@
     <div class="row">
         <div class="col-md-12">
           <div class="card mb-4">
-            <div class="card-header text-center"><b>Timing Plans</b></div>
+            <div class="card-header bg-info text-center text-white"><b>Timing Plans</b></div>
             <div class="card-body">
               <div class="row">
                 <div class="table-responsive">
@@ -77,8 +77,8 @@
                       <thead class="table-light fw-semibold">
                         <tr class="align-middle">
                           <th>Timing Plan#</th>
-                          <th>Stage </th>
-                          <th>Sub Stage</th>
+                          <th>Current Stage </th>
+                          <th>Current Sub Stage</th>
                           <th>Status</th>
                           <th>Progress</th>
                         </tr>
@@ -115,6 +115,95 @@
           </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-4">
+            <div class="card-header text-center bg-info text-white"><b>Timing Plans - Pending Activities </b></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                      <div class="row">
+                        <div class="col-6">
+                            <div class="border-start border-start-4 border-start-info px-3 mb-3"><small class="text-medium-emphasis">Active Timing Plans</small>
+                              <div class="fs-5 fw-semibold">1</div>
+                            </div>
+                          </div>
+                        <div class="col-6">
+                          <div class="border-start border-start-4 border-start-primary px-3 mb-3"><small class="text-medium-emphasis">Total Activities</small>
+                            <div class="fs-5 fw-semibold">{{$total_activities}}</div>
+                          </div>
+                        </div>
+                        <!-- /.col-->
+
+                        <!-- /.col-->
+
+                      </div>
+                      <!-- /.row-->
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="border-start border-start-4 border-start-danger px-3 mb-3"><small class="text-medium-emphasis">Pending Activities</small>
+                              <div class="fs-5 fw-semibold">{{$pending_activities}}</div>
+                            </div>
+                          </div>
+                      <!-- /.col-->
+                      <div class="col-6">
+                        <div class="border-start border-start-4 border-start-success px-3 mb-3"><small class="text-medium-emphasis">Completed Activities</small>
+                          <div class="fs-5 fw-semibold">{{$completed_activities}}</div>
+                        </div>
+                      </div>
+                      <!-- /.col-->
+
+                    </div>
+                    <!-- /.row-->
+                </div>
+              <div class="row">
+                <div class="table-responsive">
+                    <table class="table border mb-0">
+                      <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th>Timing Plan#</th>
+                            <th>Part Number</th>
+                            <th>Customer</th>
+                            <th>Stage </th>
+                            <th>Sub Stage</th>
+                            <th>Responsibility</th>
+                            <th>Plan Start Date</th>
+                            <th>Plan End Date</th>
+                            <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @forelse ($activity_list as $activity)
+                        <tr class="align-middle">
+                            <td >{{$activity->plan->apqp_timing_plan_number}}</td>
+                            <td >{{$activity->plan->part_number->name}}</td>
+                            <td >{{$activity->plan->customer->name}}</td>
+                            <td >{{$activity->stage->name}}</td>
+                            <td >{{$activity->sub_stage->name}}</td>
+                            <td >Mr.{{$activity->user->name}}</td>
+                            <td >{{$activity->plan_start_date}}</td>
+                            <td >{{$activity->plan_end_date}}</td>
+                            <td >{{$activity->plan->status->name}}</td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No Pending Activities Found!</td>
+                        </tr>
+                        @endforelse
+
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+@if(auth()->user()->id==1)
     <div class="row">
         <div class="col-md-12">
           <div class="card mb-4">
@@ -164,5 +253,6 @@
           </div>
         </div>
     </div>
+    @endif
 
 @endsection
