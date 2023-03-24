@@ -163,10 +163,10 @@
             data:$("#category_save").serialize(),
             success:function(result)
             {
-                var response = $.parseJSON(result);
+                //var response = $.parseJSON(result);
                 $.toast({
                     heading: 'Success',
-                    text: response.message,
+                    text: result.message,
                     showHideTransition: 'plain',
                     position: 'top-right',
                     icon: 'success'

@@ -101,10 +101,10 @@ class RiskAnalysisController extends Controller
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            // Mail::to('r.naveen@venkateswarasteels.com')
-            // ->cc($cc_emails)
-            // ->send(new ActivityMail($user_email,$user_name,$activity));
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            ->cc($ccEmails)
+             ->send(new ActivityMail($user_email,$user_name,$activity));
             return response()->json(['status'=>'200','message'=>'Risk Analysis Created Successfully!']);
 
 

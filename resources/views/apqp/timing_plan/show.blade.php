@@ -18,8 +18,8 @@
   </div>
   @endif
     <div class="card ">
-        <div class="card-header">
-            Create New Timing Plan 
+        <div class="card-header text-center">
+            <b>Timing Plan</b>
             <a href="{{route('apqp_timing_plan.index')}}" class="btn btn-primary btn-sm float-end">Timing Plans</a>
         </div>
         <div class="card-body">
@@ -31,11 +31,10 @@
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
                         <select name="customer_id" id="customer_id" class="form-control select2">
-                          <option value=""></option>
                           @foreach($customers as $customer)
-                          <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id)
-                            selected
-                        @endif>{{$customer->name}}</option>
+                            @if($customer->id==$timing->customer_id)
+                          <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
+                          @endif
                           @endforeach
                         </select>
                         @error('customer_id')
@@ -45,11 +44,10 @@
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
                         <select name="part_number_id" id="part_number_id" class="form-control select2">
-                          <option value=""></option>
                           @foreach($part_numbers as $part_number)
-                          <option value="{{$part_number->id}}" @if (old('part_number_id')==$part_number->id)
-                              selected
-                          @endif>{{$part_number->name}}</option>
+                          @if($part_number->id==$timing->part_number_id)
+                          <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
+                          @endif
                           @endforeach
                         </select>
                         @error('part_number_id')
@@ -58,38 +56,61 @@
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Number*</label>
-                        <input type="text" name="revision_number" id="revision_number" class="form-control @error('revision_number') is-invalid @enderror" value="{{ old('revision_number') }}">
+                        <input type="text" name="revision_number" id="revision_number" class="form-control" value="{{ $timing->revision_number }}">
                         @error('revision_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Date*</label>
-                        <input type="date" name="revision_date" id="revision_date" class="form-control @error('revision_date') is-invalid @enderror" value="{{ old('revision_date') }}">
+                        <input type="date" name="revision_date" id="revision_date" class="form-control" value="{{ $timing->revision_date }}">
                         @error('revision_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Number*</label>
-                        <input type="text" name="issuance_number" id="issuance_number" class="form-control @error('issuance_number') is-invalid @enderror" value="{{ old('issuance_number') }}">
+                        <input type="text" name="issuance_number" id="issuance_number" class="form-control" value="{{ $timing->issuance_number }}">
                         @error('issuance_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Date*</label>
-                        <input type="date" name="issuance_date" id="issuance_date" class="form-control @error('issuance_date') is-invalid @enderror" value="{{ old('issuance_date') }}">
+                        <input type="date" name="issuance_date" id="issuance_date" class="form-control" value="{{ $timing->issuance_date }}">
                         @error('issuance_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
-                      
+
                     </div>
                     <div class="row mb-3 activities_view" >
-                      
+                        <table class="table table-bordered table-responsive">
+                            <thead>
+                                <th>Stage</th>
+                                <th>Sub Stage</th>
+                                <th>Process Time</th>
+                                <th>Plan Start Date</th>
+                                <th>Plan End Date</th>
+                                <th>Actual Start Date</th>
+                                <th>Actual End Date</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($timing->activites as $activity)
+                                <tr>
+                                    <td>{{$activity->stage->name}}</td>
+                                    <td>{{$activity->sub_stage->name}}</td>
+                                    <td>{{$activity->process_time}}</td>
+                                    <td>{{$activity->plan_start_date}}</td>
+                                    <td>{{$activity->plan_end_date}}</td>
+                                    <td>{{$activity->actual_start_date}}</td>
+                                    <td>{{$activity->actual_end_date}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <button type="submit" id="submit" class="btn btn-primary">Save</button>
+                    {{-- <button type="submit" id="submit" class="btn btn-primary">Save</button> --}}
                   </form>
             </div>
         </div>
@@ -107,6 +128,8 @@
             placeholder:"Select Part Number",
             allowedClear:true,
         });
-        
+
+
+
     </script>
 @endpush

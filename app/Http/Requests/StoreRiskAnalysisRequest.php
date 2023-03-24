@@ -24,7 +24,7 @@ class StoreRiskAnalysisRequest extends FormRequest
     public function rules()
     {
         return [
-            "apqp_timing_plan_id" => 'required|unique:risk_analyses',
+            "apqp_timing_plan_id" => 'required',
             "part_number_id" => 'required',
             "revision_number" => 'required',
             "revision_date" => 'required',

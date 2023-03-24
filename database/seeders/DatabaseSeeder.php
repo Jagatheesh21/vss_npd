@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             StageSeeder::class,
             SubStageSeeder::class,
+            StatusSeeder::class,
             PartNumberSeeder::class,
             UserSeeder::class
     ]);

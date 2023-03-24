@@ -10,7 +10,7 @@ class APQPPlanActivity extends Model
     use HasFactory;
     protected $table = 'apqp_plan_activities';
     protected $fillable = ['apqp_timing_plan_id','stage_id','sub_stage_id','status'];
-    
+
     /**
      * The roles that belong to the APQPPlanActivity
      *
@@ -41,5 +41,16 @@ class APQPPlanActivity extends Model
     {
         return $this->belongsToMany(SubStage::class, 'apqp_plan_activities', 'apqp_timing_plan_id', 'sub_stage_id');
     }
-
+    public function scopeTotalActivities($query)
+    {
+        return $query->where('sub_stage_id','!=',NULL)->count();
+    }
+    public function scopePending($query)
+    {
+        return $query->where('sub_stage_id','!=',NULL)->where('status_id',1)->count();
+    }
+    public function scopeCompleted($query)
+    {
+        return $query->where('sub_stage_id','!=',NULL)->where('status_id',4)->count();
+    }
 }

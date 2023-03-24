@@ -105,15 +105,13 @@ class APQPTimingPlanController extends Controller
      * @param  \App\Models\APQPTimingPlan  $aPQPTimingPlan
      * @return \Illuminate\Http\Response
      */
-    public function show(APQPTimingPlan $aPQPTimingPlan)
+    public function show($id)
     {
-        $plan = $aPQPTimingPlan;
         $customers = Customer::all();
         $part_numbers = PartNumber::all();
         $stages = Stage::with('sub_stages')->get();
-
-        $timing = APQPTimingPlan::with(['stages','sub_stages','activites'])->find(9);
-        return view('apqp.timing_plan.show',compact('plan','timing','customers','part_numbers','stages'));
+        $timing = APQPTimingPlan::with(['stages','sub_stages','activites','stage','sub_stage'])->find($id);
+        return view('apqp.timing_plan.show',compact('timing','customers','part_numbers','stages'));
     }
 
     /**
