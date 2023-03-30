@@ -9,8 +9,12 @@ use DataTables;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Carbon\Carbon;
 use App\Exports\EscalationActivity;
 use Maatwebsite\Excel\Facades\Excel;
+Use Mail;
+use App\Mail\EscalationMail;
+use Illuminate\Support\Facades\Storage;
 class APQPPLanActivityController extends Controller
 {
     /**
@@ -43,6 +47,7 @@ class APQPPLanActivityController extends Controller
      */
     public function create()
     {
+
         $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer'])->where('responsibility',auth()->user()->id)->where('status_id',1)->get();
         dd($data);
     }
@@ -128,7 +133,13 @@ class APQPPLanActivityController extends Controller
     }
     public function escalation_export()
     {
-        return Excel::download(new EscalationActivity, 'activities.xlsx');
+        $date = Carbon::now();
+        $formattedDate = $date->format('Y-m-d');
+        $path = 'escalation/'.$formattedDate.'_activities.xlsx';
+        $file = Excel::store(new EscalationActivity(2018), $path);
+        $username = auth()->user()->name;
+        $email = "edp@venakteswarasteels.com";
+        Mail::to($email)->send(new EscalationMail($username,Storage::get($path)));
 
-    }
+   }
 }

@@ -17,6 +17,7 @@
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
+        "beyondcode/laravel-er-diagram-generator": "^2.0",
         "beyondcode/laravel-query-detector": "^1.6",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",

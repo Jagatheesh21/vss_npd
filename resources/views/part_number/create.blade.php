@@ -17,7 +17,7 @@
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
-  
+
     <div class="card ">
         <div class="card-header">
             Create New Part Number <a href="{{route('part_number.index')}}" class="btn btn-sm btn-primary float-end">Part Number List</a>
@@ -30,7 +30,7 @@
                     <div class="row mb-3">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="name" class="col-sm-6 col-form-label required">Name*</label>
+                          <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
                           <input type="text" class="form-control" id="name" name="name" @error('name') is-invalid @enderror autocomplete="off" value="{{ old('name') }}">
                           @error('name')
                           <span class="text-danger">{{$message}}</span>
@@ -39,7 +39,7 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="name" class="col-sm-6 col-form-label required">Description*</label>
+                          <label for="name" class="col-sm-6 col-form-label required">Part Description*</label>
                           <input type="text" class="form-control" id="description" name="description" @error('name') is-invalid @enderror autocomplete="off" value="{{ old('name') }}">
                           @error('description')
                           <span class="text-danger">{{$message}}</span>
@@ -47,7 +47,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
 
                     <button type="submit" id="submit" class="btn btn-primary">Save</button>
                   </form>

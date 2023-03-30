@@ -29,7 +29,7 @@
                     <div class="row mb-3">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="name" class="col-sm-6 col-form-label required">Name*</label>
+                          <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
                           <input type="text" class="form-control" id="name" name="name" @error('name') is-invalid @enderror autocomplete="off" value="{{$partNumber->name}}">
                           @error('name')
                           <span class="text-danger">{{$message}}</span>
@@ -38,16 +38,16 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="name" class="col-sm-6 col-form-label required">Description*</label>
+                          <label for="name" class="col-sm-6 col-form-label required">Part Description*</label>
                           <input type="text" class="form-control" id="description" name="description" @error('description') is-invalid @enderror autocomplete="off" value="{{$partNumber->description}}">
                           @error('description')
                           <span class="text-danger">{{$message}}</span>
                           @enderror
                         </div>
                       </div>
-                     
+
                     </div>
-                    
+
 
                     <button type="submit" id="submit" class="btn btn-primary">Update</button>
                   </form>

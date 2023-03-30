@@ -11,6 +11,13 @@
       'PDF' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
     ),
   ),
+  'beyondcode/laravel-er-diagram-generator' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider',
+    ),
+  ),
   'beyondcode/laravel-query-detector' => 
   array (
     'providers' => 

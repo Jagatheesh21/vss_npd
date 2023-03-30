@@ -16,8 +16,8 @@
                 <thead class="bg-secondary">
                     <tr>
                         <th>SNo</th>
-                        <th>Name</th>
-                        <th>Description</th>
+                        <th>Part Number</th>
+                        <th>Part Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -27,7 +27,7 @@
             </table>
         </div>
     </div>
-</div>    
+</div>
 @endsection
 
 @push('scripts')
@@ -51,8 +51,8 @@
         ajax: "{{ route('part_number.index') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'description', name: 'description'},
+            {data: 'name', name: 'partnumber'},
+            {data: 'description', name: 'partdescription'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
