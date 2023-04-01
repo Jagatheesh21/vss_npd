@@ -53,10 +53,11 @@ use App\Http\Controllers\ChangePasswordController;
 
 
 Auth::routes();
-Route::get('change-password', [ChangePasswordController::class,'index'])->name('change_password');
-Route::post('change-password', [ChangePasswordController::class,'store'])->name('change.password');
+Route::middleware(['auth'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('test_mail', [HomeController::class, 'test_mail'])->name('test_mail');
+Route::get('change-password', [ChangePasswordController::class,'index'])->name('change_password');
+Route::post('change-password', [ChangePasswordController::class,'store'])->name('change.password');
 Route::get('customer/export/excel', [CustomerController::class, 'export_excel'])->name('customer.export_excel');
 Route::get('customer/export/pdf', [CustomerController::class, 'export_pdf'])->name('customer.export_pdf');
 Route::resource('customer',CustomerController::class);
@@ -106,4 +107,4 @@ Route::resource('process_design_goal',ProcessDesignGoalController::class);
 Route::resource('customer_approval_of_ppap',CustomerApprovalOfPpapController::class);
 Route::resource('safe_launch',SafeLaunchController::class);
 
-
+});

@@ -159,7 +159,7 @@
                     </div>
                     <!-- /.row-->
                 </div>
-              <div class="row">
+              {{-- <div class="row">
                 <div class="table-responsive">
                     <table class="table border mb-0">
                       <thead class="table-light fw-semibold">
@@ -198,7 +198,7 @@
                       </tbody>
                     </table>
                   </div>
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>
