@@ -275,7 +275,7 @@ class EnquiryRegisterController extends Controller
                 ->cc($ccEmails)
                 ->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
                 $plan->actual_start_date = Carbon::now();
-                $plan->prepared_date = Carbon::now();
+                $plan->prepared_at = Carbon::now();
                 $plan->status_id = 2;
                 $plan->gyr_status = "Y";
                 $plan->update();
