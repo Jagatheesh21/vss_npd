@@ -108,6 +108,7 @@ class ProductInformationDataController extends Controller
             //$ccEmails = ["edp@venkateswarasteels.com"];
             Mail::to('edp@venkateswarasteels.com')
             //->cc($ccEmails)
+
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
