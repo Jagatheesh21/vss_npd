@@ -52,6 +52,8 @@ class RiskAnalysisController extends Controller
      */
     public function store(StoreRiskAnalysisRequest $request)
     {
+
+        DB::beginTransaction();
         try {
             //code...
             $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
@@ -62,12 +64,13 @@ class RiskAnalysisController extends Controller
             $customer_id = $request->input('customer_id');
             $product_description = $request->input('product_description');
 
-            $types = $request->input('type');
+            $type = $request->input('type');
             $risks = $request->input('risks');
             $risk_involved = $request->input('risk_involved');
             $risk_level = $request->input('risk_level');
-            $high_risk = $request->input('high_risk');
-            foreach ($types as $key => $type) {
+            $high_risks = $request->input('high_risk');
+
+            foreach ($high_risks as $key => $high_risk) {
                 $risk = new RiskAnalysis;
                 $risk->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $risk->stage_id = 1;
@@ -78,14 +81,15 @@ class RiskAnalysisController extends Controller
                 $risk->application = $application;
                 $risk->customer_id = $customer_id;
                 $risk->product_description = $product_description;
-                $risk->type = $type;
-                $risk->risks = $risks[$key];
+                $risk->type = $type[$key];
                 $risk->risks = $risks[$key];
                 $risk->risk_involved = $risk_involved[$key];
                 $risk->risk_level = $risk_level[$key];
-                $risk->high_risk = $high_risk[$key];
+                $risk->high_risk = $high_risk;
                 $risk->save();
+
             }
+
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 1;
@@ -101,15 +105,15 @@ class RiskAnalysisController extends Controller
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.naveen@venkateswarasteels.com')
-            ->cc($ccEmails)
-             ->send(new ActivityMail($user_email,$user_name,$activity));
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // Mail::to('r.naveen@venkateswarasteels.com')
+            // ->cc($ccEmails)
+            //  ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return response()->json(['status'=>'200','message'=>'Risk Analysis Created Successfully!']);
-
-
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return response()->json(['status'=>'500','message'=>$th->getMessage()]);
 
         }

@@ -28,13 +28,50 @@
                         <th>SNo</th>
                         <th>APQP Time Plan Number</th>
                         <th>Part Number</th>
-                        <th>Part Description</th>
                         <th>Customer</th>
+                        <th>Stage</th>
+                        <th>Activity</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse ($task_lists as $task)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$task->plan->apqp_timing_plan_number}}</td>
+                        <td>{{$task->plan->part_number->name}}</td>
+                        <td>{{$task->plan->customer->name}}</td>
+                        <td>{{$task->stage->name}}</td>
+                        <td>{{$task->sub_stage->name}}</td>
+                        {{-- <td>{{auth()->user()->id}}</td> --}}
 
+                        <td>
+                            @if(auth()->user()->id>7)
+                            <a href="{{url($task->sub_stage->url)}}{{$task->plan->id}}" class="btn btn-info btn-sm">Update</a>
+                            @endif
+
+                            @if(auth()->user()->id==7)
+                            <a href="{{route('task',[$task->plan->id,$task->sub_stage_id])}}" class="btn btn-info btn-sm text-white">Verify</a>
+
+                            {{-- <a href="{{url($task->sub_stage->model)}}/{{$task->plan->id}}/edit" class="btn btn-info btn-sm">Verification</a> --}}
+                            @endif
+
+                            @if(auth()->user()->id===3 || auth()->user()->id==5 || auth()->user()->id==6 )
+                            <a href="{{route('task',[$task->plan->id,$task->sub_stage_id])}}" class="btn btn-success btn-sm text-white">Approve</a>
+
+                            {{-- <a href="{{url($task->sub_stage->url)}}{{$task->plan->id}}" class="btn btn-info btn-sm">Approval</a> --}}
+                            @endif
+
+                        </td>
+                        {{-- @if(auth()->user()->id=7)
+                        <td><a href="{{route('task',[$task->plan->id,$task->sub_stage_id])}}" class="btn btn-info btn-sm">Update</a></td>
+                        @endif --}}
+                    </tr>
+                    @empty
+                    <tr>
+                        <td>No Activity Found!</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -43,7 +80,7 @@
 @endsection
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+{{-- <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script>
         load_data();
         function load_data(from_date = '', to_date = ''){
@@ -64,7 +101,7 @@
             {data: 'action', name: 'action', orderable: false, searchable: false,exportable:false},
         ]
     });
-}
+} --}}
 
     </script>
 @endpush

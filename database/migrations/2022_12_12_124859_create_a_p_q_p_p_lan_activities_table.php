@@ -27,7 +27,13 @@ return new class extends Migration
             $table->integer('status_id')->default(1);
             $table->text('remarks')->nullable();
             $table->enum('gyr_status',['G','Y','R','P'])->default('P');
-            $table->integer('aging')->default(0);
+            $table->integer('prepared_by');
+            $table->integer('prepared_at');
+            $table->integer('verified_by');
+            $table->integer('verified_at')->nullable();
+            $table->integer('approved_by');
+            $table->integer('approved_at')->nullable();
+            $table->integer('aging');
             $table->timestamps();
         });
     }

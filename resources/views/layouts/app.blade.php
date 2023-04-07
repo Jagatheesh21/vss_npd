@@ -66,9 +66,9 @@
         <li class="nav-item"><a class="nav-link" href="#"><b>New Product Development</b></a></li>
         </ul>
         <ul class="header-nav ms-auto">
-        
+
         </ul>
-        
+
         </div>
         {{-- <div class="header-divider"></div> --}}
         {{-- <div class="container-fluid">
@@ -87,7 +87,7 @@
           @yield('content')
         </div>
       </div>
-      
+
   </body>
 </html>
 <script src="{{asset('vendors/chart.js/js/chart.min.js')}}"></script>
@@ -112,5 +112,22 @@
 });
 
   });
+  function isNumber(evt)
+				{
+				evt = (evt) ? evt : window.event;
+
+				var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+				if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode!=46) {
+          $.toast({
+                  heading: 'Error',
+                  text: 'Please Select Valid Number!!',
+                  showHideTransition: 'plain',
+                  position: 'top-right',
+                  icon: 'error'
+              })
+					return false;
+				}
+				return true; }
 </script>
 @stack('scripts')

@@ -48,6 +48,9 @@ class APQPTimingPlan extends Model
     {
         return $this->belongsTo(Status::class,'status_id');
     }
-
+    public function scopePercentage($query)
+    {
+        return $query->whereDate('created_at', now()->today());
+    }
 
 }

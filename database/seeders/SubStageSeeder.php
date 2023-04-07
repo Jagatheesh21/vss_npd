@@ -38,6 +38,7 @@ class SubStageSeeder extends Seeder
         SubStage::create(['stage_id'=> 2,'name' => 'PRE LAUNCH CONTROL PLAN','url'=>'prelaunch_control_plan/create?id=']);
         SubStage::create(['stage_id'=> 2,'name' => 'WORK INSTRUCTIONS','url'=>'work_instructions/create?id=']);
         SubStage::create(['stage_id'=> 2,'name' => 'SIR SAMPLE SUBMISSION','url'=>'sample_submission/create?id=']);
+        SubStage::create(['stage_id'=> 2,'name' => 'SIR SAMPLE APPROVAL','url'=>'sample_approval/create?id=']);
         SubStage::create(['stage_id'=> 2,'name' => 'MANAGEMENT REVIEW & SUPPORT MEETING II','url'=>'management_review/meeting_id=2&create?id=']);
         SubStage::create(['stage_id'=> 3,'name' => 'PRODUCTION CONTROL PLAN RELEASE','url'=>'production_control_plan/create?id=']);
         SubStage::create(['stage_id'=> 3,'name' => 'PILOT LOT','url'=>'pilot_lot/create?id=']);

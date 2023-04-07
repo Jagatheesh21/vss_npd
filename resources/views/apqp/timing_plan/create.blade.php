@@ -19,7 +19,7 @@
   @endif
     <div class="card ">
         <div class="card-header">
-            Create New Timing Plan 
+            Create New Timing Plan
             <a href="{{route('apqp_timing_plan.index')}}" class="btn btn-primary btn-sm float-end">Timing Plans</a>
         </div>
         <div class="card-body">
@@ -44,7 +44,7 @@
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
                         <select name="customer_id" id="customer_id" class="form-control select2">
                           <option value="">Select Customer </option>
-        
+
                         </select>
                         @error('customer_id')
                         <span class="text-danger">{{$message}}</span>
@@ -92,7 +92,7 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
-                      
+
                     </div>
                     <div class="row mb-3">
                       <table class="table table-responsive table-bordered" style="width:500px;overflow-y: scroll;">
@@ -114,7 +114,7 @@
                                   <td><div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="mySwitch" name="status[]" value="{{$sub_stage->id}}" checked>
                                   </div></td>
-                                </tr> 
+                                </tr>
                                 @endforeach
                               </td>
                           </tr>
@@ -153,7 +153,7 @@
             data:{customer_type_id:$(this).val()},
             success:function(response)
             {
-            $("#customer_id").html(response.html);              
+            $("#customer_id").html(response.html);
             }
           });
         });

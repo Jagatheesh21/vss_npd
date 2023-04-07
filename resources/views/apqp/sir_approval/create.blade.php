@@ -13,22 +13,22 @@
   @endif
   @if(session('error'))
   <div class="alert alert-danger" role="alert">
-    <strong>Error!</strong>{{session('error')}}
+    <strong>Error!</strong> {{session('error')}}.
     <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
   </div>
   @endif
     <div class="card">
         <div class="card-header text-center">
-            <b>Risk Analysis</b>
+            <b>SIR Sample Submission Process</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('risk_analysis.store')}}">
+                <form id="quote_save" method="POST" enctype="multipart/form-data" action="{{route('sample_submission.store')}}" >
                   @csrf
                   @method('POST')
-                  <input type="hidden" name="stage_id" value="1">
-                  <input type="hidden" name="sub_stage_id" value="4">
                     <div class="row mb-3">
+                        <input type="hidden" name="stage_id" value="1">
+                        <input type="hidden" name="sub_stage_id" value="5">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
                             <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2 bg-light">
@@ -57,14 +57,14 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Number*</label>
-                            <input type="text" name="revision_number" readonly class="form-control bg-light" value="{{$plan->revision_number}}">
+                            <input type="text" name="revision_number" class="form-control bg-light" value="{{$plan->revision_number}}" readonly>
                             @error('revision_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Date*</label>
-                            <input type="text" name="revision_date" readonly  class="form-control bg-light" value="{{$plan->revision_date}}">
+                            <input type="text" name="revision_date" class="form-control bg-light" value="{{$plan->revision_date}}" readonly>
                             @error('revision_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
@@ -109,44 +109,21 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-
-                    </div>
-
-                    <div class="row clearfix">
-                        <div class="col-md-12">
-                            <table class="table table-responsive table-bordered" id="tab_logic">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Type</th>
-                                        <th>Risks</th>
-                                        <th>Risk Involved</th>
-                                        <th>Risk Level</th>
-                                        <th>In case of any Medium / High Risk</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr id='addr0'>
-                                    <td>1</td>
-                                    <td><input type="text" class="form-control type" name="type[]"></td>
-                                    <td><input type="text" class="form-control risks" name="risks[]"></td>
-                                    <td><input type="text" class="form-control risk_invoilved" name="risk_involved[]"></td>
-                                    <td><input type="text" class="form-control risk_level" name="risk_level[]"></td>
-                                    <td><input type="text" class="form-control high_risk" name="high_risk[]"></td>
-                                </tr>
-                                <tr id='addr1'></tr>
-                                </tbody>
-                            </table>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
                         </div>
-                    </div>
-                    <div class="row mb-3 clearfix">
-                        <div class="col-md-12 ">
-                          <button id="add_row" type="button" class="btn btn-primary pull-left">Add Row</button>
-                          <button id='delete_row' type="button" class="float-end btn btn-danger text-white" onclick="confirm('Are you Sure, Want to Delete the Row?')">Delete Row</button>
+                        <div class="col-md-6">
+                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
                         </div>
                     </div>
 
-                    <button type="submit" id="submit" class="btn btn-primary">Save</button>
+
+                    <button type="submit" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
                   </form>
             </div>
         </div>
@@ -154,43 +131,10 @@
 
 @endsection
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
-    $("#submit").click(function(e){
-        e.preventDefault();
-        $.ajax({
-            url:"{{route('risk_analysis.store')}}",
-            type:"POST",
-            data:$("#category_save").serialize(),
-            success:function(result)
-            {
-                //var response = $.parseJSON(result);
-                $.toast({
-                    heading: 'Success',
-                    text: result.message,
-                    showHideTransition: 'plain',
-                    position: 'top-right',
-                    icon: 'success'
-                });
-                //location.reload();
-            },
-            error:function(result)
-            {
-                var response = $.parseJSON(result.responseText);
-                $.each(response.errors, function(key, val) {
-                $.toast({
-                    heading: 'Error',
-                    text: val,
-                    showHideTransition: 'plain',
-                    position: 'top-right',
-                    icon: 'error'
-                });
-                });
-            }
-        });
-    });
-    // $("#apqp_timing_plan_id").select2();
-    // $("#part_number_id").select2();
+
     var i=1;
     $("#add_row").click(function(){b=i-1;
       	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);

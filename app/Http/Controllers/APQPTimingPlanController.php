@@ -59,7 +59,8 @@ class APQPTimingPlanController extends Controller
     {
         $customer_types = CustomerType::all();
         $customers = Customer::all();
-        $part_numbers = PartNumber::all();
+        $exisiting_parts = APQPTimingPlan::select('part_number_id')->get();
+        $part_numbers = PartNumber::whereNotIn('id',$exisiting_parts)->get();
         $max_id = APQPTimingPlan::max('id')??0;
         $plan_number = 'TP'.date('Y').$max_id+1;
         $stages = Stage::with('sub_stages')->get();
@@ -184,9 +185,22 @@ class APQPTimingPlanController extends Controller
         $plan_id = $request->timing_plan_id;
         $sub_stages = APQPPlanActivity::with('sub_stage')->where('apqp_timing_plan_id',$plan_id)->get();
         $stages = APQPPlanActivity::with('stage')->where('apqp_timing_plan_id',$plan_id)->GroupBy('stage_id')->get();
-        $users = User::where('id','>',4)->get();
-        $html = view('apqp.timing_plan.schedule_activities',compact('sub_stages','stages','users'))->render();
+        $users = User::where('id','>',7)->get();
+        $verification_users = User::where('id',7)->get();
+        $approval_users = User::whereIn('id',[3,5,6])->get();
+        $html = view('apqp.timing_plan.schedule_activities',compact('sub_stages','stages','users','verification_users','approval_users'))->render();
         return response(['html' => $html]);
+    }
+    public function fetch_part_number(Request $request)
+    {
+        $customer_id = $request->customer_id;
+        $part_numbers = APQPTimingPlan::with('part_number')->select('part_number_id')->where('customer_id',$customer_id)->get();
+        $html = "<option value=''>Select Part Number</option>";
+        foreach($part_numbers as $part_number)
+        {
+            $html.="<option value='".$part_number->part_number->id."'>".$part_number->part_number->name."</option>";
+        }
+        return $html;
     }
     public function scheduler_update(StoreAPQPPLanActivityRequest $request)
     {
@@ -195,19 +209,24 @@ class APQPTimingPlanController extends Controller
             $apqp_plan_id = $request->apqp_timing_plan_id;
             $activities = $request->input('id');
             $responsibility = $request->input('responsibility');
-            $process_time = $request->input('process_time');
+            $plan_start_date = $request->input('plan_start_date');
+            $plan_end_date = $request->input('plan_end_date');
+            $verified_by = $request->input('verified_by');
+            $approved_by = $request->input('approved_by');
             $stage = $request->input('stage_id');
             $sub_stage = $request->input('sub_stage_id');
             $process_date = carbon::now();
             foreach($activities as $key=>$activity)
             {
                 $plan_activity = APQPPlanActivity::find($activity);
-                $plan_activity->process_time = $process_time[$key];
                 $plan_activity->responsibility = $responsibility[$key];
-                $process_start_date = Carbon::parse($process_date);
-                $process_date = $process_start_date->addWeekdays($process_time[$key]);
-                $plan_activity->plan_start_date = $process_date;
-                $plan_activity->plan_end_date = $process_date;
+                $plan_activity->verified_by = $verified_by[$key];
+                $plan_activity->approved_by = $approved_by[$key];
+                $from = Carbon::parse(date('Y-m-d', strtotime($plan_start_date[$key])));
+                $to = Carbon::parse(date('Y-m-d', strtotime($plan_end_date[$key])));
+                $plan_activity->process_time = $from->diffInDays($to);
+                $plan_activity->plan_start_date = $plan_start_date[$key];
+                $plan_activity->plan_end_date = $plan_end_date[$key];
                 $plan_activity->update();
 
             }

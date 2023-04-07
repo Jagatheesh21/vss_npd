@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerType;
 use App\Models\PartNumber;
 use App\Models\User;
+use App\Models\Status;
 use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
 use Auth;
@@ -63,7 +64,7 @@ class EnquiryRegisterController extends Controller
         $part_numbers = PartNumber::all();
         $customer_types = CustomerType::all();
         $timing_plans = APQPTimingPlan::all();
-        $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($id);
+        $plan = APQPTimingPlan::find($id);
         return view('apqp.enquiry_register.create',compact('timing_plans','plan','customer_types','customers','part_numbers'));
 
         // $customers = Customer::all();
@@ -141,7 +142,7 @@ class EnquiryRegisterController extends Controller
      */
     public function show($id)
     {
-        dd('test');
+        //dd('test');
     }
 
     /**
@@ -156,8 +157,11 @@ class EnquiryRegisterController extends Controller
         $part_numbers = PartNumber::all();
         $customer_types = CustomerType::all();
         $timing_plans = APQPTimingPlan::all();
+        $statuses=Status::whereIn('id',[3,5])->get();
+        $enquiry = EnquiryRegister::where('apqp_timing_plan_id',$id)->first();
         $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($id);
-        return view('apqp.enquiry_register.edit',compact('timing_plans','plan','customer_types','customers','part_numbers'));
+        $location = $enquiry->timing_plan->apqp_timing_plan_number.'/enquiry_register/';
+        return view('apqp.enquiry_register.edit',compact('timing_plans','plan','customer_types','customers','part_numbers','statuses','enquiry','location'));
     }
 
     /**
@@ -169,7 +173,54 @@ class EnquiryRegisterController extends Controller
      */
     public function update(UpdateEnquiryRegisterRequest $request, EnquiryRegister $enquiryRegister)
     {
-        //
+        $status_id = $request->input('status_id');
+        $file = $request->file('enquiry_document');
+        if($file)
+        {
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $enquiryRegister->timing_plan->apqp_timing_plan_number.'/enquiry_register';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
+            $enquiryRegister->enquiry_document = $fileName;
+        }
+        $plan = APQPPlanActivity::where('apqp_timing_plan_id',$enquiryRegister->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
+        if($status_id==3)
+        {
+            $enquiryRegister->status = $status_id;
+            $enquiryRegister->verified_by = auth()->user()->id;
+            $enquiryRegister->verified_at = Carbon::now();
+        }
+        if($status_id==5)
+        {
+            $enquiryRegister->status = $status_id;
+        }
+
+        $enquiryRegister->remarks = $request->input('remarks')??NULL;
+
+        $enquiryRegister->save();
+        $approval_user = $plan->approved_by->email;
+
+        $plan->verified_date = Carbon::now();
+        $plan->status_id = 3;
+        $plan->gyr_status = "Y";
+        $plan->update();
+
+        // Mail
+        $user_email = auth()->user()->email;
+        $user_name = auth()->user()->name;
+
+        //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+        $ccEmails = ["bharathmukesh85@gmail.com"];
+        $activity = APQPPlanActivity::find($plan->id);
+        Mail::to('edp@venakteswarasteels.com')
+        ->cc($ccEmails)
+        ->send(new ActivityMail($user_email,$user_name,$activity));
+        //->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
+
+        return redirect(route('activity.index'))->withSuccess('Enquiry Register Updated Successfully!');
+
     }
 
     /**
@@ -187,7 +238,7 @@ class EnquiryRegisterController extends Controller
             $validated = $request->validate([
                 'received_date' => 'required',
                 'average_annum_demand' => 'required',
-                'enquiry_document' => 'required|mimes:csv,txt,xlx,xls,pdf,jpg,png,PNG|max:2048',
+                'enquiry_document' => 'required|mimes:csv,txt,xlsx,xls,pdf,jpg,png,PNG|max:2048',
                 'type_of_enquiry' => 'required'
             ]);
             $enquiry_register = new EnquiryRegister;
@@ -216,16 +267,24 @@ class EnquiryRegisterController extends Controller
             $user_name = auth()->user()->name;
             $file_path = $location.'/'.$fileName;
             $enquiry = EnquiryRegister::find($enquiry_register->id);
-           // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.navee@venkateswarasteels.com')
-           // ->cc($ccEmails)
+            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            $ccEmails = ["bharathmukesh85@gmail.com"];
+            Mail::to('edp@venkateswarasteels.com')
+            ->cc($ccEmails)
             ->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
             $plan->actual_start_date = Carbon::now();
-            $plan->actual_end_date = Carbon::now();
-            $plan->status_id = 4;
-            $plan->gyr_status = "G";
+            $plan->prepared_date = Carbon::now();
+            $plan->status_id = 2;
+            $plan->gyr_status = "Y";
             $plan->update();
 
             return redirect(route('activity.index'))->withSuccess('Enquiry Register Updated Successfully!');
+    }
+    public function verify(Request $request)
+    {
+        $plan_id = $request->input('id');
+        $enquiry_register = EnquiryRegister::where("apqp_timing_plan_id",$plan_id)->get();
+        return view('apqp.enquiry_register');
+
     }
 }

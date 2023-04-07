@@ -13,7 +13,7 @@ class UpdateEnquiryRegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class UpdateEnquiryRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'status_id' => 'required',
+            'received_date' => 'required|date',
+            'average_annum_demand' => 'required',
+            'enquiry_document' => 'mimes:csv,txt,xlsx,xls,pdf,jpg,png,PNG|max:2048',
+            'type_of_enquiry' => 'required'
         ];
     }
 }

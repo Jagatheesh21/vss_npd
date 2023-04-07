@@ -38,6 +38,14 @@ class APQPPlanActivity extends Model
     {
         return $this->belongsTo(User::class, 'responsibility');
     }
+    public function verified()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+    public function approved_by()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
     public function stages()
     {
         return $this->belongsToMany(Stage::class, 'apqp_plan_activities', 'apqp_timing_plan_id', 'stage_id');

@@ -117,9 +117,15 @@ class ManufacturingFeasibilityReviewController extends Controller
      * @param  \App\Models\ManufacturingFeasibilityReview  $manufacturingFeasibilityReview
      * @return \Illuminate\Http\Response
      */
-    public function show(ManufacturingFeasibilityReview $manufacturingFeasibilityReview)
+    public function show($id)
     {
-        //
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $mfr = ManufacturingFeasibilityReview::with('timing_plan')->findorFail($id);
+        dd($mfr);
+        return view('apqp.mfr.view',compact('plans','part_numbers','customers','customer_types','mfr'));
     }
 
     /**

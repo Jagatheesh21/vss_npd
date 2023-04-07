@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ManufacturingFeasibilityReview extends Model
 {
     use HasFactory;
+    /**
+     * Get the timing_plan that owns the ManufacturingFeasibilityReview
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function timing_plan()
+    {
+        return $this->belongsTo(APQPTimingPlan::class, 'apqp_timing_plan_id');
+    }
 }
