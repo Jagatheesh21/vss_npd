@@ -106,7 +106,7 @@ class ProductInformationDataController extends Controller
             // Mail Function
             //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             //$ccEmails = ["edp@venkateswarasteels.com"];
-            Mail::to('edp@venkateswarasteels.com')
+            Mail::to('r.naveen@venkateswarasteels.com')
             //->cc($ccEmails)
 
             ->send(new ActivityMail($user_email,$user_name,$activity));
