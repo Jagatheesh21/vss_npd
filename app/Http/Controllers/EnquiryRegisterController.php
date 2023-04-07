@@ -270,9 +270,9 @@ class EnquiryRegisterController extends Controller
                 $file_path = $location.'/'.$fileName;
                 $enquiry = EnquiryRegister::find($enquiry_register->id);
                 //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-                $ccEmails = ["bharathmukesh85@gmail.com"];
-                Mail::to('edp@venkateswarasteels.com')
-                ->cc($ccEmails)
+                //$ccEmails = ["bharathmukesh85@gmail.com"];
+                Mail::to('r.naveen@venkateswarasteels.com')
+                //->cc($ccEmails)
                 ->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
                 $plan->actual_start_date = Carbon::now();
                 $plan->prepared_at = Carbon::now();
