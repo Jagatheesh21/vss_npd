@@ -238,7 +238,7 @@ class EnquiryRegisterController extends Controller
             $validated = $request->validate([
                 'received_date' => 'required',
                 'average_annum_demand' => 'required',
-                'enquiry_document' => 'required|mimes:csv,txt,xlsx,xls,pdf,jpg,png,PNG|max:2048',
+                'enquiry_document' => 'required|mimes:csv,txt,xlsx,xls,pdf,jpg,png,svg,PNG|max:2048',
                 'type_of_enquiry' => 'required'
             ]);
 
