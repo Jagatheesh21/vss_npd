@@ -55,7 +55,7 @@ class ExperienceSharingController extends Controller
      */
     public function store(StoreExperienceSharingRequest $request)
     {
-        //dd($request->all());
+        DB::beginTransaction();
         try {
 
             $quote = new ExperienceSharing;
@@ -96,13 +96,15 @@ class ExperienceSharingController extends Controller
             $user_name = auth()->user()->name;
             // Mail Function
             //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('edp@venkateswarasteels.com')
+            Mail::to('r.naveen@venkateswarasteels.com')
            // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return back()->withSuccess('Experience Sharing Created Successfully!');
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return back()->withErrors($th->getMessage());
         }
     }
