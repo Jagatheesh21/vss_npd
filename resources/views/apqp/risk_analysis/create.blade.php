@@ -146,7 +146,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" id="submit" class="btn btn-primary" onclick="confirm('Are you Sure?')">Save</button>
                   </form>
             </div>
         </div>
@@ -172,7 +172,7 @@
                     position: 'top-right',
                     icon: 'success'
                 });
-                //location.reload();
+                location.reload();
             },
             error:function(result)
             {

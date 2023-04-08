@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mail;
 use App\Mail\ActivityMail;
+use Carbon\Carbon;
 
 class ManufacturingFeasibilityReviewController extends Controller
 {
@@ -52,6 +53,8 @@ class ManufacturingFeasibilityReviewController extends Controller
      */
     public function store(StoreManufacturingFeasibilityReviewRequest $request)
     {
+
+        DB::beginTransaction();
         try {
             //code...
             $ref_nos = $request->input('grid_ref_no');
@@ -69,9 +72,9 @@ class ManufacturingFeasibilityReviewController extends Controller
             $sub_stage_id = 3;
             foreach ($ref_nos as $key => $ref_no) {
                 $mfr = new ManufacturingFeasibilityReview;
-                $mfr->apqp_timing_plan_id = $request->apqp_timing_plan_id;
-                $mfr->stage_id = 1;
-                $mfr->sub_stage_id = 3;
+                $mfr->apqp_timing_plan_id = $apqp_timing_plan_id;
+                $mfr->stage_id = $stage_id;
+                $mfr->sub_stage_id = $sub_stage_id;
                 $mfr->grid_notes = $ref_no;
                 $mfr->pfd_no = $pfds[$key];
                 $mfr->parameters_per_drawing = $parameters[$key];
@@ -86,28 +89,29 @@ class ManufacturingFeasibilityReviewController extends Controller
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
-            $plan->current_stage_id = 1;
-            $plan->current_sub_stage_id = 3;
+            $plan->current_stage_id = $stage_id;
+            $plan->current_sub_stage_id = $sub_stage_id;
             $plan->update();
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',3)->first();
-            $plan_activity->status_id = 4;
-            $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('r.naveen@venkateswarasteels.com')
-            ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
-            return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
+            DB::commit();
+            return back()->withSuccess('MFR Created Successfully!');
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['status'=>500,'message'=>$th->getMessage()]);
+           // DB::rollback();
+            return back()->withError($th->getMessage());
         }
     }
 

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use Mail;
+use Carbon\Carbon;
 use App\Mail\ActivityMail;
 
 class RiskAnalysisController extends Controller
@@ -97,18 +98,18 @@ class RiskAnalysisController extends Controller
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',4)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
+            $plan_activity->prepared_at =Carbon::now();
             $plan_activity->gyr_status = 'G';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            // Mail::to('r.naveen@venkateswarasteels.com')
+             Mail::to('edp@venkateswarasteels.com')
             // ->cc($ccEmails)
-            //  ->send(new ActivityMail($user_email,$user_name,$activity));
+             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return response()->json(['status'=>'200','message'=>'Risk Analysis Created Successfully!']);
         } catch (\Throwable $th) {
