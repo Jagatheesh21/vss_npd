@@ -95,9 +95,9 @@ class ExperienceSharingController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.naveen@venkateswarasteels.com')
-            ->cc($cc_emails)
+            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('edp@venkateswarasteels.com')
+           // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Experience Sharing Created Successfully!');
 
