@@ -117,8 +117,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
-                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" required cols="30" rows="5"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3 clearfix">
