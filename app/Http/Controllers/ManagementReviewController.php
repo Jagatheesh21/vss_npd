@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Mail\ActivityMail;
 use Mail;
+use Auth;
 use App\Http\Requests\StoreManagementReviewRequest;
 use App\Http\Requests\UpdateManagementReviewRequest;
 
@@ -46,10 +47,20 @@ class ManagementReviewController extends Controller
         $customer_types = CustomerType::get();
         $customers = Customer::get();
         $sub_stages = SubStage::get();
+        if($meeting_id==1)
+        {
+            $stage_id = 1;
+            $sub_stage_id = 10;
+        }
+        if($meeting_id==2)
+        {
+            $stage_id = 2;
+            $sub_stage_id = 10;
+        }
         $users = User::get();
         $last_id = APQPPlanActivity::where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->max('sub_stage_id');
         $review_sub_stages = APQPPlanActivity::with('sub_stage')->where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->whereNotIn('sub_stage_id',array($last_id))->get();
-        return view('apqp.management_review.create',compact('plan','plans','part_numbers','customers','customer_types','meeting_id','sub_stages','review_sub_stages','users'));
+        return view('apqp.management_review.create',compact('plan','plans','part_numbers','customers','customer_types','meeting_id','sub_stages','review_sub_stages','users','stage_id','sub_stage_id'));
 
     }
 
@@ -65,6 +76,8 @@ class ManagementReviewController extends Controller
        DB::beginTransaction();
         try {
             //code...
+            $stage_id = $request->stage_id;
+            $sub_stage_id = $request->sub_stage_id;
             $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
             $part_number_id = $request->input('part_number_id');
             $revision_number = $request->input('revision_number');
@@ -85,6 +98,8 @@ class ManagementReviewController extends Controller
             $review_comments = $request->input('review_comments');
             foreach ($points as $key => $point) {
                 $management = new ManagementReview;
+                $management->stage_id = $stage_id;
+                $management->sub_stage_id = $sub_stage_id;
                 $management->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $management->part_number_id = $part_number_id;
                 $management->revision_number = $revision_number;
@@ -105,8 +120,24 @@ class ManagementReviewController extends Controller
                 $management->review_comments = $review_comments[$key];
                 $management->save();
             }
+            // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            $plan->current_stage_id = $stage_id;
+            $plan->current_sub_stage_id = $sub_stage_id;
+            $plan->update();
+            // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
+            $plan_activity->status_id = 2;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->prepared_at = now();
+            $plan_activity->gyr_status = 'P';
+            $plan_activity->update();
+            $activity = APQPPlanActivity::find($plan->id);
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            Mail::to('edp@venkateswarasteels.com')
+            ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
-
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;
