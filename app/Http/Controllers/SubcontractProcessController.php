@@ -54,7 +54,7 @@ class SubcontractProcessController extends Controller
      */
     public function store(StoreSubcontractProcessRequest $request)
     {
-
+        DB::beginTransaction();
         try {
 
             $quote = new SubcontractProcess;
@@ -94,11 +94,13 @@ class SubcontractProcessController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return back()->withSuccess('SubContract Process Created Successfully!');
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return back()->withErrors($th->getMessage());
         }
     }
