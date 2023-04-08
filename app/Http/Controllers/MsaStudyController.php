@@ -61,14 +61,14 @@ class MsaStudyController extends Controller
             $quote = new MsaStudy;
             $quote->apqp_timing_plan_id = $request->apqp_timing_plan_id;
             $quote->stage_id = 3;
-            $quote->sub_stage_id = 22;
+            $quote->sub_stage_id = 23;
             $quote->part_number_id = $request->part_number_id;
             $quote->revision_number = $request->revision_number;
             $quote->revision_date = $request->revision_date;
             $quote->application = $request->application;
             $quote->customer_id = $request->customer_id;
             $quote->product_description = $request->product_description;
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',22)->first();
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',23)->first();
             $file = $request->file('file');
             $fileName = time().'_'.$file->getClientOriginalName();
             $location = $plan_activity->plan->apqp_timing_plan_number.'/msa_study';
@@ -83,7 +83,7 @@ class MsaStudyController extends Controller
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 3;
-            $plan->current_sub_stage_id = 22;
+            $plan->current_sub_stage_id = 23;
             $plan->update();
             // Update Activity
             $plan_activity->status_id = 2;
@@ -95,7 +95,7 @@ class MsaStudyController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('MSA Study Created Successfully!');
 
