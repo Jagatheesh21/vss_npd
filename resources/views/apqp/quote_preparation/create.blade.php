@@ -117,8 +117,11 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
                             <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            @error('remarks')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
                         </div>
                     </div>
 

@@ -460,8 +460,8 @@
                         @yield('content')
                         <p>Thanks,</p>
                         <p>Regards,
-                        <br>{{ $user_name??'' }}</p>
-                        <p>NPD Engineer - VSSIPL</p>
+                        <br>{{ $user_name??'' }}
+                        <br>NPD Engineer - VSSIPL</p>
                       </div>
                     </td>
                   </tr>
