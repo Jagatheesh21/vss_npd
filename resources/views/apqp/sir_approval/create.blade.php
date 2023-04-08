@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="quote_save" method="POST" enctype="multipart/form-data" action="{{route('sample_submission.store')}}" >
+                <form id="quote_save" method="POST" enctype="multipart/form-data" action="{{route('sample_approval.store')}}" >
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -117,8 +117,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
-                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
                         </div>
                     </div>
 
