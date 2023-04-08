@@ -135,7 +135,7 @@ class ManagementReviewController extends Controller
             $activity = APQPPlanActivity::find($plan->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            Mail::to('edp@venkateswarasteels.com')
+            Mail::to('r.naveen@venkateswarasteels.com')
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
