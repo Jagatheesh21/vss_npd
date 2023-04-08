@@ -24,7 +24,7 @@ class StoreGaugeDesignAndDevelopementRequest extends FormRequest
     public function rules()
     {
         return [
-            'apqp_timing_plan_id' => 'required|unique:quote_prepartions',
+            'apqp_timing_plan_id' => 'required|unique:gauge_design_and_developements',
             'part_number_id' => 'required',
             'revision_number' => 'required',
             'revision_date' => 'required',
@@ -34,6 +34,7 @@ class StoreGaugeDesignAndDevelopementRequest extends FormRequest
             'stage_id' => 'required',
             'sub_stage_id' => 'required',
             'file' => 'required',
+            'remarks' => 'required'
         ];
     }
 }
