@@ -356,7 +356,7 @@
                   position: 'top-right',
                   icon: 'success'
               });
-              //location.reload();
+              location.reload();
             },
             error:function(response)
             {

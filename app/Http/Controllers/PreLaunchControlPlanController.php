@@ -132,7 +132,7 @@ class PreLaunchControlPlanController extends Controller
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',16)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->prepared_at = Carbon::now();
             $plan_activity->gyr_status = 'P';
@@ -141,7 +141,7 @@ class PreLaunchControlPlanController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
          DB::commit();
         return response()->json(['status'=>200,'message'=>'ProtoContolPlan Created Successfully!']);
         } catch (\Throwable $th) {

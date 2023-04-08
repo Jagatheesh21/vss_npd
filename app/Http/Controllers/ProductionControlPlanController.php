@@ -103,7 +103,7 @@ class ProductionControlPlanController extends Controller
                 $proto->material_specification_norms = $material_specification_norms;
                 $proto->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $proto->stage_id = 3;
-                $proto->sub_stage_id = 20;
+                $proto->sub_stage_id = 21;
                 $proto->part_number_id = $part_number_id;
                 $proto->revision_number = $revision_number;
                 $proto->revision_date = $revision_date;
@@ -128,14 +128,14 @@ class ProductionControlPlanController extends Controller
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 3;
-            $plan->current_sub_stage_id = 20;
+            $plan->current_sub_stage_id = 21;
             $plan->update();
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',20)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',21)->first();
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
