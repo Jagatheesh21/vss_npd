@@ -9,6 +9,7 @@ use App\Models\PartNumber;
 use App\Models\CustomerType;
 use App\Models\Customer;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProcessDesignGoalRequest;
 use App\Http\Requests\UpdateProcessDesignGoalRequest;
@@ -54,6 +55,7 @@ class ProcessDesignGoalController extends Controller
      */
     public function store(StoreProcessDesignGoalRequest $request)
     {
+        DB::beginTransaction();
         try {
             $target_cost = $request->input('target_cost');
             $target_quality = $request->input('target_quality');
@@ -71,19 +73,19 @@ class ProcessDesignGoalController extends Controller
             $application = $request->input('application');
             $customer_id = $request->input('customer_id');
             $product_description = $request->input('product_description');
-            foreach($target_cost as $key=>$target)
+            foreach($target_cpk as $key=>$target)
             {
                 $special = new ProcessDesignGoal;
                 $special->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $special->stage_id = 3;
-                $special->sub_stage_id = 24;
+                $special->sub_stage_id = 25;
                 $special->part_number_id = $part_number_id;
                 $special->revision_number = $revision_number;
                 $special->revision_date = $revision_date;
                 $special->application = $application;
                 $special->customer_id = $customer_id;
                 $special->product_description = $product_description;
-                $special->target_cost = $target;
+                $special->target_cost = $target_cost[$key];
                 $special->target_quality = $target_quality[$key];
                 $special->target_output = $target_output[$key];
                 $special->target_cpk = $target_cpk[$key];
@@ -96,25 +98,26 @@ class ProcessDesignGoalController extends Controller
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 3;
-            $plan->current_sub_stage_id = 24;
+            $plan->current_sub_stage_id = 25;
             $plan->update();
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',24)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',25)->first();
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
-
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return response()->json(['status'=>'200','message'=>'Process Design Goal Created Successfully!']);
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return response()->json(['status'=>'500','message'=>$th->getMessage()]);
 
         }

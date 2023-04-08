@@ -211,7 +211,7 @@
             success:function(response){
 
                 //var result = $.parseJSON(response);
-
+                var url = "{{route('activity.index')}}";
                 $.toast({
                   heading: 'Success',
                   text: response.message,
@@ -219,7 +219,7 @@
                   position: 'top-right',
                   icon: 'success'
               });
-
+              window.location.href=url;
            // location.reload(true);
             },
             error:function(result)
