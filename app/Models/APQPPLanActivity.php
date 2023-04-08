@@ -61,7 +61,7 @@ class APQPPlanActivity extends Model
     }
     public function scopePending($query)
     {
-        return $query->where('sub_stage_id','!=',NULL)->where('status_id',1)->count();
+        return $query->where('sub_stage_id','!=',NULL)->where('status_id','!=',4)->count();
     }
     public function scopeCompleted($query)
     {
