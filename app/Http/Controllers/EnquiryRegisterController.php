@@ -110,11 +110,11 @@ class EnquiryRegisterController extends Controller
             $file = $filePath;
             $enquiry = EnquiryRegister::find($enquiry_register->id);
 
-            Mail::to('edp@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
 
             $plan = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
-            $plan->status_id = 4;
-            $plan->gyr_status = 'G';
+            $plan->status_id = 2;
+            $plan->prepared_at = Carbon::now();
             $plan->update();
             $data["email"] = "edp@venakteswarasteels.com";
             $data["title"] = "Enquiry Register Approval";

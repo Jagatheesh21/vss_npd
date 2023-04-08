@@ -176,4 +176,19 @@ class VerificationController extends Controller
         $activity = APQPPLanActivity::where('apqp_timing_plan_id',$plan_id)->where('sub_stage_id',$sub_stage_id)->get();
         return view('apqp.verification.create',compact('plan','sub_stage','model','activity','part_numbers','customer_types','customers','timing_plans','sub_stage_id'));
     }
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $customers = Customer::with('customer_type')->get();
+        $part_numbers = PartNumber::all();
+        $customer_types = CustomerType::all();
+        $timing_plans = APQPTimingPlan::all();
+        $sub_stage = SubStage::find($sub_stage_id);
+        $plan = APQPTimingPlan::find($plan_id);
+        $timing_plans = APQPTimingPlan::all();
+        $model_data = '\\App\\Models\\'.$sub_stage->model;
+        $activity = APQPPLanActivity::where('apqp_timing_plan_id',$plan_id)->where('sub_stage_id',$sub_stage_id)->first();
+        $model= $model_data::with('timing_plan')->where('apqp_timing_plan_id',$plan_id)->first();
+        $view ="apqp.".$activity->sub_stage->route.".view";
+        return view($view,compact('model','customers','part_numbers','customer_types','plan','timing_plans'));
+    }
 }

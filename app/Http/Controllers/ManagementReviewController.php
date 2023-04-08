@@ -55,7 +55,17 @@ class ManagementReviewController extends Controller
         if($meeting_id==2)
         {
             $stage_id = 2;
-            $sub_stage_id = 10;
+            $sub_stage_id = 20;
+        }
+        if($meeting_id==3)
+        {
+            $stage_id = 3;
+            $sub_stage_id = 29;
+        }
+        if($meeting_id==4)
+        {
+            $stage_id = 4;
+            $sub_stage_id = 35;
         }
         $users = User::get();
         $last_id = APQPPlanActivity::where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->max('sub_stage_id');
@@ -72,8 +82,8 @@ class ManagementReviewController extends Controller
      */
     public function store(StoreManagementReviewRequest $request)
     {
-       // dd($request->all());
-       DB::beginTransaction();
+     //dd($request->all());
+       //DB::beginTransaction();
         try {
             //code...
             $stage_id = $request->stage_id;
@@ -135,13 +145,13 @@ class ManagementReviewController extends Controller
             $activity = APQPPlanActivity::find($plan->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            Mail::to('r.naveen@venkateswarasteels.com')
+            Mail::to('edp@venkateswarasteels.com')
             ->send(new ActivityMail($user_email,$user_name,$activity));
-            DB::commit();
+            //DB::commit();
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;
-            DB::rollback();
+           // DB::rollback();
             return response()->json(['status'=>500,'message' =>$th->getMessage()]);
         }
 
