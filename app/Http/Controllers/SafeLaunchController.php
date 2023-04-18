@@ -126,6 +126,7 @@ class SafeLaunchController extends Controller
             $plan_activity->gyr_status = "Y";
             $plan_activity->update();
 
+
             // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
