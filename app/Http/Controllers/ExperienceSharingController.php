@@ -55,7 +55,11 @@ class ExperienceSharingController extends Controller
      */
     public function store(StoreExperienceSharingRequest $request)
     {
+<<<<<<< HEAD
         // dd($request->all());
+=======
+        DB::beginTransaction();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         try {
 
             $quote = new ExperienceSharing;
@@ -89,10 +93,11 @@ class ExperienceSharingController extends Controller
             // Update Activity
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
+<<<<<<< HEAD
             // $user_email = auth()->user()->email;
             // $user_name = auth()->user()->name;
             // // Mail Function
@@ -100,10 +105,21 @@ class ExperienceSharingController extends Controller
             // Mail::to('edp@venkateswarasteels.com')
             // ->cc($cc_emails)
             // ->send(new ActivityMail($user_email,$user_name,$activity));
+=======
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            // Mail Function
+            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+           // ->cc($cc_emails)
+            ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             return back()->withSuccess('Experience Sharing Created Successfully!');
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return back()->withErrors($th->getMessage());
         }
     }

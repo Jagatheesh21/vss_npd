@@ -57,10 +57,18 @@
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Safe Launch*</label>
                             <select name="safe_launch_id" id="safe_launch_id" class="form-control select2">
-                                <option value="1" @if ($safe_launch_id==1) selected @endif>Safe Launch 1</option>
-                                <option value="2" @if ($safe_launch_id==2) selected @endif>Safe Launch 2</option>
-                                <option value="3" @if ($safe_launch_id==3) selected @endif>Safe Launch 3</option>
-                                <option value="4" @if ($safe_launch_id==4) selected @endif>Safe Launch Sign Off</option>
+                                @if ($safe_launch_id==1)
+                                <option value="1"  selected >Safe Launch 1</option>
+                                @endif
+                                @if ($safe_launch_id==2)
+                                <option value="2"  selected >Safe Launch 2</option>
+                                @endif
+                                @if ($safe_launch_id==3)
+                                <option value="3"  selected >Safe Launch 3</option>
+                                @endif
+                                @if ($safe_launch_id==4)
+                                <option value="4"  selected >Safe Launch Sign Off</option>
+                                @endif
                             </select>
                             @error('safe_launch_id')
                             <span class="text-danger">{{$message}}</span>
@@ -69,10 +77,18 @@
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Sub Stage*</label>
                             <select name="sub_stage_id" id="sub_stage_id" class="form-control select2">
-                                <option value="30" @if ($safe_launch_id==1) selected @endif>Safe Launch 1</option>
-                                <option value="31" @if ($safe_launch_id==2) selected @endif>Safe Launch 2</option>
-                                <option value="32" @if ($safe_launch_id==3) selected @endif>Safe Launch 3</option>
-                                <option value="33" @if ($safe_launch_id==4) selected @endif>Safe Launch Sign Off</option>
+                                @if ($safe_launch_id==1)
+                                <option value="31"  selected >Safe Launch 1</option>
+                                @endif
+                                @if ($safe_launch_id==2)
+                                <option value="32"  selected >Safe Launch 2</option>
+                                @endif
+                                @if ($safe_launch_id==3)
+                                <option value="33"  selected >Safe Launch 3</option>
+                                @endif
+                                @if ($safe_launch_id==4)
+                                <option value="34"  selected >Safe Launch Sign Off</option>
+                                @endif
                             </select>
                             @error('sub_stage_id')
                             <span class="text-danger">{{$message}}</span>
@@ -141,8 +157,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
-                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
                         </div>
                     </div>
                     <div class="row mb-3 clearfix">

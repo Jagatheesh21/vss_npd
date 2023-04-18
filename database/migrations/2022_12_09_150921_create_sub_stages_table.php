@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('stage_id');
             $table->string('name');
             $table->string('url');
+            $table->string('model');
+            $table->string('route');
             $table->timestamps();
         });
     }

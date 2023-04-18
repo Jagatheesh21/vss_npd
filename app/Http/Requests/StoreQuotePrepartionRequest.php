@@ -34,6 +34,7 @@ class StoreQuotePrepartionRequest extends FormRequest
             'stage_id' => 'required',
             'sub_stage_id' => 'required',
             'quote_document' => 'required',
+            'remarks'=>'required'
         ];
     }
 }

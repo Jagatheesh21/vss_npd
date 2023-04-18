@@ -224,7 +224,11 @@ class APQPTimingPlanController extends Controller
                 $plan_activity->approved_by = $approved_by[$key];
                 $from = Carbon::parse(date('Y-m-d', strtotime($plan_start_date[$key])));
                 $to = Carbon::parse(date('Y-m-d', strtotime($plan_end_date[$key])));
+<<<<<<< HEAD
                 $plan_activity->process_time = $from->diffInDays($to);
+=======
+                $plan_activity->process_time = ($from->diffInDays($to))+1;
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                 $plan_activity->plan_start_date = $plan_start_date[$key];
                 $plan_activity->plan_end_date = $plan_end_date[$key];
                 $plan_activity->update();

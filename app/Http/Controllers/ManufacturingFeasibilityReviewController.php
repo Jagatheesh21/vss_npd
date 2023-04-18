@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mail;
 use App\Mail\ActivityMail;
+use Carbon\Carbon;
 
 class ManufacturingFeasibilityReviewController extends Controller
 {
@@ -52,6 +53,8 @@ class ManufacturingFeasibilityReviewController extends Controller
      */
     public function store(StoreManufacturingFeasibilityReviewRequest $request)
     {
+
+        DB::beginTransaction();
         try {
             //code...
             $ref_nos = $request->input('grid_ref_no');
@@ -69,9 +72,9 @@ class ManufacturingFeasibilityReviewController extends Controller
             $sub_stage_id = 3;
             foreach ($ref_nos as $key => $ref_no) {
                 $mfr = new ManufacturingFeasibilityReview;
-                $mfr->apqp_timing_plan_id = $request->apqp_timing_plan_id;
-                $mfr->stage_id = 1;
-                $mfr->sub_stage_id = 3;
+                $mfr->apqp_timing_plan_id = $apqp_timing_plan_id;
+                $mfr->stage_id = $stage_id;
+                $mfr->sub_stage_id = $sub_stage_id;
                 $mfr->grid_notes = $ref_no;
                 $mfr->pfd_no = $pfds[$key];
                 $mfr->parameters_per_drawing = $parameters[$key];
@@ -86,28 +89,43 @@ class ManufacturingFeasibilityReviewController extends Controller
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
-            $plan->current_stage_id = 1;
-            $plan->current_sub_stage_id = 3;
+            $plan->current_stage_id = $stage_id;
+            $plan->current_sub_stage_id = $sub_stage_id;
             $plan->update();
             // Update Activity
+<<<<<<< HEAD
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',3)->first();
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->actual_end_date = date('Y-m-d');
             $plan_activity->gyr_status = 'G';
+=======
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
+<<<<<<< HEAD
             // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('npd@venkateswarasteels.com')
             ->cc($cc_emails)
+=======
+            Mail::to('r.naveen@venkateswarasteels.com')
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             ->send(new ActivityMail($user_email,$user_name,$activity));
-            return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
+            DB::commit();
+            return back()->withSuccess('MFR Created Successfully!');
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['status'=>500,'message'=>$th->getMessage()]);
+           // DB::rollback();
+            return back()->withError($th->getMessage());
         }
     }
 
@@ -119,12 +137,16 @@ class ManufacturingFeasibilityReviewController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
         // $id = $request->id;
         $plan = APQPTimingPlan::find($id);
+=======
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
 
         // $mfr = ManufacturingFeasibilityReview::with('timing_plan')->find($id);
 
@@ -133,6 +155,11 @@ class ManufacturingFeasibilityReviewController extends Controller
         // dd($mfr);
         return view('apqp.mfr.view',compact('plan','plans','part_numbers','customers','customer_types','mfr_data'));
 
+=======
+        $mfr = ManufacturingFeasibilityReview::with('timing_plan')->findorFail($id);
+        dd($mfr);
+        return view('apqp.mfr.view',compact('plans','part_numbers','customers','customer_types','mfr'));
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
     }
 
     /**

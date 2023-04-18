@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use Mail;
+use Carbon\Carbon;
 use App\Mail\ActivityMail;
 
 class RiskAnalysisController extends Controller
@@ -52,8 +53,13 @@ class RiskAnalysisController extends Controller
      */
     public function store(StoreRiskAnalysisRequest $request)
     {
+<<<<<<< HEAD
         //dd($request);
 
+=======
+
+        DB::beginTransaction();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         try {
             //code...
             $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
@@ -64,11 +70,15 @@ class RiskAnalysisController extends Controller
             $customer_id = $request->input('customer_id');
             $product_description = $request->input('product_description');
 
-            $types = $request->input('type');
+            $type = $request->input('type');
             $risks = $request->input('risks');
             $risk_involved = $request->input('risk_involved');
             $risk_level = $request->input('risk_level');
             $high_risks = $request->input('high_risk');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             foreach ($high_risks as $key => $high_risk) {
                 $risk = new RiskAnalysis;
                 $risk->apqp_timing_plan_id = $apqp_timing_plan_id;
@@ -81,22 +91,29 @@ class RiskAnalysisController extends Controller
                 $risk->application = $application;
                 $risk->customer_id = $customer_id;
                 $risk->product_description = $product_description;
+<<<<<<< HEAD
                 $risk->type = $types[$key];
+=======
+                $risk->type = $type[$key];
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                 $risk->risks = $risks[$key];
                 $risk->risk_involved = $risk_involved[$key];
                 $risk->risk_level = $risk_level[$key];
                 $risk->high_risk = $high_risk;
                 $risk->save();
+
             }
+
             // Update Timing Plan Current Activity
 
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',4)->first();
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
+            $plan_activity->prepared_at =Carbon::now();
             $plan_activity->gyr_status = 'G';
             $plan_activity->update();
+<<<<<<< HEAD
             // $activity = APQPPlanActivity::find($plan_activity->id);
             // $user_email = auth()->user()->email;
             // $user_name = auth()->user()->name;
@@ -104,11 +121,20 @@ class RiskAnalysisController extends Controller
             // Mail::to('edp@venkateswarasteels.com')
             // ->cc($ccEmails)
             //  ->send(new ActivityMail($user_email,$user_name,$activity));
+=======
+            $activity = APQPPlanActivity::find($plan_activity->id);
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+             Mail::to('edp@venkateswarasteels.com')
+            // ->cc($ccEmails)
+             ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             return response()->json(['status'=>'200','message'=>'Risk Analysis Created Successfully!']);
-
-
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return response()->json(['status'=>'500','message'=>$th->getMessage()]);
 
         }

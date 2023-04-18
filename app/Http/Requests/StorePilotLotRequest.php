@@ -34,6 +34,7 @@ class StorePilotLotRequest extends FormRequest
             'stage_id' => 'required',
             'sub_stage_id' => 'required',
             'file' => 'required',
+            'remarks' => 'required',
         ];
     }
 }

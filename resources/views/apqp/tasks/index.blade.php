@@ -47,7 +47,11 @@
 
                         <td>
                             @if(auth()->user()->id>7)
+<<<<<<< HEAD
                             <a href="{{url($task->sub_stage->url)}}{{$task->plan->id}}" class="btn btn-info btn-sm">Update</a>
+=======
+                            <a href="{{url($task->sub_stage->url)}}{{$task->plan->id}}" class="btn btn-info btn-sm text-white">Update</a>
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                             @endif
 
                             @if(auth()->user()->id==7)
@@ -56,7 +60,11 @@
                             {{-- <a href="{{url($task->sub_stage->model)}}/{{$task->plan->id}}/edit" class="btn btn-info btn-sm">Verification</a> --}}
                             @endif
 
+<<<<<<< HEAD
                             @if(auth()->user()->id===3 || auth()->user()->id==5 || auth()->user()->id==6 )
+=======
+                            @if(auth()->user()->id==3 || auth()->user()->id==5 || auth()->user()->id==6 )
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                             <a href="{{route('task',[$task->plan->id,$task->sub_stage_id])}}" class="btn btn-success btn-sm text-white">Approve</a>
 
                             {{-- <a href="{{url($task->sub_stage->url)}}{{$task->plan->id}}" class="btn btn-info btn-sm">Approval</a> --}}

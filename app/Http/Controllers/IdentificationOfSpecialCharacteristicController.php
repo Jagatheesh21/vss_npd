@@ -12,6 +12,8 @@ use App\Http\Requests\StoreIdentificationOfSpecialCharacteristicRequest;
 use App\Http\Requests\UpdateIdentificationOfSpecialCharacteristicRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Auth;
 use Mail;
 use App\Mail\ActivityMail;
 class IdentificationOfSpecialCharacteristicController extends Controller
@@ -51,6 +53,7 @@ class IdentificationOfSpecialCharacteristicController extends Controller
      */
     public function store(StoreIdentificationOfSpecialCharacteristicRequest $request)
     {
+        DB::beginTransaction();
         try {
             $grid_notes = $request->input('grid_notes');
             $description = $request->input('description');
@@ -92,19 +95,28 @@ class IdentificationOfSpecialCharacteristicController extends Controller
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',7)->first();
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
+<<<<<<< HEAD
             // $user_email = auth()->user()->email;
             // $user_name = auth()->user()->name;
             // // Mail Function
             // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
 
+=======
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            // Mail Function
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             return response()->json(['status'=>'200','message'=>'Special Characteristics Created Successfully!']);
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return response()->json(['status'=>'500','message'=>$th->getMessage()]);
 
         }

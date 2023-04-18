@@ -193,6 +193,7 @@
             data:$("#category_save").serialize(),
             success:function(response)
             {
+                var url = "{{route('activity.index')}}";
                 console.log(response);
                 //var result = $.parseJSON(response);
                 $.toast({
@@ -202,6 +203,7 @@
                   position: 'top-right',
                   icon: 'success'
               });
+              window.location.href=url;
              // location.reload();
             },
             error:function(response)

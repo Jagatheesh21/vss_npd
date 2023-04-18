@@ -53,7 +53,7 @@ class ProcessFlowDiagramController extends Controller
      */
     public function store(StoreProcessFlowDiagramRequest $request)
     {
-
+        DB::beginTransaction();
         try {
             //code...
             $processes = $request->input('process');
@@ -74,7 +74,7 @@ class ProcessFlowDiagramController extends Controller
                 $process_flow = new ProcessFlowDiagram;
                 $process_flow->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $process_flow->stage_id = 2;
-                $process_flow->sub_stage_id = 1;
+                $process_flow->sub_stage_id = 11;
                 $process_flow->part_number_id = $part_number_id;
                 $process_flow->revision_number = $revision_number;
                 $process_flow->revision_date = $revision_date;
@@ -93,25 +93,25 @@ class ProcessFlowDiagramController extends Controller
                 // Update Timing Plan Current Activity
                 $plan = APQPTimingPlan::find($apqp_timing_plan_id);
                 $plan->current_stage_id = 2;
-                $plan->current_sub_stage_id = 1;
+                $plan->current_sub_stage_id = 11;
                 $plan->update();
                 // Update Activity
-                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',1)->first();
-                $plan_activity->status_id = 4;
+                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',11)->first();
+                $plan_activity->status_id = 2;
                 $plan_activity->actual_start_date = date('Y-m-d');
-                $plan_activity->actual_end_date = date('Y-m-d');
+                $plan_activity->prepared_at = now();
                 $plan_activity->gyr_status = 'G';
                 $plan_activity->update();
                 $activity = APQPPlanActivity::find($plan_activity->id);
                 $user_email = auth()->user()->email;
                 $user_name = auth()->user()->name;
                 // Mail Function
-                Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
-
+                Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+                DB::commit();
                 return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
         } catch (\Throwable $th) {
             //throw $th;
-
+            DB::rollback();
             return response()->json(['status'=>500,'message'=>$th->getMessage()]);
         }
     }

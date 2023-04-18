@@ -54,7 +54,7 @@ class SubcontractProcessController extends Controller
      */
     public function store(StoreSubcontractProcessRequest $request)
     {
-
+        DB::beginTransaction();
         try {
 
             $quote = new SubcontractProcess;
@@ -85,20 +85,22 @@ class SubcontractProcessController extends Controller
             $plan->current_sub_stage_id = 15;
             $plan->update();
             // Update Activity
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return back()->withSuccess('SubContract Process Created Successfully!');
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return back()->withErrors($th->getMessage());
         }
     }

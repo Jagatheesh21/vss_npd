@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Http\Requests\StoreProductInformationDataRequest;
 use App\Http\Requests\UpdateProductInformationDataRequest;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Mail;
 use App\Mail\ActivityMail;
 
@@ -97,7 +98,11 @@ class ProductInformationDataController extends Controller
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
+<<<<<<< HEAD
             $plan_activity->prepared_date = date('Y-m-d');
+=======
+            $plan_activity->prepared_at = Carbon::now();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             $plan_activity->update();
             //
             $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->first();
@@ -105,9 +110,16 @@ class ProductInformationDataController extends Controller
             $user_name = auth()->user()->name;
             // Mail Function
             //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+<<<<<<< HEAD
             $ccEmails = ["edp@venkateswarasteels.com"];
             Mail::to('edp@venkateswarasteels.com')
             ->cc($ccEmails)
+=======
+            //$ccEmails = ["edp@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            //->cc($ccEmails)
+
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
@@ -125,13 +137,23 @@ class ProductInformationDataController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
         $productInformationData = ProductInformationData::with('timing_plan')->find($id);
         $data = ProductInformationData::with('id')->find($id);
+<<<<<<< HEAD
         return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data'));
+=======
+        // dd($productInformationData);
+        return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data'));
+
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
     }
 
     /**

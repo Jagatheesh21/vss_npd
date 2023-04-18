@@ -98,7 +98,11 @@
                     @if(auth()->user()->id==7)
                     <option value="3">Verified</option>
                     @endif
+<<<<<<< HEAD
                     @if(auth()->user()->id===3 || auth()->user()->id==5 || auth()->user()->id==6 )
+=======
+                    @if(auth()->user()->id==3 || auth()->user()->id==5 || auth()->user()->id==6 )
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                     <option value="4">Approve</option>
                     @endif
                     <option value="5">Reject</option>

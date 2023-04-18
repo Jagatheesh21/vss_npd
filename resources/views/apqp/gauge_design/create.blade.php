@@ -118,8 +118,11 @@
                         </div>
                         <div class="col-md-6">
                             <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
-                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
                         </div>
+                        @error('remarks')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
                     </div>
                     <div class="row mb-3 clearfix">
                         <div class="col-md-12 text-center m-3 ">

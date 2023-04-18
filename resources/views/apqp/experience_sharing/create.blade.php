@@ -70,7 +70,7 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-6 col-form-label required">Application*</label>
+                            <label for="" class="col-sm-6 col-form-label required">Customer Type*</label>
                             <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
@@ -97,7 +97,7 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-8 col-form-label required">Product Description*</label>
+                            <label for="" class="col-sm-8 col-form-label required">Part Description*</label>
                             <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
@@ -117,8 +117,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="" class="col-sm-8 col-form-label required">Remarks</label>
-                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5"></textarea>
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
                         </div>
                     </div>
 

@@ -38,7 +38,7 @@ class SafeLaunchController extends Controller
     public function create(Request $request)
     {
         $id = $request->id;
-        $safe_launch_id = $request->safe_launch_id;
+        $safe_launch_id = $request->safe_launch;
         $plan = APQPTimingPlan::find($id);
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
@@ -55,6 +55,7 @@ class SafeLaunchController extends Controller
      */
     public function store(StoreSafeLaunchRequest $request)
     {
+        DB::beginTransaction();
         try {
             $quote = new SafeLaunch;
             $quote->safe_launch_id = $request->safe_launch_id;
@@ -85,20 +86,21 @@ class SafeLaunchController extends Controller
             $plan->current_sub_stage_id = $request->sub_stage_id;
             $plan->update();
             // Update Activity
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
             return back()->withSuccess('Safe Launch Created Successfully!');
 
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollback();
             return back()->withErrors($th->getMessage());
         }
     }

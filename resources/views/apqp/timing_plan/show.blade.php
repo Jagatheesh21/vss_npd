@@ -30,7 +30,7 @@
                     <div class="row mb-3">
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
-                        <select name="customer_id" id="customer_id" class="form-control select2">
+                        <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                           @foreach($customers as $customer)
                             @if($customer->id==$timing->customer_id)
                           <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
@@ -43,7 +43,7 @@
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
-                        <select name="part_number_id" id="part_number_id" class="form-control select2">
+                        <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                           @foreach($part_numbers as $part_number)
                           @if($part_number->id==$timing->part_number_id)
                           <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
@@ -56,28 +56,28 @@
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Number*</label>
-                        <input type="text" name="revision_number" id="revision_number" class="form-control" value="{{ $timing->revision_number }}">
+                        <input type="text" name="revision_number" id="revision_number" class="form-control bg-light" readonly value="{{ $timing->revision_number }}">
                         @error('revision_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Revision Date*</label>
-                        <input type="date" name="revision_date" id="revision_date" class="form-control" value="{{ $timing->revision_date }}">
+                        <input type="date" name="revision_date" id="revision_date" class="form-control bg-light" readonly value="{{ $timing->revision_date }}">
                         @error('revision_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Number*</label>
-                        <input type="text" name="issuance_number" id="issuance_number" class="form-control" value="{{ $timing->issuance_number }}">
+                        <input type="text" name="issuance_number" id="issuance_number" class="form-control bg-light" readonly value="{{ $timing->issuance_number }}">
                         @error('issuance_number')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                       </div>
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Issue Date*</label>
-                        <input type="date" name="issuance_date" id="issuance_date" class="form-control" value="{{ $timing->issuance_date }}">
+                        <input type="date" name="issuance_date" id="issuance_date" class="form-control bg-light" readonly value="{{ $timing->issuance_date }}">
                         @error('issuance_date')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
@@ -86,7 +86,7 @@
                     </div>
                     <div class="row mb-3 activities_view" >
                         <table class="table table-bordered table-responsive">
-                            <thead>
+                            <thead class="bg-info text-white">
                                 <th>Stage</th>
                                 <th>Sub Stage</th>
                                 <th>Process Time</th>
@@ -94,6 +94,7 @@
                                 <th>Plan End Date</th>
                                 <th>Actual Start Date</th>
                                 <th>Actual End Date</th>
+                                <th>Action</th>
                             </thead>
                             <tbody>
                                 @foreach ($timing->activites as $activity)
@@ -105,6 +106,7 @@
                                     <td>{{$activity->plan_end_date}}</td>
                                     <td>{{$activity->actual_start_date}}</td>
                                     <td>{{$activity->actual_end_date}}</td>
+                                    <td><a href="{{url('verification/preview')}}/{{$activity->apqp_timing_plan_id}}/{{$activity->sub_stage_id}}" target="_blank" class="btn btn-success text-white btn-sm">Details</a></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -120,14 +122,14 @@
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
-        $("#customer_id").select2({
-            placeholder:"Select Customer",
-            allowedClear:true,
-        });
-        $("#part_number_id").select2({
-            placeholder:"Select Part Number",
-            allowedClear:true,
-        });
+        // $("#customer_id").select2({
+        //     placeholder:"Select Customer",
+        //     allowedClear:true,
+        // });
+        // $("#part_number_id").select2({
+        //     placeholder:"Select Part Number",
+        //     allowedClear:true,
+        // });
 
 
 

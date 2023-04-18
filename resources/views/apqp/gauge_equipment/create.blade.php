@@ -29,7 +29,7 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
-                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2">
+                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2 bg-light">
                                 @foreach ($plans as $t_plan)
                                     @if ($t_plan->id==$plan->id)
                                     <option value="{{$t_plan->id}}" selected>{{$t_plan->apqp_timing_plan_number}}</option>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Part Number*</label>
-                            <select name="part_number_id" id="part_number_id" class="form-control select2">
+                            <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
                                     <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
@@ -55,21 +55,21 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Number*</label>
-                            <input type="text" name="revision_number" class="form-control" value="{{$plan->revision_number}}" readonly>
+                            <input type="text" name="revision_number" class="form-control bg-light" value="{{$plan->revision_number}}" readonly>
                             @error('revision_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Date*</label>
-                            <input type="text" name="revision_date" class="form-control" value="{{$plan->revision_date}}" readonly>
+                            <input type="text" name="revision_date" class="form-control bg-light" value="{{$plan->revision_date}}" readonly>
                             @error('revision_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-6 col-form-label required">Application*</label>
-                            <select name="application" id="application" class="form-control select2">
+                            <label for="" class="col-sm-6 col-form-label required">Customer Type*</label>
+                            <select name="application" id="application" class="form-control select2 bg-light">
                                 @foreach ($customer_types as $customer_type)
                                     @if ($customer_type->id==$plan->customer->customer_type->id)
                                     <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
@@ -83,7 +83,7 @@
 
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Customer*</label>
-                            <select name="customer_id" id="customer_id" class="form-control select2">
+                            <select name="customer_id" id="customer_id" class="form-control select2 bg-light">
                                 @foreach ($customers as $customer)
                                     @if ($customer->id==$plan->customer_id)
                                     <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
@@ -95,8 +95,8 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <label for="" class="col-sm-8 col-form-label required">Product Description*</label>
-                            <select name="product_description" id="product_description" class="form-control select2">
+                            <label for="" class="col-sm-8 col-form-label required">Part Description*</label>
+                            <select name="product_description" id="product_description" class="form-control select2 bg-light">
                                 @foreach ($part_numbers as $part_number)
                                     @if ($part_number->id==$plan->part_number_id)
                                     <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
@@ -160,8 +160,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
-    $("#apqp_timing_plan_id").select2();
-    $("#part_number_id").select2();
+    // $("#apqp_timing_plan_id").select2();
+    // $("#part_number_id").select2();
     $("#submit").click(function(){
         $.ajax({
             url:"{{route('gauge_equipment.store')}}",
@@ -169,15 +169,15 @@
             data:$("#category_save").serialize(),
             success:function(result)
             {
-                var response = $.parseJSON(result);
+                //var response = $.parseJSON(result);
                 $.toast({
                     heading: 'Success',
-                    text: response.message,
+                    text: result.message,
                     showHideTransition: 'plain',
                     position: 'top-right',
                     icon: 'success'
                 });
-                location.reload();
+                location.reload(true);
             },
             error:function(result)
             {

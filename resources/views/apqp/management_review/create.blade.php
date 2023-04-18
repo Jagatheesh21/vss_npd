@@ -27,6 +27,8 @@
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
+                        <input type="hidden" name="stage_id" value="{{$stage_id}}">
+                        <input type="hidden" name="sub_stage_id" value="{{$sub_stage_id}}">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
                             <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2 bg-light">
@@ -228,7 +230,6 @@
 
 @endsection
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
     // $("#apqp_timing_plan_id").select2();
@@ -244,16 +245,17 @@
             data:$("#category_save").serialize(),
             success:function(response)
             {
-
-                var result = $.parseJSON(response);
-                $.toast({
-                  heading: 'Success',
-                  text: response.message,
-                  showHideTransition: 'plain',
-                  position: 'top-right',
-                  icon: 'success'
-              });
-              location.reload();
+                console.log(response);
+            //     var result = $.parseJSON(response);
+                var url = "{{route('activity.index')}}";
+            //     $.toast({
+            //       heading: 'Success',
+            //       text: response.message,
+            //       showHideTransition: 'plain',
+            //       position: 'top-right',
+            //       icon: 'success'
+            //   });
+               window.location.href=url;
             },
             error:function(response)
             {

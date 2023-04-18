@@ -8,6 +8,7 @@ use App\Models\APQPTimingPlan;
 use App\Models\APQPPlanActivity;
 use App\Models\Customer;
 use App\Models\SubStage;
+use Illuminate\Support\Facades\DB;
 use App\Mail\NotifyMail;
 use Mail;
 
@@ -34,7 +35,7 @@ class HomeController extends Controller
         $sub_stages_count = SubStage::get()->count();
         $total_users = User::where('id','>',1)->count();
         $total_customers = Customer::get()->count();
-        $timing_plan_lists = APQPTimingPlan::get();
+        $timing_plan_lists = APQPTimingPlan::GroupBy('status_id')->get();
         $pending_activities = APQPPlanActivity::pending();
         $completed_activities = APQPPlanActivity::completed();
         $activity_list = APQPPLanActivity::with('plan','plan.part_number','plan.customer','stage','sub_stage','plan.status','user')->upcoming()->get();

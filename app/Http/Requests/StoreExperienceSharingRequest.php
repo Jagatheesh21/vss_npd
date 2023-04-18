@@ -24,7 +24,7 @@ class StoreExperienceSharingRequest extends FormRequest
     public function rules()
     {
         return [
-            'apqp_timing_plan_id' => 'required|unique:quote_prepartions',
+            'apqp_timing_plan_id' => 'required|unique:experience_sharings',
             'part_number_id' => 'required',
             'revision_number' => 'required',
             'revision_date' => 'required',
@@ -34,6 +34,7 @@ class StoreExperienceSharingRequest extends FormRequest
             'stage_id' => 'required',
             'sub_stage_id' => 'required',
             'file' => 'required',
+            'remarks' => 'required',
         ];
     }
 }

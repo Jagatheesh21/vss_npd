@@ -89,16 +89,22 @@ class QuotePrepartionController extends Controller
             // Update Activity
             $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->actual_end_date = date('Y-m-d');
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'P';
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
+<<<<<<< HEAD
             // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('edp@venkateswarasteels.com')
             ->cc($cc_emails)
+=======
+           // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('r.naveen@venkateswarasteels.com')
+            //->cc($cc_emails)
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Quote Preparation Created Successfully!');
 

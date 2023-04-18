@@ -77,16 +77,21 @@
                       <thead class="table-light fw-semibold">
                         <tr class="align-middle">
                           <th>Timing Plan#</th>
+                          <th>Customer </th>
+                          <th>Part Number</th>
                           <th>Current Stage </th>
                           <th>Current Sub Stage</th>
                           <th>Status</th>
                           <th>Progress</th>
+                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         @forelse ($timing_plan_lists as $timing_plan)
                         <tr class="align-middle">
                             <td >{{$timing_plan->apqp_timing_plan_number}}</td>
+                            <td >{{$timing_plan->customer->name}}</td>
+                            <td >{{$timing_plan->part_number->name}}</td>
                             <td >{{$timing_plan->stage->name}}</td>
                             <td >{{$timing_plan->sub_stage->name}}</td>
                             <td >{{$timing_plan->status->name}}</td>
@@ -100,6 +105,7 @@
                                 <div class="progress-bar bg-success" role="progressbar" style="width: {{$percentage}}%" aria-valuenow="{{$percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
                             </td>
+                            <td><a href="{{route('apqp_timing_plan.show',$timing_plan->id)}}" target="_blank" class="btn btn-success btn-sm text-white">Details</a></td>
                         </tr>
                         @empty
                         <tr>
