@@ -55,7 +55,7 @@ class ExperienceSharingController extends Controller
      */
     public function store(StoreExperienceSharingRequest $request)
     {
-        //dd($request->all());
+        // dd($request->all());
         try {
 
             $quote = new ExperienceSharing;
@@ -67,6 +67,7 @@ class ExperienceSharingController extends Controller
             $quote->revision_date = $request->revision_date;
             $quote->application = $request->application;
             $quote->customer_id = $request->customer_id;
+            $quote->status = 2;
             $quote->product_description = $request->product_description;
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$request->stage_id)->where('sub_stage_id',$request->sub_stage_id)->first();
             $file = $request->file('file');
@@ -86,19 +87,19 @@ class ExperienceSharingController extends Controller
             $plan->current_sub_stage_id = 9;
             $plan->update();
             // Update Activity
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->actual_end_date = date('Y-m-d');
             $plan_activity->gyr_status = 'G';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
-            $user_email = auth()->user()->email;
-            $user_name = auth()->user()->name;
-            // Mail Function
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.naveen@venkateswarasteels.com')
-            ->cc($cc_emails)
-            ->send(new ActivityMail($user_email,$user_name,$activity));
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // Mail::to('edp@venkateswarasteels.com')
+            // ->cc($cc_emails)
+            // ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Experience Sharing Created Successfully!');
 
         } catch (\Throwable $th) {
@@ -113,9 +114,17 @@ class ExperienceSharingController extends Controller
      * @param  \App\Models\ExperienceSharing  $experienceSharing
      * @return \Illuminate\Http\Response
      */
-    public function show(ExperienceSharing $experienceSharing)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $tgw_data = ExperienceSharing::where('apqp_timing_plan_id',$id)->first();
+        $location = $tgw_data->timing_plan->apqp_timing_plan_number.'/experience_sharing/';
+        return view('apqp.experience_sharing.view',compact('plan','plans','part_numbers','customers','customer_types','tgw_data','location'));
+
     }
 
     /**

@@ -39,6 +39,9 @@ use App\Http\Controllers\SpcStudyController;
 use App\Http\Controllers\CustomerApprovalOfPpapController;
 use App\Http\Controllers\SafeLaunchController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\SirApprovalController;
+use App\Http\Controllers\VerificationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,13 +73,19 @@ Route::post('apqp_timing_plan/customers',[APQPTimingPlanController::class,'getCu
 Route::post('apqp_timing_plan/plans',[APQPTimingPlanController::class,'getPlans'])->name('plans');
 Route::post('apqp_timing_plan/schedule_plans',[APQPTimingPlanController::class,'getSchedulePlans'])->name('schedule_plans');
 Route::post('apqp_timing_plan/plan_activities',[APQPTimingPlanController::class,'getPlanActivities'])->name('plan_activities');
+Route::post('apqp_timing_plan/fetch_part_number',[APQPTimingPlanController::class,'fetch_part_number'])->name('fetch_part_number');
 Route::get('apqp_timing_plan/export',[APQPTimingPlanController::class,'export'])->name('timing_plan.export');
 Route::resource('apqp_timing_plan',APQPTimingPlanController::class);
 Route::get('escalation_activity',[APQPPLanActivityController::class,'escalation_activity'])->name('escalation_activity');
 Route::get('escalation_export',[APQPPLanActivityController::class,'escalation_export'])->name('escalation_export');
+Route::get('activity/task_list',[APQPPLanActivityController::class,'task_list'])->name('task_list');
 Route::resource('activity',APQPPLanActivityController::class);
+Route::get('enquiry_register/verify',[EnquiryRegisterController::class,'verify'])->name('enquiry.verify');
 Route::post('enquiry_register/save_register',[EnquiryRegisterController::class,'save_register'])->name('save_register');
 Route::resource('enquiry_register',EnquiryRegisterController::class);
+Route::get('verification/task/{plan_id}/{sub_stage_id}',[VerificationController::class,'task'])->name('task');
+Route::resource('verification',VerificationController::class);
+// Route::resource('verification/activity/',[VerificationController::class,'activity'])->name('activity');
 Route::resource('product_information_data',ProductInformationDataController::class);
 Route::resource('mfr',ManufacturingFeasibilityReviewController::class);
 Route::resource('risk_analysis',RiskAnalysisController::class);
@@ -100,6 +109,7 @@ Route::resource('msa_study',MsaStudyController::class);
 Route::resource('spc_study',SpcStudyController::class);
 Route::resource('experience_sharing',ExperienceSharingController::class);
 Route::resource('sample_submission',SampleSubmissionController::class);
+Route::resource('sample_approval',SirApprovalController::class);
 Route::resource('pilot_lot',PilotLotController::class);
 Route::resource('packing_specification',PackingSpecificationPreparationController::class);
 Route::resource('ppap_preparation',PpapPreparationController::class);

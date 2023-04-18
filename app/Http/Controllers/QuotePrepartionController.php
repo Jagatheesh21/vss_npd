@@ -42,6 +42,8 @@ class QuotePrepartionController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+
+
         return view('apqp.quote_preparation.create',compact('plan','plans','part_numbers','customers','customer_types'));
 
     }
@@ -65,6 +67,7 @@ class QuotePrepartionController extends Controller
             $quote->revision_date = $request->revision_date;
             $quote->application = $request->application;
             $quote->customer_id = $request->customer_id;
+            $quote->status_id = 2;
             $quote->product_description = $request->product_description;
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',5)->first();
             $file = $request->file('quote_document');
@@ -84,7 +87,7 @@ class QuotePrepartionController extends Controller
             $plan->current_sub_stage_id = 5;
             $plan->update();
             // Update Activity
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->actual_end_date = date('Y-m-d');
             $plan_activity->gyr_status = 'G';
@@ -93,8 +96,8 @@ class QuotePrepartionController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.naveen@venkateswarasteels.com')
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('edp@venkateswarasteels.com')
             ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Quote Preparation Created Successfully!');
@@ -111,10 +114,26 @@ class QuotePrepartionController extends Controller
      * @param  \App\Models\QuotePrepartion  $quotePrepartion
      * @return \Illuminate\Http\Response
      */
-    public function show(QuotePrepartion $quotePrepartion)
+    public function show($id)
     {
-        //
+        // $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $quoteprepartion = QuotePrepartion::with('timing_plan')->find($id);
+        // dd($quoteprepartion->timing_plan);
+        return view('apqp.quote_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','quoteprepartion'));
+
     }
+    // public function download($quote_document)
+    // {
+    //     // $file = material::where('uuid',$uuid)->first();
+    //     $pathofFile = storage_path($quote_document);
+    //     return response()->download($pathofFile);
+    // }
+
 
     /**
      * Show the form for editing the specified resource.

@@ -156,7 +156,8 @@
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
-    $("#submit").click(function(){
+    $("#submit").click(function(e){
+        e.preventDefault();
         $.ajax({
             url:"{{route('risk_analysis.store')}}",
             type:"POST",
@@ -171,7 +172,7 @@
                     position: 'top-right',
                     icon: 'success'
                 });
-                location.reload();
+                // location.reload();
             },
             error:function(result)
             {

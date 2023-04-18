@@ -24,17 +24,58 @@ class APQPPLanActivityController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
-            $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer','sub_stage'])->where('responsibility',auth()->user()->id)->where('status_id',1)->get();
-                return Datatables::of($data)
-                        ->addIndexColumn()
-                        ->addColumn('action', function($row){
-                            $btn = '<a href="'.$row->sub_stage->url.$row->plan->id.'" data-toggle="tooltip"  data-id="'.$row->plan->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Update</a>';
-                            return $btn;
-                        })
-                        ->rawColumns(['action'])
-                        ->make(true);
-                    }
+
+        if(auth()->user()->id>7)
+        {
+            if($request->ajax()){
+
+                $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer','sub_stage'])->where('responsibility',auth()->user()->id)->where('status_id',1)->GroupBy('apqp_timing_plan_id')->get();
+                    return Datatables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+                                $url = url('activity/task_list?id=');
+                                $btn = '<a href="'.$url.$row->plan->id.'" data-toggle="tooltip"  data-id="'.$row->plan->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Tasks</a>';
+                                return $btn;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+                        }
+
+        }
+        if(auth()->user()->id==7)
+        {
+            if($request->ajax()){
+
+                $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer','sub_stage'])->where('verified_by',auth()->user()->id)->where('status_id',2)->GroupBy('apqp_timing_plan_id')->get();
+                    return Datatables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+                                $url = url('activity/task_list?id=');
+                                $btn = '<a href="'.$url.$row->plan->id.'" data-toggle="tooltip"  data-id="'.$row->plan->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Tasks</a>';
+                                return $btn;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+                        }
+
+        }
+        if(auth()->user()->id==3 || auth()->user()->id==5 || auth()->user()->id==6)
+        {
+            if($request->ajax()){
+
+                $data = APQPPlanActivity::with(['plan','plan.part_number','plan.customer','sub_stage'])->where('approved_by',auth()->user()->id)->where('status_id',3)->GroupBy('apqp_timing_plan_id')->get();
+                    return Datatables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+                                $url = url('activity/task_list?id=');
+                                $btn = '<a href="'.$url.$row->plan->id.'" data-toggle="tooltip"  data-id="'.$row->plan->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Tasks</a>';
+                                return $btn;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+                        }
+
+        }
 
         return view('apqp.activity.index');
 
@@ -142,4 +183,26 @@ class APQPPLanActivityController extends Controller
         Mail::to($email)->send(new EscalationMail($username,Storage::get($path)));
 
    }
+
+   public function task_list(Request $request)
+   {
+        $plan_id = $request->input('id');
+        $tasks = APQPPLanActivity::with('plan','plan.part_number','plan.customer','stage','sub_stage','plan.status')->where('apqp_timing_plan_id',$plan_id);
+        $user_id = auth()->user()->id;
+        if($user_id>7)
+        {
+            $tasks = $tasks->where('responsibility',auth()->user()->id)->where('status_id',1);
+        }
+        if($user_id==7)
+        {
+            $tasks = $tasks->where('verified_by',auth()->user()->id)->where('status_id',2);
+        }
+        if($user_id==3 || $user_id==5 || $user_id==6 )
+        {
+            $tasks = $tasks->where('approved_by',auth()->user()->id)->where('status_id',3);
+        }
+        $task_lists = $tasks->get();
+        return view('apqp.tasks.index',compact('task_lists'));
+
+    }
 }

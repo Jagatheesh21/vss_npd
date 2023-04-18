@@ -19,7 +19,7 @@
   @endif
     <div class="card ">
         <div class="card-header text-center">
-            <b>Schedule Timing Plan</b> 
+            <b>Schedule Timing Plan</b>
             <a href="{{route('apqp_timing_plan.index')}}" class="btn btn-primary btn-sm float-end">Timing Plans</a>
         </div>
         <div class="card-body">
@@ -45,12 +45,6 @@
                       <div class="col-md-4">
                         <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
                         <select name="part_number_id" id="part_number_id" class="form-control select2" required>
-                          <option value=""></option>
-                          @foreach($part_numbers as $part_number)
-                          <option value="{{$part_number->id}}" @if (old('part_number_id')==$part_number->id)
-                              selected
-                          @endif>{{$part_number->name}}</option>
-                          @endforeach
                         </select>
                         @error('part_number_id')
                         <span class="text-danger">{{$message}}</span>
@@ -62,10 +56,10 @@
                             <option value="">Select Part Number First</option>
                         </select>
                       </div>
-                      
+
                     </div>
                     <div class="row mb-3 activities">
-                      
+
                     </div>
                     <button type="submit" id="submit" class="btn btn-primary">Save</button>
                   </form>
@@ -76,26 +70,27 @@
 @push('scripts')
 <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
-       
+
         $("#customer_id").select2({
             placeholder:"Select Customer",
             allowedClear:true,
         });
-        $("#part_number_id").select2({
-            placeholder:"Select Part Number",
-            allowedClear:true,
-        });
+        // $("#part_number_id").select2({
+        //     placeholder:"Select Part Number",
+        //     allowedClear:true,
+        // });
         $("#apqp_timing_plan_id").select2({
             placeholder:"Select Timing Plan",
             allowedClear:true,
         });
-        
+
         $("#part_number_id").change(function(e){
             e.preventDefault();
             var part_number = $(this).val();
             var customer_id = $("#customer_id").val();
             if(part_number!="" && part_number!=null)
             {
+                // alert($(this).val());
                 $.ajax({
                     url:"{{route('plans')}}",
                     type:"POST",
@@ -111,11 +106,36 @@
                 });
             }
         });
+        // select part number
+        $("#customer_id").change(function(e){
+            e.preventDefault();
+            if($(this).val()=="" || $(this).val()==null || $(this).val()==undefined){
+                return false;
+            }
+            $.ajax({
+                url:"{{route('fetch_part_number')}}",
+                type:"POST",
+                data:{customer_id:$(this).val()},
+                success:function(response)
+                {
+                    if(response)
+                    {
+                      $("#part_number_id").select2({
+            placeholder:"Select Part Number",
+            allowedClear:true,
+        });
+                      $("#part_number_id").html(response);
+                    }
+                }
+            });
+
+        });
         $("#apqp_timing_plan_id").change(function(e){
             e.preventDefault();
             if($(this).val()=="" || $(this).val()==null || $(this).val()==undefined){
                 return false;
             }
+            // alert($(this).val());
             $.ajax({
                 url:"{{route('plan_activities')}}",
                 type:"POST",
@@ -124,7 +144,7 @@
                 {
                     if(response.html)
                     {
-                      $(".responsibility").select2();  
+                      $(".responsibility").select2();
                       $(".activities").html(response.html);
                     }
                 }
@@ -145,8 +165,15 @@
           error: function (reject) {
                 if( reject.status === 422 ) {
                   $.each(reject.responseJSON.errors,function(field_name,error){
-                    $(document).find('[name='+field_name+']').after('');
-                    $(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
+                    $.toast({
+                    heading: 'Error',
+                    text: error,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'error'
+                });
+                    // $(document).find('[name='+field_name+']').after('');
+                    // $(document).find('[name='+field_name+']').after('<br><span class="text-strong text-danger">' +error+ '</span>')
                     })
                 }
             }

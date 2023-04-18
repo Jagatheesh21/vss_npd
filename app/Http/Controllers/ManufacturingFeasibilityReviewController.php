@@ -91,7 +91,7 @@ class ManufacturingFeasibilityReviewController extends Controller
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',3)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->actual_end_date = date('Y-m-d');
             $plan_activity->gyr_status = 'G';
@@ -100,8 +100,8 @@ class ManufacturingFeasibilityReviewController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            Mail::to('r.naveen@venkateswarasteels.com')
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('npd@venkateswarasteels.com')
             ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return response()->json(['status'=>200,'message'=>'MFR Created Successfully!']);
@@ -117,9 +117,22 @@ class ManufacturingFeasibilityReviewController extends Controller
      * @param  \App\Models\ManufacturingFeasibilityReview  $manufacturingFeasibilityReview
      * @return \Illuminate\Http\Response
      */
-    public function show(ManufacturingFeasibilityReview $manufacturingFeasibilityReview)
+    public function show($id)
     {
-        //
+        // $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+
+        // $mfr = ManufacturingFeasibilityReview::with('timing_plan')->find($id);
+
+        $mfr_data=ManufacturingFeasibilityReview::with('timing_plan')->where('apqp_timing_plan_id', $id)->get();
+
+        // dd($mfr);
+        return view('apqp.mfr.view',compact('plan','plans','part_numbers','customers','customer_types','mfr_data'));
+
     }
 
     /**

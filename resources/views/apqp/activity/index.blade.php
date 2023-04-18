@@ -30,7 +30,6 @@
                         <th>Part Number</th>
                         <th>Part Description</th>
                         <th>Customer</th>
-                        <th>Activity</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -62,7 +61,6 @@
             {data: 'plan.part_number.name', name: 'part_number'},
             {data: 'plan.part_number.description', name: 'part_description'},
             {data: 'plan.customer.name', name: 'customer'},
-            {data: 'sub_stage.name', name: 'activity'},
             {data: 'action', name: 'action', orderable: false, searchable: false,exportable:false},
         ]
     });

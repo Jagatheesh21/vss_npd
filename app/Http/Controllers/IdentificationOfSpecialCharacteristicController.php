@@ -90,16 +90,16 @@ class IdentificationOfSpecialCharacteristicController extends Controller
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',7)->first();
-            $plan_activity->status_id = 4;
+            $plan_activity->status_id = 2;
             $plan_activity->actual_start_date = date('Y-m-d');
             $plan_activity->actual_end_date = date('Y-m-d');
             $plan_activity->gyr_status = 'G';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
-            $user_email = auth()->user()->email;
-            $user_name = auth()->user()->name;
-            // Mail Function
-            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
 
             return response()->json(['status'=>'200','message'=>'Special Characteristics Created Successfully!']);
 
@@ -116,9 +116,18 @@ class IdentificationOfSpecialCharacteristicController extends Controller
      * @param  \App\Models\IdentificationOfSpecialCharacteristic  $identificationOfSpecialCharacteristic
      * @return \Illuminate\Http\Response
      */
-    public function show(IdentificationOfSpecialCharacteristic $identificationOfSpecialCharacteristic)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $special_characters=IdentificationOfSpecialCharacteristic::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',7)->get();
+        // echo "<pre>";
+        // print_r($special_characters);echo "</pre>";exit;
+        // dd($special_characters);
+        return view('apqp.special_characteristics.view',compact('plan','plans','part_numbers','customers','customer_types','special_characters'));
     }
 
     /**

@@ -24,8 +24,11 @@ class StoreAPQPPLanActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'process_time.*' => 'required',
+            'plan_start_date.*' => 'required',
+            'plan_end_date.*' => 'required',
             'responsibility.*' => 'required',
+            'verified_by.*' => 'required',
+            'approved_by.*' => 'required',
 
         ];
     }

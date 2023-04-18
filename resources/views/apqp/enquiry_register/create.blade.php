@@ -23,9 +23,10 @@
                     <label for="name" class="col-sm-6 col-form-label required">Customer*</label>
                     <select name="customer_id" id="customer_id" class="form-control select2 bg-light" required readonly>
                       @foreach($customers as $customer)
-                      <option value="{{$customer->id}}" @if (old('customer_id')==$customer->id || $plan->plan->customer_id==$customer->id)
-                        selected
-                    @endif>{{$customer->name}}</option>
+                      @if($customer->id==$plan->customer->id)
+                      <option value="{{$customer->id}}" selected
+                        @endif
+                    >{{$customer->name}}</option>
                       @endforeach
                     </select>
                     @error('customer_id')
@@ -36,9 +37,9 @@
                     <label for="name" class="col-sm-6 col-form-label required">Part Number*</label>
                     <select name="part_number_id" id="part_number_id" class="form-control select2 bg-light" required readonly>
                       @foreach($part_numbers as $part_number)
-                      <option value="{{$part_number->id}}" @if (old('part_number_id')==$part_number->id || $plan->plan->part_number_id==$part_number->id)
-                          selected
-                      @endif>{{$part_number->name}}</option>
+                      @if ($part_number->id==$plan->part_number_id)
+                      <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
+                      @endif
                       @endforeach
                     </select>
                     @error('part_number_id')
@@ -49,7 +50,7 @@
                     <label for="" class="col-sm-6 col-form-label required">Timing Plan#</label>
                     <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" required class="form-control select2 bg-light" readonly>
                         @foreach($timing_plans as $timing_plan)
-                        @if ($timing_plan->id==$plan->apqp_timing_plan_id)
+                        @if ($timing_plan->id==$plan->id)
                             <option value="{{$timing_plan->id}}"
                               selected
                             >{{$timing_plan->apqp_timing_plan_number}}</option>
@@ -59,13 +60,13 @@
                   </div>
               <div class="col-md-4">
                 <label for="name" class="col-sm-6 col-form-label required">Supplier Name*</label>
-                <input type="text" readonly name="supplier" id="supplier" class="form-control bg-light"  value="{{$plan->plan->supplier}}" readonly>
+                <input type="text" readonly name="supplier" id="supplier" class="form-control bg-light"  value="{{$plan->supplier}}" readonly>
               </div>
               <div class="col-md-4">
                 <label for="name" class="col-sm-6 col-form-label required">Type Of Enquiry*</label>
                 <select name="type_of_enquiry" id="type_of_enquiry" class="form-control bg-light">
                   @foreach ($customer_types as $customer_type)
-                  @if ($customer_type->id==$plan->plan->customer->customer_type->id)
+                  @if ($customer_type->id==$plan->customer->customer_type->id)
                       <option value="{{$customer_type->id}}"
                           selected
                       >{{$customer_type->name}}</option>
