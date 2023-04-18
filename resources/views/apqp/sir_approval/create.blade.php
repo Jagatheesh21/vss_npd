@@ -19,7 +19,7 @@
   @endif
     <div class="card">
         <div class="card-header text-center">
-            <b>SIR Sample Submission Process</b>
+            <b>SIR Sample Approval Process</b>
         </div>
         <div class="card-body">
             <div class="col-md-12">
@@ -27,8 +27,8 @@
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
-                        <input type="hidden" name="stage_id" value="1">
-                        <input type="hidden" name="sub_stage_id" value="5">
+                        <input type="hidden" name="stage_id" value="2">
+                        <input type="hidden" name="sub_stage_id" value="19">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
                             <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2 bg-light">

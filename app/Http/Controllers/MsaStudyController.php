@@ -84,14 +84,19 @@ class MsaStudyController extends Controller
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 3;
             $plan->current_sub_stage_id = 23;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            // Mail Function
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
@@ -113,9 +118,37 @@ class MsaStudyController extends Controller
      * @param  \App\Models\MsaStudy  $msaStudy
      * @return \Illuminate\Http\Response
      */
-    public function show(MsaStudy $msaStudy)
+    public function show($id)
     {
-        //
+
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $msa_study = MsaStudy::where('apqp_timing_plan_id',$id)->first();
+        $location = $msa_study->timing_plan->apqp_timing_plan_number.'/msa_study/';
+        $msa_study_data=MsaStudy::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',23)->get();
+        return view('apqp.msa_study.view',compact('plan','plans','part_numbers','customers','customer_types','msa_study_data','location'));
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $msa_study = MsaStudy::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $msa_study->timing_plan->apqp_timing_plan_number.'/msa_study/';
+        $msa_study_data=MsaStudy::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($msa_study_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.msa_study.view',compact('plan','plans','part_numbers','customers','customer_types','msa_study_data','location'));
     }
 
     /**

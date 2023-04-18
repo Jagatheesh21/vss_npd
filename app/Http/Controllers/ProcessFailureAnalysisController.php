@@ -12,8 +12,10 @@ use App\Models\User;
 use App\Http\Requests\StoreProcessFailureAnalysisRequest;
 use App\Http\Requests\UpdateProcessFailureAnalysisRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Auth;
 use Mail;
 use App\Mail\ActivityMail;
 class ProcessFailureAnalysisController extends Controller
@@ -84,6 +86,14 @@ class ProcessFailureAnalysisController extends Controller
             $rpn = $request->input('rpn');
             $so = $request->input('so');
             $sd = $request->input('sd');
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',13)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/process_failure_analysis';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
             foreach ($process_descriptions as $key => $process_description) {
                 $analysis = new ProcessFailureAnalysis;
                 $analysis->apqp_timing_plan_id = $apqp_timing_plan_id;
@@ -109,28 +119,35 @@ class ProcessFailureAnalysisController extends Controller
                 $analysis->rpn = $rpn[$key];
                 $analysis->so = $so[$key];
                 $analysis->sd = $sd[$key];
+                $analysis->file = $fileName;
+                $analysis->remarks = $request->remarks??NULL;
+                $analysis->prepared_by = auth()->user()->id;
                 $analysis->save();
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 2;
             $plan->current_sub_stage_id = 13;
+            $plan->status_id = 2;
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',13)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+
+            // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
+            // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
 
             DB::commit();
-            return response()->json(['status'=>200,'message'=>'Process Failur Analysis Created Successfully!']);
+            return response()->json(['status'=>200,'message'=>'Process Failure Analysis Created Successfully!']);
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -146,9 +163,38 @@ class ProcessFailureAnalysisController extends Controller
      * @param  \App\Models\ProcessFailureAnalysis  $processFailureAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function show(ProcessFailureAnalysis $processFailureAnalysis)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $users = User::where('id','>',1)->get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $process_failure_analysis = ProcessFailureAnalysis::where('apqp_timing_plan_id',$id)->first();
+        $location = $process_failure_analysis->timing_plan->apqp_timing_plan_number.'/process_failure_analysis/';
+        $process_flow_data=ProcessFailureAnalysis::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',13)->get();
+        // echo "<pre>";
+        // print_r($process_flow_data);
+        // echo "</pre>";exit;
+        return view('apqp.process_failure_analysis.view',compact('plan','users','plans','part_numbers','customers','customer_types','process_flow_data','location'));
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $users = User::where('id','>',1)->get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $process_failure_analysis = ProcessFailureAnalysis::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $process_failure_analysis->timing_plan->apqp_timing_plan_number.'/process_failure_analysis/';
+        $process_flow_data=ProcessFailureAnalysis::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($process_flow_data);
+        // echo "</pre>";exit;
+        return view('apqp.process_failure_analysis.view',compact('plan','users','plans','part_numbers','customers','customer_types','process_flow_data','location'));
     }
 
     /**

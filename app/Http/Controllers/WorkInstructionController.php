@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Auth;
 use App\Http\Requests\StoreWorkInstructionRequest;
 use App\Http\Requests\UpdateWorkInstructionRequest;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Mail\ActivityMail;
 use Mail;
@@ -68,6 +69,14 @@ class WorkInstructionController extends Controller
             $description = $request->description;
             $inspection_method = $request->inspection_method;
             $remarks = $request->remarks;
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',17)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/work_instructions';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
             foreach ($reference_numbers as $key => $reference_number) {
                 $work = new WorkInstruction;
                 $work->apqp_timing_plan_id = $apqp_timing_plan_id;
@@ -81,23 +90,29 @@ class WorkInstructionController extends Controller
                 $work->description = $description[$key];
                 $work->inspection_method = $inspection_method[$key];
                 $work->remarks = $remarks[$key];
+                $work->file = $fileName;
+                $work->prepared_by = auth()->user()->id;
                 $work->save();
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 2;
             $plan->current_sub_stage_id = 17;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',2)->where('sub_stage_id',17)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            // Mail Function
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
             Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return response()->json(['status'=>200,'message'=>'Work Instructions Added Successfully!']);
@@ -114,9 +129,32 @@ class WorkInstructionController extends Controller
      * @param  \App\Models\WorkInstruction  $workInstruction
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkInstruction $workInstruction)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $workinstruction_data=WorkInstruction::with('timing_plan')->where('apqp_timing_plan_id', $id)->get();
+        $work_instructions = WorkInstruction::where('apqp_timing_plan_id',$id)->first();
+        $location = $work_instructions->timing_plan->apqp_timing_plan_number.'/work_instructions/';
+        return view('apqp.work_instructions.view',compact('plan','plans','part_numbers','customers','customer_types','workinstruction_data','location'));
+
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $work_instructions = WorkInstruction::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $work_instructions->timing_plan->apqp_timing_plan_number.'/work_instructions/';
+        $workinstruction_data=WorkInstruction::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->get();
+        return view('apqp.work_instructions.view',compact('plan','plans','part_numbers','customers','customer_types','workinstruction_data','location'));
+
     }
 
     /**

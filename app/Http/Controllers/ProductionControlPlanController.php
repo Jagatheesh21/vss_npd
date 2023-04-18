@@ -13,7 +13,9 @@ use App\Http\Requests\StoreProductionControlPlanRequest;
 use App\Http\Requests\UpdateProductionControlPlanRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use Auth;
 use Mail;
 use App\Mail\ActivityMail;
 class ProductionControlPlanController extends Controller
@@ -88,6 +90,14 @@ class ProductionControlPlanController extends Controller
             $control_method = $request->input('control_method');
             $responsiblity = $request->input('responsiblity');
             $reaction_plan = $request->input('reaction_plan');
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',21)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/production_control_plan';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
             $data = array();
             foreach ($process_seq_nos as $key => $process_seq_no) {
                 $proto = new ProductionControlPlan;
@@ -123,25 +133,33 @@ class ProductionControlPlanController extends Controller
                 $proto->control_method = $control_method[$key];
                 $proto->responsiblity = $responsiblity[$key];
                 $proto->reaction_plan = $reaction_plan[$key];
+                $proto->file = $fileName;
+                $proto->remarks = $request->remarks??NULL;
+                $proto->prepared_by = auth()->user()->id;
                 $proto->save();
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 3;
             $plan->current_sub_stage_id = 21;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',21)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+
+
+            // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
-            Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            // Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
          DB::commit();
         return response()->json(['status'=>200,'message'=>'Production ContolPlan Created Successfully!']);
         } catch (\Throwable $th) {
@@ -157,9 +175,39 @@ class ProductionControlPlanController extends Controller
      * @param  \App\Models\ProductionControlPlan  $productionControlPlan
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductionControlPlan $productionControlPlan)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $users = User::where('id','>',1)->get();
+        $productioncontrolplan_data=ProductionControlPlan::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',21)->get();
+        $productionc_control_plan = ProductionControlPlan::where('apqp_timing_plan_id',$id)->first();
+        $location = $productionc_control_plan->timing_plan->apqp_timing_plan_number.'/production_control_plan/';
+        // echo "<pre>";
+        // print_r($productioncontrolplan_data);echo "</pre>";
+        // exit;
+        return view('apqp.production_control_plan.view',compact('plan','plans','part_numbers','customers','customer_types','users','productioncontrolplan_data','location'));
+
+    }
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $users = User::where('id','>',1)->get();
+        $productionc_control_plan = ProductionControlPlan::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $productionc_control_plan->timing_plan->apqp_timing_plan_number.'/production_control_plan/';
+        $productioncontrolplan_data=ProductionControlPlan::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($productioncontrolplan_data);echo "</pre>";
+        // exit;
+        return view('apqp.production_control_plan.view',compact('plan','plans','part_numbers','customers','customer_types','users','productioncontrolplan_data','location'));
+
     }
 
     /**

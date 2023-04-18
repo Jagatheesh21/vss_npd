@@ -25,7 +25,7 @@
             <table class="table table-bordered table-hover table-striped" id="enquiry_table">
                 <thead class="bg-secondary">
                     <tr>
-                        <th>SNo</th>
+                        <th>S.No</th>
                         <th>APQP Time Plan Number</th>
                         <th>Part Number</th>
                         <th>Customer</th>

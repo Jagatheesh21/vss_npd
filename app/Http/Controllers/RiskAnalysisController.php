@@ -13,7 +13,9 @@ use App\Http\Requests\UpdateRiskAnalysisRequest;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Mail;
+use Auth;
 use Carbon\Carbon;
 use App\Mail\ActivityMail;
 
@@ -71,6 +73,15 @@ class RiskAnalysisController extends Controller
             $risk_level = $request->input('risk_level');
             $high_risks = $request->input('high_risk');
 
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',4)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/risk_analysis';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
+
             foreach ($high_risks as $key => $high_risk) {
                 $risk = new RiskAnalysis;
                 $risk->apqp_timing_plan_id = $apqp_timing_plan_id;
@@ -81,6 +92,9 @@ class RiskAnalysisController extends Controller
                 $risk->revision_date = $revision_date;
                 $risk->application = $application;
                 $risk->customer_id = $customer_id;
+                $risk->file = $fileName;
+                $risk->remarks = $request->remarks??NULL;
+                // dd($request->remarks);
                 $risk->product_description = $product_description;
                 $risk->type = $type[$key];
                 $risk->risks = $risks[$key];
@@ -91,44 +105,83 @@ class RiskAnalysisController extends Controller
 
             }
 
-            // Update Timing Plan Current Activity
-            $plan = APQPTimingPlan::find($apqp_timing_plan_id);
+             // Update Timing Plan Current Activity
+             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 4;
+            $plan->status_id = 2;
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',4)->first();
             $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->prepared_at =Carbon::now();
-            $plan_activity->gyr_status = 'G';
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
+            $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->gyr_status = 'Y';
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-             Mail::to('edp@venkateswarasteels.com')
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+             Mail::to('r.naveen@venkateswarasteels.com')
+            //  Mail::to('edp@venkateswarasteels.com')
             // ->cc($ccEmails)
              ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return response()->json(['status'=>'200','message'=>'Risk Analysis Created Successfully!']);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             DB::rollback();
             return response()->json(['status'=>'500','message'=>$th->getMessage()]);
 
         }
     }
-
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\RiskAnalysis  $riskAnalysis
      * @return \Illuminate\Http\Response
      */
-    public function show(RiskAnalysis $riskAnalysis)
+    public function show($id)
     {
-        //
+        $sub_stage_id=4;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $riskAnalysis = RiskAnalysis::where('apqp_timing_plan_id',$id)->first();
+        $location = $riskAnalysis->timing_plan->apqp_timing_plan_number.'/risk_analysis/';
+        $risk_analysis_data=RiskAnalysis::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',4)->get();
+
+        // echo "<pre>";
+        // print_r($risk_analysis_data);
+        // echo "</pre>";exit;
+        return view('apqp.risk_analysis.view',compact('plan','plans','part_numbers','customers','customer_types','risk_analysis_data','location'));
+
+    }
+        /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\RiskAnalysis  $riskAnalysis
+     * @return \Illuminate\Http\Response
+     */
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $riskAnalysis = RiskAnalysis::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $riskAnalysis->timing_plan->apqp_timing_plan_number.'/risk_analysis/';
+        $risk_analysis_data=RiskAnalysis::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+
+        // echo "<pre>";
+        // print_r($risk_analysis_data);
+        // echo "</pre>";exit;
+        return view('apqp.risk_analysis.view',compact('plan','plans','part_numbers','customers','customer_types','risk_analysis_data','location'));
+
     }
 
     /**

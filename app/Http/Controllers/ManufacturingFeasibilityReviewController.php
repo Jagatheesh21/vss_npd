@@ -12,9 +12,11 @@ use App\Http\Requests\StoreManufacturingFeasibilityReviewRequest;
 use App\Http\Requests\UpdateManufacturingFeasibilityReviewRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Carbon\Carbon;
+use Auth;
 use Mail;
 use App\Mail\ActivityMail;
-use Carbon\Carbon;
 
 class ManufacturingFeasibilityReviewController extends Controller
 {
@@ -53,7 +55,7 @@ class ManufacturingFeasibilityReviewController extends Controller
      */
     public function store(StoreManufacturingFeasibilityReviewRequest $request)
     {
-
+        // dd(auth()->user()->id);
         DB::beginTransaction();
         try {
             //code...
@@ -70,11 +72,20 @@ class ManufacturingFeasibilityReviewController extends Controller
             $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
             $stage_id = 1;
             $sub_stage_id = 3;
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',3)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/mfr';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
             foreach ($ref_nos as $key => $ref_no) {
                 $mfr = new ManufacturingFeasibilityReview;
                 $mfr->apqp_timing_plan_id = $apqp_timing_plan_id;
                 $mfr->stage_id = $stage_id;
                 $mfr->sub_stage_id = $sub_stage_id;
+                $mfr->file = $fileName;
                 $mfr->grid_notes = $ref_no;
                 $mfr->pfd_no = $pfds[$key];
                 $mfr->parameters_per_drawing = $parameters[$key];
@@ -87,14 +98,16 @@ class ManufacturingFeasibilityReviewController extends Controller
                 $mfr->remarks = $remark[$key];
                 $mfr->save();
             }
-            // Update Timing Plan Current Activity
+         // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
-            $plan->current_stage_id = $stage_id;
-            $plan->current_sub_stage_id = $sub_stage_id;
+            $plan->current_stage_id = 1;
+            $plan->current_sub_stage_id = 3;
+            $plan->status_id = 2;
             $plan->update();
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
             $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
             $plan_activity->status_id = 2;
             $plan_activity->gyr_status = "Y";
@@ -105,12 +118,15 @@ class ManufacturingFeasibilityReviewController extends Controller
             $user_name = auth()->user()->name;
             // Mail Function
             Mail::to('r.naveen@venkateswarasteels.com')
+            // Mail::to('edp@venkateswarasteels.com')
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
-            return back()->withSuccess('MFR Created Successfully!');
+            // return back()->withSuccess('MFR Created Successfully!');
+            return response()->json(['status'=>'200','message'=>'MFR Created Successfully!']);
+            // return response('success',$file);
         } catch (\Throwable $th) {
-            //throw $th;
-           // DB::rollback();
+            // throw $th;
+           DB::rollback();
             return back()->withError($th->getMessage());
         }
     }
@@ -123,15 +139,29 @@ class ManufacturingFeasibilityReviewController extends Controller
      */
     public function show($id)
     {
+        $plan = APQPTimingPlan::find($id);
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        $mfr = ManufacturingFeasibilityReview::with('timing_plan')->findorFail($id);
-        dd($mfr);
-        return view('apqp.mfr.view',compact('plans','part_numbers','customers','customer_types','mfr'));
+        $mfr = ManufacturingFeasibilityReview::where('apqp_timing_plan_id',$id)->first();
+        $location = $mfr->timing_plan->apqp_timing_plan_number.'/mfr/';
+        $mfr_data=ManufacturingFeasibilityReview::with('timing_plan')->where('apqp_timing_plan_id', $id)->get();
+        return view('apqp.mfr.view',compact('plan','plans','part_numbers','customers','customer_types','mfr_data','location'));
     }
 
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $mfr = ManufacturingFeasibilityReview::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $mfr->timing_plan->apqp_timing_plan_number.'/mfr/';
+        $mfr_data=ManufacturingFeasibilityReview::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id', $sub_stage_id)->get();
+        return view('apqp.mfr.view',compact('plan','plans','part_numbers','customers','customer_types','mfr_data','location'));
+    }
     /**
      * Show the form for editing the specified resource.
      *

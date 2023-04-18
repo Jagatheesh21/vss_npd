@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('management_review.store')}}">
+                <form id="category_save" method="POST"  enctype="multipart/form-data" action="{{route('management_review.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -143,6 +143,13 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" id="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
 
                     </div>
                     <div class="row clearfix">
@@ -151,7 +158,7 @@
                                 <thead>
                                 <tr class="text-center bg-light">
                                     <th>Point Discussed</th>
-                                    <th>Resp</th>
+                                    <th>Responsibility</th>
                                     <th>Target Date</th>
                                     <th>Actual Date</th>
                                     <th>Reason For Delay</th>
@@ -239,10 +246,13 @@
     // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
+        var formData = new FormData($("#category_save")[0]);
         $.ajax({
             url:"{{ route('management_review.store') }}",
             type:"POST",
-            data:$("#category_save").serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             success:function(response)
             {
                 console.log(response);

@@ -83,9 +83,9 @@ class EnquiryRegisterController extends Controller
     public function store(StoreEnquiryRegisterRequest $request)
     {
 
-        //DB::beginTransaction();
-        // try {
-            //EnquiryRegister::create($request->validated());
+        DB::beginTransaction();
+        try {
+        //EnquiryRegister::create($request->validated());
             $enquiry_register = new EnquiryRegister;
             $enquiry_register->apqp_timing_plan_id = $request->apqp_timing_plan_id;
             $enquiry_register->stage_id = 1;
@@ -98,24 +98,37 @@ class EnquiryRegisterController extends Controller
                 $filePath = $req->file('enquiry_document')->storeAs('uploads', $fileName, 'public');
             }
             $enquiry_register->enquiry_document = $fileName;
+            $enquiry_register->average_annum_demand = $request->average_annum_demand;
             $enquiry_register->prepared_by = auth()->user()->id;
             $enquiry_register->ern_sample = $request->ern_sample;
             $enquiry_register->sir_sample = $request->sir_sample;
             $enquiry_register->safe_launch_sample = $request->safe_launch_sample;
             $enquiry_register->save();
 
+         // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            $plan->current_stage_id = 1;
+            $plan->current_sub_stage_id = 1;
+            $plan->status_id = 2;
+            $plan->update();
+
+        // Update Activity
+             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
+             $plan_activity->actual_start_date = Carbon::now();
+             $plan_activity->prepared_by = auth()->user()->id;
+             $plan_activity->prepared_at = Carbon::now();
+             $plan_activity->status_id = 2;
+             $plan_activity->gyr_status = "Y";
+             $plan_activity->update();
+
+        //  mail
             $user_email = auth()->user()->email;
             //$user_email = 'edp@venkateswarasteels.com';
             $user_name = auth()->user()->name;
             $file = $filePath;
             $enquiry = EnquiryRegister::find($enquiry_register->id);
-
+            // Mail::to('edp@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
             Mail::to('r.naveen@venkateswarasteels.com')->send(new EnquiryRegisterMail($user_email,$user_name,$file,$enquiry));
-
-            $plan = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',1)->first();
-            $plan->status_id = 2;
-            $plan->prepared_at = Carbon::now();
-            $plan->update();
             $data["email"] = "edp@venakteswarasteels.com";
             $data["title"] = "Enquiry Register Approval";
         //   Mail::send('email.welcome', $data, function($message)use($data, $file) {
@@ -123,15 +136,15 @@ class EnquiryRegisterController extends Controller
         //             ->subject($data["title"])
         //             ->attach($file);
         //     });
-          // DB::commit();
+          DB::commit();
 
             return response('success',$file);
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        //    DB::rollback();
-        //     return response($th->getMessage());
+        } catch (\Throwable $th) {
+            //throw $th;
+           DB::rollback();
+            return response($th->getMessage());
 
-        // }
+        }
     }
 
     /**
@@ -162,6 +175,20 @@ class EnquiryRegisterController extends Controller
         $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($id);
         $location = $enquiry->timing_plan->apqp_timing_plan_number.'/enquiry_register/';
         return view('apqp.enquiry_register.edit',compact('timing_plans','plan','customer_types','customers','part_numbers','statuses','enquiry','location'));
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $customers = Customer::with('customer_type')->get();
+        $part_numbers = PartNumber::all();
+        $customer_types = CustomerType::all();
+        $timing_plans = APQPTimingPlan::all();
+        $statuses=Status::whereIn('id',[3,5])->get();
+        $enquiry = EnquiryRegister::where('apqp_timing_plan_id',$plan_id)->first();
+        $plan = APQPPlanActivity::with(['plan','plan.customer','plan.customer.customer_type'])->find($plan_id);
+        $location = $enquiry->timing_plan->apqp_timing_plan_number.'/enquiry_register/';
+        // dd($enquiry);
+        return view('apqp.enquiry_register.show',compact('timing_plans','plan','customer_types','customers','part_numbers','statuses','enquiry','location'));
     }
 
     /**

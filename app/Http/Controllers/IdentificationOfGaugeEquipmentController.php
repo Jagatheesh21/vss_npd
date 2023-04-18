@@ -102,24 +102,29 @@ class IdentificationOfGaugeEquipmentController extends Controller
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 8;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',8)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+
+            // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
-           // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+        //    $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('r.naveen@venkateswarasteels.com')
+            // Mail::to('edp@venkateswarasteels.com')
            // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
-            return response()->json(['status'=>'200','message'=>'Special Characteristics Created Successfully!']);
+            return response()->json(['status'=>'200','message'=>'Gauge Equipments Created Successfully!']);
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -128,15 +133,41 @@ class IdentificationOfGaugeEquipmentController extends Controller
         }
     }
 
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\IdentificationOfGaugeEquipment  $identificationOfGaugeEquipment
      * @return \Illuminate\Http\Response
      */
-    public function show(IdentificationOfGaugeEquipment $identificationOfGaugeEquipment)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $gauge = IdentificationOfGaugeEquipment::where('apqp_timing_plan_id',$id)->first();
+        $location = $gauge->timing_plan->apqp_timing_plan_number.'/gauge_equipment/';
+        // dd($location);
+        $gaugeequipments=IdentificationOfGaugeEquipment::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',8)->get();
+        return view('apqp.gauge_equipment.view',compact('plan','plans','part_numbers','customers','customer_types','gaugeequipments','location'));
+
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $gauge = IdentificationOfGaugeEquipment::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $gauge->timing_plan->apqp_timing_plan_number.'/gauge_equipment/';
+        // dd($location);
+        $gaugeequipments=IdentificationOfGaugeEquipment::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        return view('apqp.gauge_equipment.view',compact('plan','plans','part_numbers','customers','customer_types','gaugeequipments','location'));
+
     }
 
     /**

@@ -178,6 +178,7 @@ class VerificationController extends Controller
     }
     public function preview($plan_id,$sub_stage_id)
     {
+        if ($sub_stage_id==1) {
         $customers = Customer::with('customer_type')->get();
         $part_numbers = PartNumber::all();
         $customer_types = CustomerType::all();
@@ -189,6 +190,24 @@ class VerificationController extends Controller
         $activity = APQPPLanActivity::where('apqp_timing_plan_id',$plan_id)->where('sub_stage_id',$sub_stage_id)->first();
         $model= $model_data::with('timing_plan')->where('apqp_timing_plan_id',$plan_id)->first();
         $view ="apqp.".$activity->sub_stage->route.".view";
+        // dd($model);
         return view($view,compact('model','customers','part_numbers','customer_types','plan','timing_plans'));
-    }
+
+        }elseif ($sub_stage_id==2) {
+           return 'hello';
+        }elseif ($sub_stage_id==3) {
+            $plan = APQPTimingPlan::find($plan_id);
+            $plans = APQPTimingPlan::get();
+            $part_numbers = PartNumber::get();
+            $customer_types = CustomerType::get();
+            $customers = Customer::get();
+            $sub_stage = SubStage::find($sub_stage_id);
+            $timing_plans = APQPTimingPlan::all();
+            $model_data = '\\App\\Models\\'.$sub_stage->model;
+            $mfr_data=APQPPLanActivity::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->first();
+            $view ="apqp.".$mfr_data->sub_stage->route.".view";
+            dd($model_data);
+            return view($view,compact('plan','plans','part_numbers','customers','customer_types','mfr_data'));
+        }
+          }
 }

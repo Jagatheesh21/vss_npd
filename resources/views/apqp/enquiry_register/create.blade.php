@@ -86,7 +86,7 @@
               </div>
               <div class="col-md-4">
                 <label for="name" class="col-sm-6 col-form-label required">Average Annum Demand *</label>
-                <input type="text" name="average_annum_demand" id="average_annum_demand" class="form-control @error('average_annum_demand') is-invalid @enderror" value="{{ old('average_annum_demand') }}">
+                <input type="text" name="average_annum_demand" id="average_annum_demand" class="form-control @error('average_annum_demand') is-invalid @enderror">
                 @error('average_annum_demand')
                 <span class="text-danger">{{$message}}</span>
                 @enderror

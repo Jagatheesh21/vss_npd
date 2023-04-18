@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('risk_analysis.store')}}">
+                <form id="category_save" method="POST"  enctype="multipart/form-data"  action="{{route('risk_analysis.store')}}">
                   @csrf
                   @method('POST')
                   <input type="hidden" name="stage_id" value="1">
@@ -109,10 +109,22 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
-
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" id="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
+                        </div>
                     </div>
 
-                    <div class="row clearfix">
+                    <div class="row clearfix mt-3">
                         <div class="col-md-12">
                             <table class="table table-responsive table-bordered" id="tab_logic">
                                 <thead>
@@ -158,10 +170,13 @@
 <script>
     $("#submit").click(function(e){
         e.preventDefault();
+        var formData = new FormData($("#category_save")[0]);
         $.ajax({
             url:"{{route('risk_analysis.store')}}",
             type:"POST",
-            data:$("#category_save").serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             success:function(result)
             {
                 //var response = $.parseJSON(result);

@@ -12,7 +12,9 @@ use App\Models\Customer;
 use App\Http\Requests\StoreProductInformationDataRequest;
 use App\Http\Requests\UpdateProductInformationDataRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use Auth;
 use Mail;
 use App\Mail\ActivityMail;
 
@@ -56,7 +58,7 @@ class ProductInformationDataController extends Controller
         // $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
 
         // dd($plan);
-        //dd($request->all());
+        // dd($request->all());
          DB::beginTransaction();
         try {
 
@@ -85,6 +87,16 @@ class ProductInformationDataController extends Controller
             $product->brought_out_parts = $request->details_of_brought_out_part;
             $product->sub_contract_process = $request->details_of_subcontract_process;
             $product->preliminary_process_flow = $request->preliminary_process_flow;
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $location = $plan_activity->plan->apqp_timing_plan_number.'/product_information';
+            if (! File::exists($location)) {
+                File::makeDirectory(public_path().'/'.$location,0777,true);
+            }
+            $file->move($location,$fileName);
+            $product->file = $fileName;
+            $product->remarks = $request->remarks??NULL;
             $product->prepared_by = auth()->user()->id;
             $product->prepared_at = now();
             $product->save();
@@ -97,7 +109,8 @@ class ProductInformationDataController extends Controller
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
             $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
             $plan_activity->update();
             //
@@ -105,15 +118,17 @@ class ProductInformationDataController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
-            //$ccEmails = ["edp@venkateswarasteels.com"];
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // $ccEmails = ["edp@venkateswarasteels.com"];
             Mail::to('r.naveen@venkateswarasteels.com')
-            //->cc($ccEmails)
+            // Mail::to('edp@venkateswarasteels.com')
+            ->cc($ccEmails)
 
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
         } catch (\Throwable $th) {
+            // throw $th;
             DB::rollback();
             return back()->withError($th->getMessage());
         }
@@ -132,10 +147,34 @@ class ProductInformationDataController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
-        $productInformationData = ProductInformationData::with('timing_plan')->find($id);
-        $data = ProductInformationData::with('id')->find($id);
+        $productInformation = ProductInformationData::where('apqp_timing_plan_id',$id)->first();
+        $location = $productInformation->timing_plan->apqp_timing_plan_number.'/product_information/';
+        $productInformationData = ProductInformationData::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',2)->get();
+        $data = ProductInformationData::with('id')->with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',2)->get();
         // dd($productInformationData);
-        return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data'));
+        return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data','location'));
+
+    }
+
+      /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\ProductInformationData  $productInformationData
+     * @return \Illuminate\Http\Response
+     */
+    public function preview($plan_id,$sub_stage_id)
+    {
+
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $productInformation = ProductInformationData::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $productInformation->timing_plan->apqp_timing_plan_number.'/product_information/';
+        $productInformationData = ProductInformationData::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        $data = ProductInformationData::with('id')->with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // dd($productInformationData);
+        return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data','location'));
 
     }
 

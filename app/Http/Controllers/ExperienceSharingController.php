@@ -84,18 +84,22 @@ class ExperienceSharingController extends Controller
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 9;
+            $plan->status_id = 2;
             $plan->update();
             // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',9)->first();
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
+            $plan_activity->prepared_at = Carbon::now();
             $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->prepared_at = now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
-            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // Mail::to('edp@venkateswarasteels.com')
             Mail::to('r.naveen@venkateswarasteels.com')
            // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
@@ -115,11 +119,30 @@ class ExperienceSharingController extends Controller
      * @param  \App\Models\ExperienceSharing  $experienceSharing
      * @return \Illuminate\Http\Response
      */
-    public function show(ExperienceSharing $experienceSharing)
+    public function show($id)
     {
-        //
-    }
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $tgw_data = ExperienceSharing::where('apqp_timing_plan_id',$id)->where('sub_stage_id',9)->first();
+        $location = $tgw_data->timing_plan->apqp_timing_plan_number.'/experience_sharing/';
+        return view('apqp.experience_sharing.view',compact('plan','plans','part_numbers','customers','customer_types','tgw_data','location'));
 
+    }
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $tgw_data = ExperienceSharing::where('apqp_timing_plan_id',$plan_id)->where('sub_stage_id',$sub_stage_id)->first();
+        $location = $tgw_data->timing_plan->apqp_timing_plan_number.'/experience_sharing/';
+        return view('apqp.experience_sharing.view',compact('plan','plans','part_numbers','customers','customer_types','tgw_data','location'));
+
+    }
     /**
      * Show the form for editing the specified resource.
      *

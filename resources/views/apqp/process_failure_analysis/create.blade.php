@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('process_failure_analysis.store')}}">
+                <form id="category_save" method="POST" enctype="multipart/form-data"  action="{{route('process_failure_analysis.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -127,6 +127,17 @@
                             @enderror
                         </div>
 
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" id="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: auto">
@@ -253,10 +264,13 @@
 $("#submit").click(function(e){
         e.preventDefault();
         var url = "{{route('activity.index')}}";
+        var formData = new FormData($("#category_save")[0]);
         $.ajax({
             url:"{{route('process_failure_analysis.store')}}",
             type:"POST",
-            data:$("#category_save").serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             success:function(response)
             {
                 $.toast({

@@ -112,6 +112,7 @@ class APQPTimingPlanController extends Controller
         $part_numbers = PartNumber::all();
         $stages = Stage::with('sub_stages')->get();
         $timing = APQPTimingPlan::with(['stages','sub_stages','activites','stage','sub_stage'])->find($id);
+        // dd($timing);
         return view('apqp.timing_plan.show',compact('timing','customers','part_numbers','stages'));
     }
 

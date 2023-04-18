@@ -29,9 +29,9 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="name" class="col-sm-6 col-form-label required">Timing Plan#</label>
-                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control select2">
+                            <select name="apqp_timing_plan_id" id="apqp_timing_plan_id" class="form-control bg-light" readonly>
                                 @foreach ($plans as $t_plan)
-                                    @if ($t_plan->id==$mfr->timing_plan->id)
+                                    @if ($t_plan->id==$plan->id)
                                     <option value="{{$t_plan->id}}" selected>{{$t_plan->apqp_timing_plan_number}}</option>
                                     @endif
                                 @endforeach
@@ -42,9 +42,9 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Part Number*</label>
-                            <select name="part_number_id" id="part_number_id" class="form-control select2">
+                            <select name="part_number_id" id="part_number_id" class="form-control bg-light" readonly>
                                 @foreach ($part_numbers as $part_number)
-                                    @if ($part_number->id==$$mfr->timing_plan->part_number_id)
+                                    @if ($part_number->id==$plan->part_number_id)
                                     <option value="{{$part_number->id}}" selected>{{$part_number->name}}</option>
                                     @endif
                                 @endforeach
@@ -55,23 +55,23 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Number*</label>
-                            <input type="text" name="revision_number" class="form-control" value="{{$mfr->timing_plan->revision_number}}" readonly>
+                            <input type="text" name="revision_number" class="form-control bg-light" value="{{$plan->revision_number}}" readonly>
                             @error('revision_number')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Revision Date*</label>
-                            <input type="text" name="revision_date" class="form-control" value="{{$mfr->timing_plan->revision_date}}" readonly>
+                            <input type="text" name="revision_date" class="form-control bg-light" value="{{$plan->revision_date}}" readonly>
                             @error('revision_date')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Application*</label>
-                            <select name="application" id="application" class="form-control select2">
+                            <select name="application" id="application" class="form-control bg-light select2">
                                 @foreach ($customer_types as $customer_type)
-                                    @if ($customer_type->id==$mfr->timing_plan->customer->customer_type->id)
+                                    @if ($customer_type->id==$plan->customer->customer_type->id)
                                     <option value="{{$customer_type->id}}" selected>{{$customer_type->name}}</option>
                                     @endif
                                 @endforeach
@@ -83,9 +83,9 @@
 
                         <div class="col-md-3">
                             <label for="" class="col-sm-6 col-form-label required">Customer*</label>
-                            <select name="customer_id" id="customer_id" class="form-control select2">
+                            <select name="customer_id" id="customer_id" class="form-control bg-light select2">
                                 @foreach ($customers as $customer)
-                                    @if ($customer->id==$mfr->timing_plan->customer_id)
+                                    @if ($customer->id==$plan->customer_id)
                                     <option value="{{$customer->id}}" selected>{{$customer->name}}</option>
                                     @endif
                                 @endforeach
@@ -96,14 +96,21 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Product Description*</label>
-                            <select name="product_description" id="product_description" class="form-control select2">
+                            <select name="product_description" id="product_description" class="form-control bg-light select2">
                                 @foreach ($part_numbers as $part_number)
-                                    @if ($part_number->id==$mfr->timing_plan->part_number_id)
+                                    @if ($part_number->id==$plan->part_number_id)
                                     <option value="{{$part_number->id}}" selected>{{$part_number->description}}</option>
                                     @endif
                                 @endforeach
                             </select>
                             @error('product_description')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <a href="{{url($location)}}/{{$mfr_data[0]->file}}" class="form-control btn btn-success btn-sm text-white" target="_blank">Download</a>
+                            @error('file')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
@@ -123,62 +130,59 @@
                                     <th>SC/CC,FFF,Past Trouble,TGW</th>
                                     <th>INITIAL SAMPLE LAYOUT INSPECTION</th>
                                     <th>MASS PRODUCTION</th>
-                                    </th>
                                     <th>FEASIBILITY CONFIRMATION</th>
-                                    <th>CPK CMK</th>
+                                    <th>&nbsp;&nbsp;CPK CMK&nbsp;&nbsp;</th>
                                     <th>REMARKS</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr id='addr0'>
-                                    <td>1</td>
-                                    <td><input type="text" class="form-control" name="grid_ref_no[]">
-                                        @error('grid_ref_no')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
-                                    </td>
-                                    <td><input type="text" class="form-control" name="pfd[]"></td>
-                                    <td><select name="parameter_as_per_drawing[]" class="form-control">
-                                        <option value="Radius">Radius</option>
-                                        <option value="Dimension">Dimension</option>
-                                        <option value="Material">Material</option>
-                                        <option value="WireDia">WireDia</option>
-                                        <option value="Angle">Angle</option>
-                                    </select></td>
-                                    <td><input type="text" class="form-control" name="specification_as_per_drawing[]"></td>
-                                    <td><input type="text" class="form-control" name="past_trouble[]"></td>
-                                    <td><select name="initial_sample_layout_inspection[]" class="form-control">
-                                        <option value="SupplierTC">SupplierTC</option>
-                                        <option value="Micrometer">Micrometer</option>
-                                        <option value="ProfileProjector">ProfileProjector</option>
-                                        <option value="DigitalVernier">DigitalVernier</option>
-                                        <option value="LoadTestMechine">LoadTestMechine</option>
-                                    </select></td>
-                                    <td><select name="mass_production[]" class="form-control">
-                                        <option value="SupplierTC">SupplierTC</option>
-                                        <option value="Micrometer">Micrometer</option>
-                                        <option value="ProfileProjector">ProfileProjector</option>
-                                        <option value="DigitalVernier">DigitalVernier</option>
-                                        <option value="LoadTestMechine">LoadTestMechine</option>
-                                    </select></td>
-                                    <td class="col-md-4"><input type="text" class="form-control" name="feasibility_confirmation[]"></td>
-                                    <td class="col-md-4"><input type="text" class="form-control" name="cpk_cmk[]"></td>
-                                    <td class="col-md-4">
-                                        <input type="text" name="remarks[]" class="form-control">
-                                </tr>
-                                <tr id='addr1'></tr>
+                                    @forelse ($mfr_data as $mfr)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td  class="col-md-4"><input type="text" class="form-control bg-light" name="grid_ref_no[]" value="{{$mfr->grid_notes}}" readonly></td>
+                                        <td><input type="text" class="form-control bg-light" name="pfd[]" value="{{$mfr->pfd_no}}"></td>
+                                        <td><select name="parameter_as_per_drawing[]" class="form-control bg-light" readonly>
+                                            {{-- <option value="Radius" {{ ($mfr->parameters_per_drawing=="Radius")? "selected" : "" }}>Radius</option>
+                                            <option value="Dimension" {{ ($mfr->parameters_per_drawing=="Dimension")? "selected" : "" }}>Dimension</option>
+                                            <option value="Material" {{ ($mfr->parameters_per_drawing=="Material")? "selected" : "" }}>Material</option>
+                                            <option value="WireDia" {{ ($mfr->parameters_per_drawing=="WireDia")? "selected" : "" }}>WireDia</option>
+                                            <option value="Angle" {{ ($mfr->parameters_per_drawing=="Angle")? "selected" : "" }}>Angle</option> --}}
+                                            <option value="{{ $mfr->parameters_per_drawing }}" selected>{{ $mfr->parameters_per_drawing }}</option>
+                                        </select></td>
+                                        <td><input type="text" class="form-control bg-light" name="specification_as_per_drawing[]" value="{{$mfr->specification_per_drawing}}" readonly></td>
+                                        <td><input type="text" class="form-control bg-light" name="past_trouble[]" value="{{$mfr->past_trouble}}"></td>
+                                        <td><select name="initial_sample_layout_inspection[]" class="form-control bg-light" readonly>
+                                            {{-- <option value="SupplierTC"  {{ ($mfr->initial_sample_layout_inspection=="SupplierTC")? "selected" : "" }}>SupplierTC</option>
+                                            <option value="Micrometer"  {{ ($mfr->initial_sample_layout_inspection=="Micrometer")? "selected" : "" }}>Micrometer</option>
+                                            <option value="ProfileProjector" {{ ($mfr->initial_sample_layout_inspection=="ProfileProjector")? "selected" : "" }}>ProfileProjector</option>
+                                            <option value="DigitalVernier" {{ ($mfr->initial_sample_layout_inspection=="DigitalVernier")? "selected" : "" }}>DigitalVernier</option>
+                                            <option value="LoadTestMechine" {{ ($mfr->initial_sample_layout_inspection=="LoadTestMechine")? "selected" : "" }}>LoadTestMechine</option> --}}
+                                            <option value="{{ $mfr->initial_sample_layout_inspection }}" selected>{{ $mfr->initial_sample_layout_inspection }}</option>
+                                        </select></td>
+                                        <td><select name="mass_production[]" class="form-control bg-light" readonly>
+                                            {{-- <option value="SupplierTC"  {{ ($mfr->mass_production=="SupplierTC")? "selected" : "" }}>SupplierTC</option>
+                                            <option value="Micrometer"  {{ ($mfr->mass_production=="Micrometer")? "selected" : "" }}>Micrometer</option>
+                                            <option value="ProfileProjector" {{ ($mfr->mass_production=="ProfileProjector")? "selected" : "" }}>ProfileProjector</option>
+                                            <option value="DigitalVernier" {{ ($mfr->mass_production=="DigitalVernier")? "selected" : "" }}>DigitalVernier</option>
+                                            <option value="LoadTestMechine" {{ ($mfr->mass_production=="LoadTestMechine")? "selected" : "" }}>LoadTestMechine</option> --}}
+                                            <option value="{{ $mfr->mass_production }}" selected>{{ $mfr->mass_production }}</option>
+                                        </select></td>
+                                        <td  class="col-md-4"><input type="text" class="form-control bg-light" name="feasibility_confirmation[]" value="{{$mfr->feasibility_confirmation}}" readonly></td>
+                                        <td  class="col-md-6"><input type="text" class="form-control bg-light" name="cpk_cmk[]" value="{{$mfr->cpk_cmk}}" readonly></td>
+                                        <td  class="col-md-6"><textarea type="text" name="remarks[]" class="form-control bg-light" readonly>{{$mfr->remarks}}</textarea></td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td>No Activity Found!</td>
+                                    </tr>
+                                    @endforelse
+
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="row mb-3 clearfix">
-                        <div class="col-md-12 ">
-                          <button id="add_row" type="button" class="btn btn-primary pull-left">Add Row</button>
-                          <button id='delete_row' type="button" class="float-end btn btn-danger text-white" onclick="confirm('Are you Sure, Want to Delete the Row?')">Delete Row</button>
-                        </div>
-                    </div>
-
-                    <button type="button" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
+                    {{-- <button type="button" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button> --}}
                   </form>
             </div>
         </div>
@@ -187,7 +191,7 @@
 @endsection
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
-<script src="{{asset('js/select2.min.js')}}"></script>
+{{-- <script src="{{asset('js/select2.min.js')}}"></script> --}}
 <script>
     $("#submit").click(function(e){
         e.preventDefault();

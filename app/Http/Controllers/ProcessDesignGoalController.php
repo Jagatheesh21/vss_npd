@@ -14,7 +14,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreProcessDesignGoalRequest;
 use App\Http\Requests\UpdateProcessDesignGoalRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Mail;
+use Auth;
 use App\Mail\ActivityMail;
 
 class ProcessDesignGoalController extends Controller
@@ -93,24 +95,39 @@ class ProcessDesignGoalController extends Controller
                 $special->actual_quality = $actual_quality[$key];
                 $special->actual_output = $actual_output[$key];
                 $special->actual_cpk = $actual_cpk[$key];
+                $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',25)->first();
+                $file = $request->file('file');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $location = $plan_activity->plan->apqp_timing_plan_number.'/process_design_goal';
+                if (! File::exists($location)) {
+                    File::makeDirectory(public_path().'/'.$location,0777,true);
+                }
+                $file->move($location,$fileName);
+                $special->file = $fileName;
+                $special->remarks = $request->remarks??NULL;
+                $special->prepared_by = auth()->user()->id;
                 $special->save();
             }
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($apqp_timing_plan_id);
             $plan->current_stage_id = 3;
             $plan->current_sub_stage_id = 25;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',3)->where('sub_stage_id',25)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+
+            // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
+            // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return response()->json(['status'=>'200','message'=>'Process Design Goal Created Successfully!']);
@@ -129,10 +146,41 @@ class ProcessDesignGoalController extends Controller
      * @param  \App\Models\ProcessDesignGoal  $processDesignGoal
      * @return \Illuminate\Http\Response
      */
-    public function show(ProcessDesignGoal $processDesignGoal)
+    public function show($id)
     {
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $users = User::where('id','>',1)->get();
+        $process_design_goal_data=ProcessDesignGoal::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',25)->get();
+        $process_design_goal = ProcessDesignGoal::where('apqp_timing_plan_id',$id)->first();
+        $location = $process_design_goal->timing_plan->apqp_timing_plan_number.'/process_design_goal/';
+        // echo "<pre>";
+        // print_r($process_design_goal_data);echo "</pre>";
+        // exit;
+        return view('apqp.process_design_goal.view',compact('plan','plans','part_numbers','customers','customer_types','users','process_design_goal_data','location'));
 
     }
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $users = User::where('id','>',1)->get();
+        $process_design_goal = ProcessDesignGoal::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $process_design_goal->timing_plan->apqp_timing_plan_number.'/process_design_goal/';
+        $process_design_goal_data=ProcessDesignGoal::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($process_design_goal_data);echo "</pre>";
+        // exit;
+        return view('apqp.process_design_goal.view',compact('plan','plans','part_numbers','customers','customer_types','users','process_design_goal_data','location'));
+
+    }
+
 
     /**
      * Show the form for editing the specified resource.

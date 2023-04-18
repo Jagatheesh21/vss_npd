@@ -82,10 +82,8 @@ class ManagementReviewController extends Controller
      */
     public function store(StoreManagementReviewRequest $request)
     {
-     //dd($request->all());
-       //DB::beginTransaction();
+        DB::beginTransaction();
         try {
-            //code...
             $stage_id = $request->stage_id;
             $sub_stage_id = $request->sub_stage_id;
             $apqp_timing_plan_id = $request->input('apqp_timing_plan_id');
@@ -106,7 +104,41 @@ class ManagementReviewController extends Controller
             $action_plan = $request->input('action_plan');
             $revisied_target_date = $request->input('revisied_target_date');
             $review_comments = $request->input('review_comments');
-            foreach ($points as $key => $point) {
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
+
+            if ($sub_stage_id==10) {
+                $file = $request->file('file');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $location = $plan_activity->plan->apqp_timing_plan_number.'/management_review1';
+                // dd($location);
+                if (! File::exists($location)) {
+                    File::makeDirectory(public_path().'/'.$location,0777,true);
+                }
+            }elseif ($sub_stage_id==20) {
+                $file = $request->file('file');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $location = $plan_activity->plan->apqp_timing_plan_number.'/management_review2';
+                if (! File::exists($location)) {
+                    File::makeDirectory(public_path().'/'.$location,0777,true);
+                }
+            }elseif ($sub_stage_id==29) {
+                $file = $request->file('file');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $location = $plan_activity->plan->apqp_timing_plan_number.'/management_review3';
+                if (! File::exists($location)) {
+                    File::makeDirectory(public_path().'/'.$location,0777,true);
+                }
+            }elseif ($sub_stage_id==35) {
+                $file = $request->file('file');
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $location = $plan_activity->plan->apqp_timing_plan_number.'/management_review4';
+                if (! File::exists($location)) {
+                    File::makeDirectory(public_path().'/'.$location,0777,true);
+                }
+            }
+            $file->move($location,$fileName);
+            foreach($action_plan as $key=>$plan)
+            {
                 $management = new ManagementReview;
                 $management->stage_id = $stage_id;
                 $management->sub_stage_id = $sub_stage_id;
@@ -120,38 +152,46 @@ class ManagementReviewController extends Controller
                 $management->meeting_date = $meeting_date;
                 $management->meeting_id = $meeting_number;
                 $management->meeting_attend_by = $meeting_attend_by;
-                $management->points_discussed = $point;
+                $management->points_discussed = $points[$key];
                 $management->responsibility = $responsibility[$key];
                 $management->target_date = $target_date[$key];
                 $management->actual_date = $actual_date[$key]??NULL;
                 $management->delay_reason = $delay_reason[$key];
-                $management->action_plan = $action_plan[$key];
+                $management->action_plan = $plan;
                 $management->revisied_target_date = $revisied_target_date[$key];
                 $management->review_comments = $review_comments[$key];
+                $management->file = $fileName;
+                $management->prepared_by = auth()->user()->id;
                 $management->save();
             }
-            // Update Timing Plan Current Activity
-            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
-            $plan->current_stage_id = $stage_id;
-            $plan->current_sub_stage_id = $sub_stage_id;
-            $plan->update();
-            // Update Activity
-            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
-            $plan_activity->prepared_at = now();
-            $plan_activity->gyr_status = 'P';
-            $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
-            $user_email = auth()->user()->email;
-            $user_name = auth()->user()->name;
-            Mail::to('edp@venkateswarasteels.com')
-            ->send(new ActivityMail($user_email,$user_name,$activity));
-            //DB::commit();
+
+
+            //   Update Timing Plan Current Activity
+              $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+              $plan->current_stage_id = $request->stage_id;
+              $plan->current_sub_stage_id = $request->sub_stage_id;
+              $plan->status_id = 2;
+              $plan->update();
+              // Update Activity
+              $plan_activity->actual_start_date = Carbon::now();
+              $plan_activity->prepared_by = auth()->user()->id;
+              $plan_activity->prepared_at = Carbon::now();
+              $plan_activity->status_id = 2;
+              $plan_activity->gyr_status = "Y";
+              $plan_activity->update();
+
+            //   Mail Function
+              $activity = APQPPlanActivity::find($plan_activity->id);
+              $user_email = auth()->user()->email;
+              $user_name = auth()->user()->name;
+              Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+            //   Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+              DB::commit();
+            //   return back()->withSuccess('Safe Launch Created Successfully!');
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
         } catch (\Throwable $th) {
-            //throw $th;
-           // DB::rollback();
+           // throw $th;
+            DB::rollback();
             return response()->json(['status'=>500,'message' =>$th->getMessage()]);
         }
 
@@ -163,10 +203,55 @@ class ManagementReviewController extends Controller
      * @param  \App\Models\ManagementReview  $managementReview
      * @return \Illuminate\Http\Response
      */
-    public function show(ManagementReview $managementReview)
+    public function show($id)
     {
-        //
+
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $management_review = ManagementReview::where('apqp_timing_plan_id',$id)->first();
+        // $location = $management_review->timing_plan->apqp_timing_plan_number.'/customer_ppap/';
+        $management_review_data=ManagementReview::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',30)->get();
+        // echo "<pre>";
+        // print_r($management_review_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.management_review.view',compact('plan','plans','part_numbers','customers','customer_types','management_review_data'));
     }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $sub_stages = SubStage::get();
+        $management_review = ManagementReview::where('apqp_timing_plan_id',$plan_id)->first();
+        if($sub_stage_id==10){
+            $location = $management_review->timing_plan->apqp_timing_plan_number.'/management_review1/';
+        }elseif ($sub_stage_id==20) {
+            $location = $management_review->timing_plan->apqp_timing_plan_number.'/management_review2/';
+        }elseif ($sub_stage_id==29) {
+            $location = $management_review->timing_plan->apqp_timing_plan_number.'/management_review3/';
+        }elseif ($sub_stage_id==35) {
+            $location = $management_review->timing_plan->apqp_timing_plan_number.'/management_review4/';
+        }
+
+        $management_review_data=ManagementReview::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // // print_r($sub_stages);
+        // print_r($management_review_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.management_review.view',compact('plan','plans','part_numbers','customers','sub_stages','users','customer_types','management_review_data','location'));
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.

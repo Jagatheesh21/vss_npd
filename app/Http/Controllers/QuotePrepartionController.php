@@ -77,24 +77,30 @@ class QuotePrepartionController extends Controller
             $quote->quote_document = $fileName;
             $quote->remarks = $request->remarks??NULL;
             $quote->save();
-            // Mail
             // Update Timing Plan Current Activity
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 1;
             $plan->current_sub_stage_id = 5;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',5)->first();
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
-            $plan_activity->gyr_status = 'P';
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+
+            // Mail
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('r.naveen@venkateswarasteels.com')
+            // Mail::to('edp@venkateswarasteels.com')
             //->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Quote Preparation Created Successfully!');
@@ -105,17 +111,44 @@ class QuotePrepartionController extends Controller
         }
     }
 
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\QuotePrepartion  $quotePrepartion
      * @return \Illuminate\Http\Response
      */
-    public function show(QuotePrepartion $quotePrepartion)
+    public function show($id)
     {
-        //
+        // $id = $request->id;
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $quote_preparation = QuotePrepartion::where('apqp_timing_plan_id',$id)->first();
+        $location = $quote_preparation->timing_plan->apqp_timing_plan_number.'/quote_preparation/';
+        $quoteprepartion = QuotePrepartion::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',5)->get();
+        // dd($quoteprepartion->timing_plan);
+        return view('apqp.quote_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','quoteprepartion','location'));
+
     }
 
+    public function preview($plan_id,$sub_stage_id)
+    {
+        // $id = $request->id;
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $customers = Customer::get();
+        $quote_preparation = QuotePrepartion::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $quote_preparation->timing_plan->apqp_timing_plan_number.'/quote_preparation/';
+        $quoteprepartion = QuotePrepartion::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // dd($quoteprepartion->timing_plan);
+        return view('apqp.quote_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','quoteprepartion','location'));
+
+    }
     /**
      * Show the form for editing the specified resource.
      *

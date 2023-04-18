@@ -86,13 +86,19 @@ class PpapPreparationController extends Controller
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 3;
             $plan->current_sub_stage_id = 28;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            // Mail Function
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
@@ -114,10 +120,40 @@ class PpapPreparationController extends Controller
      * @param  \App\Models\PpapPreparation  $ppapPreparation
      * @return \Illuminate\Http\Response
      */
-    public function show(PpapPreparation $ppapPreparation)
+    public function show($id)
     {
-        //
+
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $ppap_preparation = PpapPreparation::where('apqp_timing_plan_id',$id)->first();
+        $location = $ppap_preparation->timing_plan->apqp_timing_plan_number.'/ppap_preparation/';
+        $ppap_preparation_data=PpapPreparation::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',28)->get();
+        return view('apqp.ppap_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','ppap_preparation_data','location'));
     }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $ppap_preparation = PpapPreparation::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $ppap_preparation->timing_plan->apqp_timing_plan_number.'/ppap_preparation/';
+        $ppap_preparation_data=PpapPreparation::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($ppap_preparation_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.ppap_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','ppap_preparation_data','location'));
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.

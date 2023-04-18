@@ -86,16 +86,21 @@ class SampleSubmissionController extends Controller
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 2;
             $plan->current_sub_stage_id = 18;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            // Mail Function
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
-            // Mail Function
             Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('SIR Sample Submission Created Successfully!');
@@ -114,9 +119,36 @@ class SampleSubmissionController extends Controller
      * @param  \App\Models\SampleSubmission  $sampleSubmission
      * @return \Illuminate\Http\Response
      */
-    public function show(SampleSubmission $sampleSubmission)
+    public function show($id)
     {
-        //
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $sir_sample = SampleSubmission::where('apqp_timing_plan_id',$id)->first();
+        $location = $sir_sample->timing_plan->apqp_timing_plan_number.'/sir_sample/';
+        $sir_sample_data=SampleSubmission::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',18)->get();
+        return view('apqp.sample_submission.view',compact('plan','plans','part_numbers','customers','customer_types','sir_sample_data','location'));
+    }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $sir_sample = SampleSubmission::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $sir_sample->timing_plan->apqp_timing_plan_number.'/sir_sample/';
+        $sir_sample_data=SampleSubmission::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($sir_sample_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.sample_submission.view',compact('plan','plans','part_numbers','customers','customer_types','sir_sample_data','location'));
     }
 
     /**

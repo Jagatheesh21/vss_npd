@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('process_flow_diagram.store')}}">
+                <form id="category_save" method="POST"  enctype="multipart/form-data"  action="{{route('process_flow_diagram.store')}}">
                   @csrf
                   @method('POST')
                   <input type="hidden" name="stage_id" value="2">
@@ -119,6 +119,17 @@
                             <input type="text" name="process_flow_number" class="form-control">
 
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" id="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5" required></textarea>
+                        </div>
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">
@@ -172,10 +183,13 @@
 <script>
     $("#submit").click(function(e){
         e.preventDefault();
+        var formData = new FormData($("#category_save")[0]);
         $.ajax({
             url:"{{ route('process_flow_diagram.store') }}",
             type:"POST",
-            data:$("#category_save").serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             success:function(response){
                 var url = "{{route('activity.index')}}";
                 //alert(response);

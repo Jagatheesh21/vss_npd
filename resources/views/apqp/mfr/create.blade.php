@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
-                <form id="category_save" method="POST" action="{{route('mfr.store')}}">
+                <form id="category_save" method="POST" enctype="multipart/form-data" action="{{route('mfr.store')}}">
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -107,9 +107,16 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="col-sm-8 col-form-label required">File*</label>
+                            <input type="file" name="file" id="file" class="form-control">
+                            @error('file')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
 
                     </div>
-                    <div class="row clearfix">
+                    <div class="row clearfix mt-3">
                         <div class="col-md-12">
                             <table class="table table-responsive table-bordered" id="tab_logic">
                                 <thead>
@@ -191,25 +198,26 @@
 <script>
     $("#submit").click(function(e){
         e.preventDefault();
+        var formData = new FormData($("#category_save")[0]);
+
+      // Append data
+
         $.ajax({
             url:"{{ route('mfr.store') }}",
             type:"POST",
-            data:$("#category_save").serialize(),
-            headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-   },
-            success:function(response){
-                //alert(response);
-               // var result = $.parseJSON(response);
+            data: formData,
+            processData: false,
+            contentType: false,
+            success:function(result)
+            {
                 $.toast({
-                  heading: 'Success',
-                  text: response,
-                  showHideTransition: 'plain',
-                  position: 'top-right',
-                  icon: 'success'
-              });
-            location.reload(true);
-           // window.location.reload();
+                    heading: 'Success',
+                    text: result.message,
+                    showHideTransition: 'plain',
+                    position: 'top-right',
+                    icon: 'success'
+                });
+                location.reload();
             },
             error:function(result)
             {
@@ -225,6 +233,7 @@
                 })
             }
         });
+
     });
     // $("#apqp_timing_plan_id").select2();
     // $("#part_number_id").select2();

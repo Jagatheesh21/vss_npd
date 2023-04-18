@@ -106,7 +106,8 @@
                                     <td>{{$activity->plan_end_date}}</td>
                                     <td>{{$activity->actual_start_date}}</td>
                                     <td>{{$activity->actual_end_date}}</td>
-                                    <td><a href="{{url('verification/preview')}}/{{$activity->apqp_timing_plan_id}}/{{$activity->sub_stage_id}}" target="_blank" class="btn btn-success text-white btn-sm">Details</a></td>
+                                    <td><a href="{{url($activity->sub_stage->route)}}/{{$activity->apqp_timing_plan_id}}/{{$activity->sub_stage_id}}" target="_blank" class="btn btn-success text-white btn-sm">Details</a></td>
+                                    {{-- <td><a href="{{url('verification/preview')}}/{{$activity->apqp_timing_plan_id}}/{{$activity->sub_stage_id}}" target="_blank" class="btn btn-success text-white btn-sm">Details</a></td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>

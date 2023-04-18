@@ -82,13 +82,19 @@ class CustomerApprovalOfPpapController extends Controller
             $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
             $plan->current_stage_id = 4;
             $plan->current_sub_stage_id = 30;
+            $plan->status_id = 2;
             $plan->update();
+
             // Update Activity
-            $plan_activity->status_id = 2;
-            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->actual_start_date = Carbon::now();
+            $plan_activity->prepared_by = auth()->user()->id;
             $plan_activity->prepared_at = Carbon::now();
+            $plan_activity->status_id = 2;
+            $plan_activity->gyr_status = "Y";
             $plan_activity->update();
-            $activity = APQPPlanActivity::find($plan->id);
+
+            // Mail Function
+            $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
@@ -110,10 +116,43 @@ class CustomerApprovalOfPpapController extends Controller
      * @param  \App\Models\CustomerApprovalOfPpap  $customerApprovalOfPpap
      * @return \Illuminate\Http\Response
      */
-    public function show(CustomerApprovalOfPpap $customerApprovalOfPpap)
+    public function show($id)
     {
-        //
+
+        $plan = APQPTimingPlan::find($id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $customer_approval_of_ppap = CustomerApprovalOfPpap::where('apqp_timing_plan_id',$id)->first();
+        $location = $customer_approval_of_ppap->timing_plan->apqp_timing_plan_number.'/customer_ppap/';
+        $customer_approval_of_ppap_data=CustomerApprovalOfPpap::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',30)->get();
+        // echo "<pre>";
+        // print_r($customer_approval_of_ppap_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.customer_approval_of_ppap.view',compact('plan','plans','part_numbers','customers','customer_types','customer_approval_of_ppap_data','location'));
     }
+
+    public function preview($plan_id,$sub_stage_id)
+    {
+        $plan = APQPTimingPlan::find($plan_id);
+        $plans = APQPTimingPlan::get();
+        $part_numbers = PartNumber::get();
+        $customer_types = CustomerType::get();
+        $users = User::where('id','>',1)->get();
+        $customers = Customer::get();
+        $customer_approval_of_ppap = CustomerApprovalOfPpap::where('apqp_timing_plan_id',$plan_id)->first();
+        $location = $customer_approval_of_ppap->timing_plan->apqp_timing_plan_number.'/customer_ppap/';
+        $customer_approval_of_ppap_data=CustomerApprovalOfPpap::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
+        // echo "<pre>";
+        // print_r($customer_approval_of_ppap_data);
+        // echo "</pre>";
+        // exit;
+        return view('apqp.customer_approval_of_ppap.view',compact('plan','plans','part_numbers','customers','customer_types','customer_approval_of_ppap_data','location'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.
