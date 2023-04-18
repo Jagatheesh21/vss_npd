@@ -265,7 +265,11 @@ class EnquiryRegisterController extends Controller
             $validated = $request->validate([
                 'received_date' => 'required',
                 'average_annum_demand' => 'required',
+<<<<<<< HEAD
+                'enquiry_document' => 'required|mimes:csv,txt,xlsx,xls,pdf,jpg,png,PNG|max:2048',
+=======
                 'enquiry_document' => 'required|mimes:csv,txt,xlsx,xls,pdf,jpg,png,svg,PNG|max:2048',
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                 'type_of_enquiry' => 'required'
             ]);
 
@@ -314,6 +318,34 @@ class EnquiryRegisterController extends Controller
                 DB::rollback();
                 return back()->withErrors($th->getMessage());
             }
+<<<<<<< HEAD
+            $file->move($location,$fileName);
+            $enquiry_register->enquiry_document = $fileName;
+            $enquiry_register->save();
+            // Mail
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            $file_path = $location.'/'.$fileName;
+            $enquiry = EnquiryRegister::find($enquiry_register->id);
+            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            $ccEmails = ["bharathmukesh85@gmail.com"];
+            Mail::to('edp@venkateswarasteels.com')
+            ->cc($ccEmails)
+            ->send(new EnquiryRegisterMail($user_email,$user_name,$file_path,$enquiry));
+            $plan->actual_start_date = Carbon::now();
+            $plan->prepared_date = Carbon::now();
+            $plan->status_id = 2;
+            $plan->gyr_status = "Y";
+            $plan->update();
+=======
+    }
+    public function verify(Request $request)
+    {
+        $plan_id = $request->input('id');
+        $enquiry_register = EnquiryRegister::where("apqp_timing_plan_id",$plan_id)->get();
+        return view('apqp.enquiry_register');
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
+
     }
     public function verify(Request $request)
     {

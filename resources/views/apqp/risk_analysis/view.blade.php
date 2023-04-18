@@ -109,6 +109,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+<<<<<<< HEAD
                         <div class="col-md-3 mb-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
                             <a href="{{url($location)}}/{{$risk_analysis_data[0]->file}}" class="form-control btn btn-success btn-sm text-white" target="_blank">Download</a>
@@ -126,6 +127,12 @@
                     </div>
 
                     <div class="row clearfix mt-3">
+=======
+
+                    </div>
+
+                    <div class="row clearfix">
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                         <div class="col-md-12">
                             <table class="table table-responsive table-bordered" id="tab_logic">
                                 <thead>

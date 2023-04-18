@@ -164,6 +164,7 @@ class ManagementReviewController extends Controller
                 $management->prepared_by = auth()->user()->id;
                 $management->save();
             }
+<<<<<<< HEAD
 
 
             //   Update Timing Plan Current Activity
@@ -188,13 +189,60 @@ class ManagementReviewController extends Controller
             //   Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
               DB::commit();
             //   return back()->withSuccess('Safe Launch Created Successfully!');
+=======
+            // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+<<<<<<< HEAD
+            $plan->current_stage_id = 1;
+            $plan->current_sub_stage_id = 10;
+            $plan->status_id = 2;
+            $plan->update();
+            // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
+            $plan_activity->status_id = 2;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->prepared_date = date('Y-m-d');
+            $plan_activity->update();
+            //
+            // $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->first();
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // $ccEmails = ["edp@venkateswarasteels.com"];
+            // Mail::to('edp@venkateswarasteels.com')
+            // ->cc($ccEmails)
+            // ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
+            return back()->withSuccess('Management Review Created Successfully!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->withError($th->getMessage());
+=======
+            $plan->current_stage_id = $stage_id;
+            $plan->current_sub_stage_id = $sub_stage_id;
+            $plan->update();
+            // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$stage_id)->where('sub_stage_id',$sub_stage_id)->first();
+            $plan_activity->status_id = 2;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->prepared_at = now();
+            $plan_activity->gyr_status = 'P';
+            $plan_activity->update();
+            $activity = APQPPlanActivity::find($plan->id);
+            $user_email = auth()->user()->email;
+            $user_name = auth()->user()->name;
+            Mail::to('edp@venkateswarasteels.com')
+            ->send(new ActivityMail($user_email,$user_name,$activity));
+            //DB::commit();
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
             return response()->json(['status'=>'200','message'=>'Management Review Created Successfully!']);
         } catch (\Throwable $th) {
            // throw $th;
             DB::rollback();
             return response()->json(['status'=>500,'message' =>$th->getMessage()]);
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         }
-
     }
 
     /**
@@ -205,11 +253,17 @@ class ManagementReviewController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
 
+=======
+        //
+        $meeting_id =1;
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
         $plan = APQPTimingPlan::find($id);
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
+<<<<<<< HEAD
         $users = User::where('id','>',1)->get();
         $customers = Customer::get();
         $management_review = ManagementReview::where('apqp_timing_plan_id',$id)->first();
@@ -220,6 +274,17 @@ class ManagementReviewController extends Controller
         // echo "</pre>";
         // exit;
         return view('apqp.management_review.view',compact('plan','plans','part_numbers','customers','customer_types','management_review_data'));
+=======
+        $customers = Customer::get();
+        $sub_stages = SubStage::get();
+        $users = User::get();
+        $last_id = APQPPlanActivity::where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->max('sub_stage_id');
+        $review_sub_stages = APQPPlanActivity::with('sub_stage')->where("apqp_timing_plan_id",$id)->where("stage_id",$meeting_id)->whereNotIn('sub_stage_id',array($last_id))->get();
+        $management_reviews=ManagementReview::with('timing_plan')->where('apqp_timing_plan_id', $id)->get();
+        // dd($management_reviews);
+        return view('apqp.management_review.view',compact('plan','plans','part_numbers','customers','customer_types','meeting_id','sub_stages','review_sub_stages','users','management_reviews'));
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     }
 
     public function preview($plan_id,$sub_stage_id)

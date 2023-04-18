@@ -85,9 +85,16 @@ Route::post('enquiry_register/save_register',[EnquiryRegisterController::class,'
 Route::resource('enquiry_register',EnquiryRegisterController::class);
 Route::get('enquiry_register/preview/{plan_id}/{sub_stage_id}',[EnquiryRegisterController::class,'preview'])->name('enquiry_register_preview');
 Route::get('verification/task/{plan_id}/{sub_stage_id}',[VerificationController::class,'task'])->name('task');
+<<<<<<< HEAD
 Route::get('verification/preview/{plan_id}/{sub_stage_id}',[VerificationController::class,'preview'])->name('verification_preview');
 // Route::get('mfr/preview/{plan_id}/{sub_stage_id}',[ManufacturingFeasibilityReviewController::class,'preview'])->name('preview');
 // Route::get('mfr/preview/{plan_id}/{sub_stage_id}',[ManufacturingFeasibilityReviewController::class,'preview'])->name('preview');
+=======
+<<<<<<< HEAD
+=======
+Route::get('verification/preview/{plan_id}/{sub_stage_id}',[VerificationController::class,'preview'])->name('preview');
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 Route::resource('verification',VerificationController::class);
 // Route::resource('verification/activity/',[VerificationController::class,'activity'])->name('activity');
 Route::resource('product_information_data',ProductInformationDataController::class);

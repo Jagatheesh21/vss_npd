@@ -57,8 +57,14 @@ class SirApprovalController extends Controller
      */
     public function store(StoreSirApprovalRequest $request)
     {
+<<<<<<< HEAD
         // dd($request->all());
 
+=======
+<<<<<<< HEAD
+        //
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
         DB::beginTransaction();
 
         try {
@@ -114,6 +120,7 @@ class SirApprovalController extends Controller
             DB::rollback();
             return back()->withErrors($th->getMessage());
         }
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
     }
 
     /**

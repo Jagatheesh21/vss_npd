@@ -111,17 +111,32 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
+<<<<<<< HEAD
                                 {{-- <a href="{{$t_plan->apqp_timing_plan_number}}/quote_preparation/{{$quoteprepartion[0]->quote_document}}" name="quote_document"  value="{{$quoteprepartion[0]->quote_document}}" class="form-control btn btn-success text-white" target="_blank">DOWNLOAD</a> --}}
                                 <a href="{{url($location)}}/{{$quoteprepartion[0]->quote_document}}" class="form-control btn btn-success text-white" target="_blank">DOWNLOAD</a>
 
                             {{-- <input type="file" name="quote_document"  value="{{$quoteprepartion[0]->quote_document}}" class="form-control"> --}}
+=======
+                            @foreach ($plans as $t_plan)
+                            @if ($t_plan->id==$plan->id)
+                                <a href="url{{$t_plan->apqp_timing_plan_number}}/quote_preparation/{{$quoteprepartion->quote_document}}" name="quote_document"  value="{{$quoteprepartion->quote_document}}" class="form-control btn btn-info text-white" target="_blank">DOWNLOAD</a>
+                                @endif
+                                @endforeach
+                                {{-- <a href="#" class="form-control btn btn-info text-white" target="_blank">DOWNLOAD</a> --}}
+
+                            {{-- <input type="file" name="quote_document"  value="{{$quoteprepartion->quote_document}}" class="form-control"> --}}
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                             @error('quote_document')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="" class="col-sm-8 col-form-label required">Remarks</label>
+<<<<<<< HEAD
                             <textarea name="remarks" class="form-control bg-light" id="remarks" cols="30" rows="5" readonly>{{$quoteprepartion[0]->remarks}}</textarea>
+=======
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5">{{$quoteprepartion->remarks}}</textarea>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                         </div>
                     </div>
 

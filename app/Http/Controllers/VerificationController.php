@@ -176,6 +176,8 @@ class VerificationController extends Controller
         $activity = APQPPLanActivity::where('apqp_timing_plan_id',$plan_id)->where('sub_stage_id',$sub_stage_id)->get();
         return view('apqp.verification.create',compact('plan','sub_stage','model','activity','part_numbers','customer_types','customers','timing_plans','sub_stage_id'));
     }
+<<<<<<< HEAD
+=======
     public function preview($plan_id,$sub_stage_id)
     {
         if ($sub_stage_id==1) {
@@ -192,6 +194,7 @@ class VerificationController extends Controller
         $view ="apqp.".$activity->sub_stage->route.".view";
         // dd($model);
         return view($view,compact('model','customers','part_numbers','customer_types','plan','timing_plans'));
+<<<<<<< HEAD
 
         }elseif ($sub_stage_id==2) {
            return 'hello';
@@ -210,4 +213,8 @@ class VerificationController extends Controller
             return view($view,compact('plan','plans','part_numbers','customers','customer_types','mfr_data'));
         }
           }
+=======
+    }
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 }

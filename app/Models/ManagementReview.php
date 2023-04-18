@@ -9,7 +9,12 @@ class ManagementReview extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
                 /**
+=======
+
+    /**
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
      * Get the Timing Plan that owns the ProductInformationData
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -18,4 +23,8 @@ class ManagementReview extends Model
     {
         return $this->belongsTo(APQPTimingPlan::class, 'apqp_timing_plan_id');
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 }

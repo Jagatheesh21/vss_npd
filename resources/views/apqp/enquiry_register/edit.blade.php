@@ -100,7 +100,11 @@
                     @enderror
                   </div>
                   <div class="col-md-4 mt-5">
+<<<<<<< HEAD
+                    <a href="{{url($location)}}/{{$enquiry->enquiry_document}}" class="btn btn-success btn-sm text-white">Download</a>
+=======
                     <a href="{{url($location)}}/{{$enquiry->enquiry_document}}" target="_blank" class="btn btn-success btn-sm text-white">Download</a>
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
                   </div>
                   <div class="col-md-4">
                     <label for="name" class="col-sm-6 col-form-label required">Status* <i class="bi bi-info-circle"></i></label>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +9,11 @@ class QuotePrepartion extends Model
     use HasFactory;
     protected $fillable = ['apqp_timing_plan_id','stage_id','sub_stage_id','part_number_id','revision_number','revision_date','customer_id','application','product_description','quote_document','remarks'];
 
+<<<<<<< HEAD
         /**
+=======
+    /**
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
      * Get the Timing Plan that owns the ProductInformationData
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

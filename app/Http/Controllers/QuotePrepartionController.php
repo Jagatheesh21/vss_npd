@@ -42,6 +42,8 @@ class QuotePrepartionController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+
+
         return view('apqp.quote_preparation.create',compact('plan','plans','part_numbers','customers','customer_types'));
 
     }
@@ -65,6 +67,7 @@ class QuotePrepartionController extends Controller
             $quote->revision_date = $request->revision_date;
             $quote->application = $request->application;
             $quote->customer_id = $request->customer_id;
+            $quote->status_id = 2;
             $quote->product_description = $request->product_description;
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',5)->first();
             $file = $request->file('quote_document');
@@ -98,10 +101,16 @@ class QuotePrepartionController extends Controller
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
+<<<<<<< HEAD
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            Mail::to('edp@venkateswarasteels.com')
+            ->cc($cc_emails)
+=======
            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             Mail::to('r.naveen@venkateswarasteels.com')
             // Mail::to('edp@venkateswarasteels.com')
             //->cc($cc_emails)
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             ->send(new ActivityMail($user_email,$user_name,$activity));
             return back()->withSuccess('Quote Preparation Created Successfully!');
 
@@ -126,13 +135,26 @@ class QuotePrepartionController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
         $quote_preparation = QuotePrepartion::where('apqp_timing_plan_id',$id)->first();
         $location = $quote_preparation->timing_plan->apqp_timing_plan_number.'/quote_preparation/';
         $quoteprepartion = QuotePrepartion::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',5)->get();
         // dd($quoteprepartion->timing_plan);
         return view('apqp.quote_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','quoteprepartion','location'));
+=======
+        $quoteprepartion = QuotePrepartion::with('timing_plan')->find($id);
+        // dd($quoteprepartion->timing_plan);
+        return view('apqp.quote_preparation.view',compact('plan','plans','part_numbers','customers','customer_types','quoteprepartion'));
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 
     }
+    // public function download($quote_document)
+    // {
+    //     // $file = material::where('uuid',$uuid)->first();
+    //     $pathofFile = storage_path($quote_document);
+    //     return response()->download($pathofFile);
+    // }
+
 
     public function preview($plan_id,$sub_stage_id)
     {

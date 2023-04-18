@@ -55,7 +55,11 @@ class ExperienceSharingController extends Controller
      */
     public function store(StoreExperienceSharingRequest $request)
     {
+<<<<<<< HEAD
+        // dd($request->all());
+=======
         DB::beginTransaction();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         try {
 
             $quote = new ExperienceSharing;
@@ -67,6 +71,7 @@ class ExperienceSharingController extends Controller
             $quote->revision_date = $request->revision_date;
             $quote->application = $request->application;
             $quote->customer_id = $request->customer_id;
+            $quote->status = 2;
             $quote->product_description = $request->product_description;
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',$request->stage_id)->where('sub_stage_id',$request->sub_stage_id)->first();
             $file = $request->file('file');
@@ -95,6 +100,15 @@ class ExperienceSharingController extends Controller
             $plan_activity->gyr_status = "Y";
             $plan_activity->update();
             $activity = APQPPlanActivity::find($plan->id);
+<<<<<<< HEAD
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // Mail::to('edp@venkateswarasteels.com')
+            // ->cc($cc_emails)
+            // ->send(new ActivityMail($user_email,$user_name,$activity));
+=======
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
@@ -104,6 +118,7 @@ class ExperienceSharingController extends Controller
            // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             return back()->withSuccess('Experience Sharing Created Successfully!');
 
         } catch (\Throwable $th) {
@@ -126,9 +141,17 @@ class ExperienceSharingController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
         $tgw_data = ExperienceSharing::where('apqp_timing_plan_id',$id)->where('sub_stage_id',9)->first();
         $location = $tgw_data->timing_plan->apqp_timing_plan_number.'/experience_sharing/';
         return view('apqp.experience_sharing.view',compact('plan','plans','part_numbers','customers','customer_types','tgw_data','location'));
+=======
+        $tgw_data = ExperienceSharing::where('apqp_timing_plan_id',$id)->first();
+        $location = $tgw_data->timing_plan->apqp_timing_plan_number.'/experience_sharing/';
+        return view('apqp.experience_sharing.view',compact('plan','plans','part_numbers','customers','customer_types','tgw_data','location'));
+
+    }
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 
     }
     public function preview($plan_id,$sub_stage_id)

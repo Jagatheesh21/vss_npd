@@ -108,6 +108,7 @@
                             @enderror
                         </div>
 
+<<<<<<< HEAD
                         <div class="col-md-3 mb-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
                             <a href="{{url($location)}}/{{$special_characters[0]->file}}" class="form-control btn btn-success btn-sm text-white" target="_blank">Download</a>
@@ -116,6 +117,8 @@
                             @enderror
                         </div>
 
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-12">

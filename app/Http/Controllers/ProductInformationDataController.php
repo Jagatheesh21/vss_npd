@@ -109,21 +109,40 @@ class ProductInformationDataController extends Controller
             // Update Activity
             $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
             $plan_activity->status_id = 2;
+<<<<<<< HEAD
             $plan_activity->actual_start_date = Carbon::now();
             $plan_activity->prepared_by = auth()->user()->id;
+=======
+            $plan_activity->actual_start_date = date('Y-m-d');
+<<<<<<< HEAD
+            $plan_activity->prepared_date = date('Y-m-d');
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
             $plan_activity->prepared_at = Carbon::now();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             $plan_activity->update();
             //
             $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->first();
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             // Mail Function
+<<<<<<< HEAD
             $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
             // $ccEmails = ["edp@venkateswarasteels.com"];
+=======
+            //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+<<<<<<< HEAD
+            $ccEmails = ["edp@venkateswarasteels.com"];
+            Mail::to('edp@venkateswarasteels.com')
+            ->cc($ccEmails)
+=======
+            //$ccEmails = ["edp@venkateswarasteels.com"];
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
             Mail::to('r.naveen@venkateswarasteels.com')
             // Mail::to('edp@venkateswarasteels.com')
             ->cc($ccEmails)
 
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             ->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
             return back()->withSuccess('Product Information Data Created Successfully!');
@@ -142,15 +161,26 @@ class ProductInformationDataController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
         $plans = APQPTimingPlan::get();
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
         $productInformation = ProductInformationData::where('apqp_timing_plan_id',$id)->first();
         $location = $productInformation->timing_plan->apqp_timing_plan_number.'/product_information/';
         $productInformationData = ProductInformationData::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',2)->get();
         $data = ProductInformationData::with('id')->with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',2)->get();
+=======
+        $productInformationData = ProductInformationData::with('timing_plan')->find($id);
+        $data = ProductInformationData::with('id')->find($id);
+<<<<<<< HEAD
+        return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data'));
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
         // dd($productInformationData);
         return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data','location'));
 
@@ -176,6 +206,7 @@ class ProductInformationDataController extends Controller
         // dd($productInformationData);
         return view('apqp.product_information.view',compact('plans','part_numbers','customers','customer_types','productInformationData','data','location'));
 
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
     }
 
     /**

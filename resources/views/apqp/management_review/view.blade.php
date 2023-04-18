@@ -23,7 +23,11 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
+<<<<<<< HEAD
                 <form id="category_save" method="POST"  enctype="multipart/form-data" action="{{route('management_review.store')}}">
+=======
+                <form id="category_save" method="POST" action="{{route('management_review.store')}}">
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -110,6 +114,7 @@
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Meeting *</label>
                             <select name="meeting_number" id="meeting_number" class="form-control select2 bg-light">
+<<<<<<< HEAD
                                 @if($management_review_data[0]->meeting_id==1)
                                 <option value="1"  selected >Meeting Review - 1</option>
                                 @endif
@@ -120,6 +125,18 @@
                                 <option value="3"  selected >Meeting Review - 3</option>
                                 @endif
                                 @if($management_review_data[0]->meeting_id==4)
+=======
+                                @if($meeting_id==1)
+                                <option value="1"  selected >Meeting Review - 1</option>
+                                @endif
+                                @if($meeting_id==2)
+                                <option value="2"  selected >Meeting Review - 2</option>
+                                @endif
+                                @if($meeting_id==3)
+                                <option value="3"  selected >Meeting Review - 3</option>
+                                @endif
+                                @if($meeting_id==4)
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                 <option value="4"  selected >Meeting Review - 4</option>
                                 @endif
                             </select>
@@ -129,6 +146,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">Meeting Date *</label>
+<<<<<<< HEAD
                             <input type="date" name="meeting_date" id="meeting_date" class="form-control bg-light" readonly value="{{$management_review_data[0]->meeting_date}}">
                         </div>
                         <div class="col-md-3">
@@ -137,10 +155,25 @@
                                 <option value="{{$management_review_data[0]->meeting_attend_by='msv'}}" selected>Mr.M.S. Vijayraghavan</option>
                                 <option value="{{$management_review_data[0]->meeting_attend_by='msa'}}" selected>Mr.M.S. Anandakrishna</option>
                             </select>
+=======
+                            <input type="date" name="meeting_date" id="meeting_date" class="form-control" value="{{ $management_reviews[0]->meeting_date }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="" class="col-sm-8 col-form-label required">Meeting Attend By*</label>
+                            {{-- <select name="meeting_attend_by[]" id="meeting_attend_by" multiple class="form-control select2 bg-light">
+                                @foreach ($management_reviews as $member)
+                               <option value="msv" {{($member->meeting_attend_by== "msv") ? "selected" : ""}} >Mr.M.S. Vijayraghavan</option>
+                               <option value="msa" {{($member->meeting_attend_by== "msa") ? "selected" : ""}} >Mr.M.S. Anandakrishnan</option>
+                                <option value="msv,msa" {{ ($member->meeting_attend_by == "msv,msa")? "selected" : "" }} >Mr.M.S. Vijayraghavan &nbsp; Mr.M.S. Anandakrishnan</option>
+                               @endforeach
+                            </select> --}}
+                            <input name="meeting_attend_by" class="form-control" value="{{($management_reviews[0]->meeting_attend_by)}}"
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                             @error('meeting_attend_by')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+<<<<<<< HEAD
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
                             <a href="{{url($location)}}/{{$management_review_data[0]->file}}" class="form-control btn btn-success btn-sm text-white" target="_blank">Download</a>
@@ -148,6 +181,8 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 
                     </div>
                     <div class="row clearfix">
@@ -155,9 +190,14 @@
                             <table class="table table-responsive table-bordered" id="tab_logic">
                                 <thead>
                                 <tr class="text-center bg-light">
+<<<<<<< HEAD
                                     <th>S .No</th>
                                     <th>Point Discussed</th>
                                     <th>Responsibility</th>
+=======
+                                    <th>Point Discussed</th>
+                                    <th>Resp</th>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                     <th>Target Date</th>
                                     <th>Actual Date</th>
                                     <th>Reason For Delay</th>
@@ -167,14 +207,24 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+<<<<<<< HEAD
                                     @forelse($management_review_data as $management_review)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+=======
+                                    @forelse($management_reviews as $review_sub_stage)
+
+                                    <tr>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                         <td>
                                             <div style="width:250px">
                                             <select name="point_discuessed[]" class="form-control bg-light">
                                             @foreach ($sub_stages as $sub_stage)
+<<<<<<< HEAD
                                                 @if($sub_stage->id==$management_review->points_discussed)
+=======
+                                                @if($sub_stage->id==$review_sub_stage->sub_stage_id)
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                                 <option value="{{ $sub_stage->id }}" selected>{{ $sub_stage->name }}</option>
                                                 @endif
                                                 @endforeach
@@ -185,7 +235,11 @@
                                             <div style="width:150px">
                                             <select name="responsibility[]" class="form-control bg-light">
                                                 @foreach ($users as $user)
+<<<<<<< HEAD
                                                     @if ($user->id==$management_review->responsibility)
+=======
+                                                    @if ($user->id==$review_sub_stage->responsibility)
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                                         <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
                                                     @endif
                                                 @endforeach
@@ -193,6 +247,7 @@
                                             </div>
                                         </td>
                                         <td>
+<<<<<<< HEAD
                                             <input type="date" name="target_date[]" readonly class="form-control bg-light" value="{{ $management_review->target_date }}">
                                         </td>
                                         <td>
@@ -201,10 +256,21 @@
                                         <td>
                                             <div style="width:200px;">
                                                 <textarea name="delay_reason[]" class="form-control bg-light" readonly cols="30" rows="5">{{ $management_review->delay_reason }}</textarea>
+=======
+                                            <input type="date" name="target_date[]" readonly class="form-control bg-light" value="{{ $review_sub_stage->target_date }}">
+                                        </td>
+                                        <td>
+                                            <input type="date" name="actual_date[]" readonly class="form-control bg-light" value="{{ $review_sub_stage->actual_date }}">
+                                        </td>
+                                        <td>
+                                            <div style="width:200px;">
+                                                <textarea name="delay_reason[]" class="form-control" cols="30" rows="5">{{ $review_sub_stage->delay_reason }}</textarea>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:200px">
+<<<<<<< HEAD
                                                 <textarea name="action_plan[]" class="form-control bg-light" readonly cols="30" rows="5">{{ $management_review->action_plan }}</textarea>
                                             </div>
                                         </td>
@@ -214,16 +280,45 @@
                                         <td>
                                             <div style="width:200px">
                                                 <textarea name="review_comments[]" class="form-control bg-light" readonly cols="30" rows="5">{{ $management_review->review_comments }}</textarea>
+=======
+                                                <textarea name="action_plan[]" class="form-control" cols="30" rows="5">{{ $review_sub_stage->action_plan }}</textarea>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="date" name="revisied_target_date[]" class="form-control" value="{{ $review_sub_stage->revisied_target_date }}">
+                                        </td>
+                                        <td>
+                                            <div style="width:200px">
+                                                <textarea name="review_comments[]" class="form-control" cols="30" rows="5">{{ $review_sub_stage->review_comments }}</textarea>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                             </div>
                                         </td>
 
                                     </tr>
+<<<<<<< HEAD
                                     @empty
+=======
+
+                                    @empty
+                                    <tr>
+                                        <td>No Activity Found!</td>
+                                    </tr>
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
+<<<<<<< HEAD
+=======
+
+                      <div class="row mb-3 clearfix">
+                      <div class="col-md-12 text-center m-3 ">
+                            <button type="button" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
+                      </div>
+                      </div>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                 </form>
             </div>
         </div>
@@ -231,6 +326,10 @@
 
 @endsection
 @push('scripts')
+<<<<<<< HEAD
+=======
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
 <script src="{{asset('js/select2.min.js')}}"></script>
 <script>
     // $("#apqp_timing_plan_id").select2();
@@ -240,6 +339,7 @@
     // On Submit
     $("#submit").click(function(e){
         e.preventDefault();
+<<<<<<< HEAD
         var formData = new FormData($("#category_save")[0]);
         $.ajax({
             url:"{{ route('management_review.store') }}",
@@ -260,6 +360,24 @@
             //       icon: 'success'
             //   });
                window.location.href=url;
+=======
+        $.ajax({
+            url:"{{ route('management_review.store') }}",
+            type:"POST",
+            data:$("#category_save").serialize(),
+            success:function(response)
+            {
+
+                var result = $.parseJSON(response);
+                $.toast({
+                  heading: 'Success',
+                  text: response.message,
+                  showHideTransition: 'plain',
+                  position: 'top-right',
+                  icon: 'success'
+              });
+              location.reload();
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
             },
             error:function(response)
             {

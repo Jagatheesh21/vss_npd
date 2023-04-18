@@ -55,6 +55,7 @@ class CustomerSpecificRequirementController extends Controller
      */
     public function store(StoreCustomerSpecificRequirementRequest $request)
     {
+<<<<<<< HEAD
         DB::beginTransaction();
         try {
             $customer_spec=new CustomerSpecificRequirement;
@@ -118,6 +119,104 @@ class CustomerSpecificRequirementController extends Controller
            DB::rollback();
             return back()->withError($th->getMessage());
         }
+=======
+<<<<<<< HEAD
+        // dd($request)->all();
+        DB::beginTransaction();
+        try {
+
+            $specfication = new CustomerSpecificRequirement;
+            $specfication->apqp_timing_plan_id = $request->apqp_timing_plan_id;
+            $specfication->stage_id = 1;
+            $specfication->sub_stage_id = 2;
+            $specfication->part_number_id = $request->part_number_id;
+            $specfication->revision_number = $request->revision_number;
+            $specfication->revision_date = $request->revision_date;
+            $specfication->customer_id = $request->customer_id;
+            $specfication->status_id = 2;
+            $specfication->application = $request->application;
+            $specfication->manufacturing_requirements = $request->manufacturing_requirements;
+            $specfication->handling_requirements = $request->handling_requirements;
+            $specfication->marking_requirements = $request->marking_requirements;
+            $specfication->packing_preservation = $request->packing_preservation;
+            $specfication->delivery_requirements = $request->delivery_requirements;
+            $specfication->document_requirements = $request->document_requirements;
+            // echo "<pre>";
+            // print_r($specfication);
+            // echo "</pre>";exit;
+            $specfication->save();
+            // Update Timing Plan Current Activity
+            $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+            $plan->current_stage_id = 1;
+            $plan->current_sub_stage_id = 6;
+            $plan->status_id = 2;
+            $plan->update();
+            // Update Activity
+            $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',2)->first();
+            $plan_activity->status_id = 2;
+            $plan_activity->actual_start_date = date('Y-m-d');
+            $plan_activity->prepared_date = date('Y-m-d');
+            $plan_activity->update();
+            //
+            // $activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->first();
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // //$ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // $ccEmails = ["edp@venkateswarasteels.com"];
+            // Mail::to('edp@venkateswarasteels.com')
+            // ->cc($ccEmails)
+            // ->send(new ActivityMail($user_email,$user_name,$activity));
+            DB::commit();
+            return back()->withSuccess('Customer Specfication Requirement Data Created Successfully!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->withError($th->getMessage());
+        }
+        // dd($request);
+    // try {
+    //     $customer = CustomerSpecificRequirement::Create($request->validated());
+    //     // Update Timing Plan
+    //     // Update Activity
+    //     // Mail
+
+    //     return back()->withSuccess('Customer Specific Requirements Creatred Successfully!');
+    // } catch (\Throwable $th) {
+    //     //throw $th;
+    //     return back()->withErrors($th->getMessage());
+    // }
+=======
+    DB::beginTransaction();
+    try {
+        $customer = CustomerSpecificRequirement::Create($request->validated());
+
+        // Update Timing Plan
+        $plan = APQPTimingPlan::find($request->apqp_timing_plan_id);
+        $plan->current_stage_id = 1;
+        $plan->current_sub_stage_id = 6;
+        $plan->update();
+        // Update Activity
+        $plan_activity = APQPPlanActivity::where('apqp_timing_plan_id',$request->apqp_timing_plan_id)->where('stage_id',1)->where('sub_stage_id',6)->first();
+        $plan_activity->status_id = 2;
+        $plan_activity->actual_start_date = date('Y-m-d');
+        $plan_activity->prepared_at = Carbon::now();
+        $plan_activity->gyr_status = 'P';
+        $plan_activity->update();
+        // Mail
+        $activity = APQPPlanActivity::find($plan_activity->id);
+        $user_email = auth()->user()->email;
+        $user_name = auth()->user()->name;
+        Mail::to('r.naveen@venkateswarasteels.com')
+        ->send(new ActivityMail($user_email,$user_name,$activity));
+        DB::commit();
+        return back()->withSuccess('Customer Specific Requirements Creatred Successfully!');
+    } catch (\Throwable $th) {
+        //throw $th;
+        DB::rollback();
+        return back()->withErrors($th->getMessage());
+    }
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     }
 
     /**
@@ -133,13 +232,17 @@ class CustomerSpecificRequirementController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
         $customerSpecificRequirement = CustomerSpecificRequirement::where('apqp_timing_plan_id',$id)->first();
         $location = $customerSpecificRequirement->timing_plan->apqp_timing_plan_number.'/customer_spec/';
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
         $specfication=CustomerSpecificRequirement::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',6)->get();
         // echo "<pre>";
         // print_r($specfication);
         // echo "</pre>";exit;
         // dd($specfication);
+<<<<<<< HEAD
         return view('apqp.customer_spec_requirements.view',compact('plan','plans','part_numbers','customers','customer_types','specfication','location'));
     }
 
@@ -159,6 +262,19 @@ class CustomerSpecificRequirementController extends Controller
         // echo "</pre>";exit;
         // dd($specfication);
         return view('apqp.customer_spec_requirements.view',compact('plan','plans','part_numbers','customers','customer_types','specfication','location'));
+=======
+        return view('apqp.customer_spec_requirements.view',compact('plan','plans','part_numbers','customers','customer_types','specfication'));
+
+        // $plan = APQPTimingPlan::find($id);
+        // $plans = APQPTimingPlan::get();
+        // $part_numbers = PartNumber::get();
+        // $customer_types = CustomerType::get();
+        // $customers = Customer::get();
+        // $productInformationData = CustomerSpecificRequirement::with('timing_plan')->find($id);
+        // dd($plans);
+        // return view('apqp.customer_spec_requirements.view',compact('plan','plans','part_numbers','customers','customer_types'));
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     }
 
     /**

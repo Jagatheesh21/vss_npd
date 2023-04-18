@@ -10,6 +10,10 @@ class RiskAnalysis extends Model
     use HasFactory;
     protected $fillable = ['apqp_timing_plan_id','part_number_id',''];
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     /**
      * Get the Timing Plan that owns the ProductInformationData
      *

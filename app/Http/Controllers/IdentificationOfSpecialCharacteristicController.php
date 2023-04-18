@@ -115,11 +115,19 @@ class IdentificationOfSpecialCharacteristicController extends Controller
 
             // Mail Function
             $activity = APQPPlanActivity::find($plan_activity->id);
+<<<<<<< HEAD
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
+
+=======
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
             Mail::to('r.naveen@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             // Mail::to('edp@venkateswarasteels.com')->send(new ActivityMail($user_email,$user_name,$activity));
             DB::commit();
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             return response()->json(['status'=>'200','message'=>'Special Characteristics Created Successfully!']);
 
         } catch (\Throwable $th) {
@@ -143,6 +151,7 @@ class IdentificationOfSpecialCharacteristicController extends Controller
         $part_numbers = PartNumber::get();
         $customer_types = CustomerType::get();
         $customers = Customer::get();
+<<<<<<< HEAD
         $special_characteristics = IdentificationOfSpecialCharacteristic::where('apqp_timing_plan_id',$id)->first();
         $location = $special_characteristics->timing_plan->apqp_timing_plan_number.'/special_characteristics/';
         $special_characters=IdentificationOfSpecialCharacteristic::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',7)->get();
@@ -160,6 +169,13 @@ class IdentificationOfSpecialCharacteristicController extends Controller
         $location = $special_characteristics->timing_plan->apqp_timing_plan_number.'/special_characteristics/';
         $special_characters=IdentificationOfSpecialCharacteristic::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
         return view('apqp.special_characteristics.view',compact('plan','plans','part_numbers','customers','customer_types','special_characters','location'));
+=======
+        $special_characters=IdentificationOfSpecialCharacteristic::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',7)->get();
+        // echo "<pre>";
+        // print_r($special_characters);echo "</pre>";exit;
+        // dd($special_characters);
+        return view('apqp.special_characteristics.view',compact('plan','plans','part_numbers','customers','customer_types','special_characters'));
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     }
 
     /**

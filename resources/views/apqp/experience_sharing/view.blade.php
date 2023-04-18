@@ -111,19 +111,31 @@
                         </div>
                         <div class="col-md-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
+<<<<<<< HEAD
                             <a href="{{url($location)}}/{{$tgw_data->file}}" class="form-control btn btn-success btn-sm text-white">Download</a>
+=======
+                            <a href="{{url($location)}}/{{$tgw_data->file}}" class="btn btn-success btn-sm text-white">Download</a>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                             @error('file')
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="" class="col-sm-8 col-form-label required">Remarks</label>
+<<<<<<< HEAD
                             <textarea name="remarks" class="form-control bg-light" id="remarks" cols="30" rows="5">{{$tgw_data->remarks}}</textarea>
+=======
+                            <textarea name="remarks" class="form-control" id="remarks" cols="30" rows="5">{{$tgw_data->remarks}}</textarea>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                         </div>
                     </div>
 
 
+<<<<<<< HEAD
                     {{-- <button type="submit" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button> --}}
+=======
+                    <button type="submit" id="submit" class="btn btn-primary align-center" onclick="confirm('Are you sure?')">Save</button>
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                   </form>
             </div>
         </div>

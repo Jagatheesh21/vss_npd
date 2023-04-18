@@ -113,8 +113,21 @@ class IdentificationOfGaugeEquipmentController extends Controller
             $plan_activity->status_id = 2;
             $plan_activity->gyr_status = "Y";
             $plan_activity->update();
+<<<<<<< HEAD
 
             // Mail Function
+=======
+<<<<<<< HEAD
+            // $activity = APQPPlanActivity::find($plan_activity->id);
+            // $user_email = auth()->user()->email;
+            // $user_name = auth()->user()->name;
+            // // Mail Function
+            // $ccEmails = ["msv@venkateswarasteels.com", "ld@venkateswarasteels.com","marimuthu@venkateswarasteels.com"];
+            // Mail::to('r.naveen@venkateswarasteels.com')
+            // ->cc($cc_emails)
+            // ->send(new ActivityMail($user_email,$user_name,$activity));
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
             $activity = APQPPlanActivity::find($plan_activity->id);
             $user_email = auth()->user()->email;
             $user_name = auth()->user()->name;
@@ -123,6 +136,7 @@ class IdentificationOfGaugeEquipmentController extends Controller
             // Mail::to('edp@venkateswarasteels.com')
            // ->cc($cc_emails)
             ->send(new ActivityMail($user_email,$user_name,$activity));
+>>>>>>> 6effb6f30f1247ca2f8a711aad43bb1d1ea9ff99
             DB::commit();
             return response()->json(['status'=>'200','message'=>'Gauge Equipments Created Successfully!']);
 
@@ -153,6 +167,7 @@ class IdentificationOfGaugeEquipmentController extends Controller
         $gaugeequipments=IdentificationOfGaugeEquipment::with('timing_plan')->where('apqp_timing_plan_id', $id)->where('sub_stage_id',8)->get();
         return view('apqp.gauge_equipment.view',compact('plan','plans','part_numbers','customers','customer_types','gaugeequipments','location'));
 
+<<<<<<< HEAD
     }
 
     public function preview($plan_id,$sub_stage_id)
@@ -168,6 +183,8 @@ class IdentificationOfGaugeEquipmentController extends Controller
         $gaugeequipments=IdentificationOfGaugeEquipment::with('timing_plan')->where('apqp_timing_plan_id', $plan_id)->where('sub_stage_id',$sub_stage_id)->get();
         return view('apqp.gauge_equipment.view',compact('plan','plans','part_numbers','customers','customer_types','gaugeequipments','location'));
 
+=======
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     }
 
     /**

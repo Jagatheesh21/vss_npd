@@ -23,7 +23,11 @@
         </div>
         <div class="card-body">
             <div class="col-md-12">
+<<<<<<< HEAD
                 <form id="category_save" method="POST" enctype="multipart/form-data" action="{{route('customer_requiements.store')}}">
+=======
+                <form id="category_save" method="POST" action="{{route('customer_requiements.store')}}">
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                   @csrf
                   @method('POST')
                     <div class="row mb-3">
@@ -109,6 +113,7 @@
                             <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+<<<<<<< HEAD
                         <div class="col-md-3 mb-3">
                             <label for="" class="col-sm-8 col-form-label required">File*</label>
                             <a href="{{url($location)}}/{{$specfication[0]->file}}" class="form-control btn btn-success btn-sm text-white" target="_blank">Download</a>
@@ -123,6 +128,10 @@
                             <label for="" class="col-sm-8 col-form-label required">Remarks*</label>
                             <textarea name="remarks" class="form-control bg-light" id="remarks" cols="30" rows="5" readonly required>{{$specfication[0]->remarks}}</textarea>
                         </div>
+=======
+
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
                     </div>
                     <div class="row">
                         <div class="col-md-6">

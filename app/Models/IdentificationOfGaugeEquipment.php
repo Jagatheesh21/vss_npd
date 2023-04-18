@@ -9,6 +9,10 @@ class IdentificationOfGaugeEquipment extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e8d11c1f377e3a56dfcdff8e5f33d85eba795026
     /**
      * Get the Timing Plan that owns the ProductInformationData
      *
